@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html> 
+  <head>
+    <title>Hal's Tower (game)</title> 
+  </head>
+  <body>
+	<!--This draws the canvas on the webpage -->
+    <canvas id="mycanvas"></canvas> 
+  </body>
+ 
+  <!-- Include the processing.js library -->
+  <!-- See https://khanacademy.zendesk.com/hc/en-us/articles/202260404-What-parts-of-ProcessingJS-does-Khan-Academy-support- for differences -->
+  <script src="https://cdn.jsdelivr.net/processing.js/1.4.8/processing.min.js"></script> 
+  <script>
+  var programCode = function(processingInstance) {
+    with (processingInstance) {
+      size(800, 800); 
+      frameRate(60);
+        
+      // Start JS programming here
+{
+var keys = [];
+
+keyPressed = function() {
+    keys[keyCode] = keys[key.toString().toLowerCase()] = true;
+};
+
+keyReleased = function() {
+    keys[keyCode] = keys[key.toString().toLowerCase()] = false;
+};
+}
+
+var player = {
+    spawnX: 100,
+    spawnY: 5300,
+    sX: 100, // x scroll
+    sY: 1500, // y scroll
+    pX: width/2, // player x
+    pY: height/2, // player y
+    grav: 0.1, // gravity
+    xVel: 0, // x velocity
+    yVel: 0, // y velocity
+    jump: -4.5, // jump height
+    end: false, // has the playe made it to the finish
+    deaths: 0 // player deaths
+};
+        
+var checkPoint = function(checkNum){
+    if(checkNum === 1){
+        player.spawnX = 100;
+        player.spawnY = 4500;
+    }
+    if(checkNum === 2){
+        player.spawnX = 0;
+        player.spawnY = 2980;
+    }
+    if(checkNum === 3){
+        player.spawnX = 380;
+        player.spawnY = 2480;
+    }
+    if(checkNum === 4){
+        player.spawnX = 920;
+        player.spawnY = 2940;
+    }
+    if(checkNum === 5){
+        player.spawnX = -240;
+        player.spawnY = 1780;
+    }
+    if(checkNum === 6){
+        player.spawnX = 0;
+        player.spawnY = 180;
+    }
+};
+var reset = function(){
+    player.sX = player.spawnX; // x scroll
+    player.sY = player.spawnY; // y scroll
+    player.pX = width/2; // player x
+    player.pY = height/2; // player y
+    player.grav = 0.1; // gravity
+    player.xVel = 0; // x velocity
+    player.yVel = 0; // y velocity
+    player.jump = -4.5; // jump height
+    player.deaths += 1; // add one death
+    
+};
+
+var drawPlayer = function(){
+    fill(115,115,115);
+    rect(player.pX, player.pY, 20, 20);
+}; // draw player
+
+        
+{
+var keys = [];
+
+keyPressed = function() {
+    keys[keyCode] = keys[key.toString().toLowerCase()] = true;
+};
+
+keyReleased = function() {
+    keys[keyCode] = keys[key.toString().toLowerCase()] = false;
+};
+}
+
+var bulletVars = {
+    size: 20,
+    speed: 5
+};
+        
+var devTools = true; // developer tools to easily navigate map
+
+
+var mapSize = 40;
+var room = [[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,5,5,5,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,5,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,5,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,1,1,1,1],
+            [1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,2,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1],
+            [1,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+            [1,0,0,1,0,0,0,0,0,0,0,0,0,2,0,0,0,0,1,1],
+            [1,0,2,0,0,0,0,0,0,0,0,1,2,0,0,0,0,0,0,1],
+            [1,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1],
+            [1,0,2,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,1],
+            [1,0,0,1,0,0,0,0,0,2,1,2,0,1,0,0,0,0,0,1],
+            [1,0,0,0,0,2,0,0,0,0,0,0,2,0,0,0,0,0,0,1],
+            [1,0,0,0,0,2,1,0,2,0,0,0,0,1,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,1,2,0,2,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1],
+            [1,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+            [1,0,0,0,2,0,0,0,0,0,0,0,2,0,0,0,0,0,1,1],
+            [1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,2,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1],
+            [1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,2,0,0,1],
+            [1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,2,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,1,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,2,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
+            [1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,0,0,1],
+            [1,1,0,0,2,2,0,0,1,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,8,2,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,2,2,0,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,2,0,0,0,0,0,0,2,0,0,0,0,0,0,0,1,0,1],
+            [1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,2,2,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,0,0,0,0,0,0,0,0,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,1,0,0,0,0,0,0,0,2,0,2,0,2,0,2,0,2,0,0,0,0,0,0,0,0,0,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1],
+            [1,2,2,0,0,0,0,0,1,1,1,1,0,0,2,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
+            [1,2,0,0,0,0,0,0,0,0,0,2,0,1,2,1,0,1,0,0,0,0,0,0,0,0,2,0,2,0,2,0,2,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,2,1,0,0,0,0,0,0,0,0,2,0,0,2,0,0,2,0,0,0,0,0,0,0,0,2,0,2,0,2,0,2,0,0,0,0,0,0,0,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,1,0,0,0,2,1,0,2,1,0,2,0,0,0,0,0,0,0,1,2,1,2,1,2,1,2,1,0,0,0,2,0,2,2,2,2,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,2,0,0,0,0,0,0,0,0,0,2,0,0,2,0,0,2,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,2,1,0,0,0,0,0,0,0,0,2,0,1,2,1,0,2,2,1,0,0,0,0,0,5,5,5,5,5,5,5,5,5,5,5,0,2,1,0,0,1,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,2,0,2,0,0,2,0,0,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [2,0,0,0,0,0,0,0,1,2,0,2,1,0,2,1,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [2,1,0,0,0,0,0,2,0,0,0,2,0,0,2,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2,1,0,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,2,0,0,2,0,1,2,1,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1],
+            [1,2,0,0,0,0,0,1,2,0,0,2,0,0,2,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+            [2,0,0,0,0,0,0,0,0,0,0,2,1,0,2,1,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
+            [2,1,0,0,0,0,0,0,2,0,0,2,0,0,2,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,2,0,0,0,0,0,1,0,2,1,0,0,0,0,0,0,0,0,0,0,0,0,1,2,0,0,0,0,1],
+            [1,2,0,0,0,0,0,1,2,0,0,2,0,1,2,1,0,2,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [2,0,0,0,0,0,0,0,0,0,0,2,0,0,2,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,2,2,2,2,2,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,1],
+            [2,1,0,0,0,0,0,0,0,0,0,2,0,0,2,1,0,2,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,2,2,2,2,2,0,1,0,0,2,2,0,0,0,0,2,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],
+            [1,2,1,1,1,1,1,2,2,4,1,2,2,1,1,1,1,1,1,2],
+            [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
+            [1,2,0,0,0,0,0,0,0,1,0,0,0,1,1,1,1,1,0,1],
+            [1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,2,0,0,1],
+            [2,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,2,1,0,2],
+            [2,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,2,0,0,0],
+            [2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,1,1],
+            [2,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,2,0,0,1],
+            [2,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,2,1,0,1],
+            [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,1,0,0,0,0,0,0,9,2],
+            [1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,2,1,0,1],
+            [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,1,0,0,0,0,0,0,0,0,0,2,0,2,0,2,0,1,0,1,0,0,0,0,2],
+            [1,0,0,0,0,0,1,0,0,2,0,2,0,2,0,2,0,0,0,1,0,0,2,9,2],
+            [1,0,0,0,0,0,0,0,0,2,1,2,1,2,1,2,1,2,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,2],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,9,2],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,1,0,1],
+            [2,2,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1],
+            [2,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,2,9,2],
+            [2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,2],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,9],
+            [1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,1,0,0,9],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],
+            [1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0],
+            [1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,9],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,1],
+            [1,2,2,2,2,2,2,2,2,2,2,2,1,0,2,2,2,2,2,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],
+            [1,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+            ]; // map
+            
+            
+            
+var collision = function(x, y, type){
+    if(type === 1){
+        if(player.pY < y+mapSize && player.pY > y+mapSize-5 && player.pX+20 > x && player.pX < x+mapSize && player.yVel < 0){
+            player.yVel = 0.5;
+        }//hits ceiling
+        if(player.pY+21 > y && player.pY+20 < y+10 && player.pX < x+mapSize && player.pX+20 > x){
+            player.yVel = 0;
+            player.sY -= 0.5;
+            player.grav = 0;
+            if(keys[UP]){player.yVel = player.jump; player.pY = height/2;}
+        }else{player.grav = 0.1;}//hits floor
+       if(player.pX+23 > x && player.pX+15 < x && player.pY < y+mapSize && player.pY+19 > y && player.xVel > 0){
+            player.xVel = 0;
+            if(keys[LEFT]){player.xVel -= 0.5;}
+        }//right side of character collision
+       if(player.pX-3 < x+mapSize && player.pX > x+mapSize-1 && player.pY < y+mapSize && player.pY+20 > y && player.xVel < 0){
+            player.xVel = 0;
+            if(keys[RIGHT]){player.xVel += 0.5;}
+        }//left side of character collision
+    }//main block collision
+    if(type === 2){
+        if(player.pY < y+mapSize && player.pY > y+mapSize-3 && player.pX+21 > x && player.pX-1 < x+mapSize){
+            reset();
+        }//hits ceiling
+        if(player.pY+22 > y && player.pY+20 < y+10 && player.pX < x+mapSize && player.pX+20 > x){
+            reset();
+        }//hits floor
+       if(player.pX+20 > x && player.pX+15 < x && player.pY < y+mapSize && player.pY+20 > y && player.xVel > 0){
+            reset();
+        }//right side of character collision
+       if(player.pX < x+mapSize && player.pX > x+mapSize-5 && player.pY < y+mapSize && player.pY+20 > y && player.xVel < 0){
+            reset();
+        }//left side of character collision
+    }//death block collision
+    if(type === 3){
+        if(player.pY < y+mapSize && player.pY > y+mapSize-3 && player.pX+21 > x && player.pX-1 < x+mapSize){
+            checkPoint(1);
+        }//hits ceiling
+        if(player.pY+22 > y && player.pY+20 < y+10 && player.pX < x+mapSize && player.pX+20 > x){
+            checkPoint(1);
+        }//hits floor
+       if(player.pX+20 > x && player.pX+15 < x && player.pY < y+mapSize && player.pY+20 > y && player.xVel > 0){
+            checkPoint(1);
+        }//right side of character collision
+       if(player.pX < x+mapSize && player.pX > x+mapSize-5 && player.pY < y+mapSize && player.pY+20 > y && player.xVel < 0){
+            checkPoint(1);
+        }//left side of character collision
+    }//checkpoint 1 block collision
+    if(type === 4){
+        if(player.pY < y+mapSize && player.pY > y+mapSize-3 && player.pX+21 > x && player.pX-1 < x+mapSize){
+            checkPoint(2);
+        }//hits ceiling
+        if(player.pY+22 > y && player.pY+20 < y+10 && player.pX < x+mapSize && player.pX+20 > x){
+            checkPoint(2);
+        }//hits floor
+       if(player.pX+20 > x && player.pX+15 < x && player.pY < y+mapSize && player.pY+20 > y && player.xVel > 0){
+            checkPoint(2);
+        }//right side of character collision
+       if(player.pX < x+mapSize && player.pX > x+mapSize-1 && player.pY < y+mapSize && player.pY+20 > y && player.xVel < 0){
+            checkPoint(2);
+        }//left side of character collision
+    }//checkpoint 2 block collision
+    if(type === 5){
+        if(player.pY < y+mapSize && player.pY > y+mapSize-3 && player.pX+21 > x && player.pX-1 < x+mapSize){
+            checkPoint(3);
+        }//hits ceiling
+        if(player.pY+22 > y && player.pY+20 < y+10 && player.pX < x+mapSize && player.pX+20 > x){
+            checkPoint(3);
+        }//hits floor
+       if(player.pX+20 > x && player.pX+15 < x && player.pY < y+mapSize && player.pY+20 > y && player.xVel > 0){
+            checkPoint(3);
+        }//right side of character collision
+       if(player.pX < x+mapSize && player.pX > x+mapSize-1 && player.pY < y+mapSize && player.pY+20 > y && player.xVel < 0){
+            checkPoint(3);
+        }//left side of character collision
+    }//checkpoint 3 block collision
+    if(type === 6){
+        if(player.pY < y+mapSize && player.pY > y+mapSize-3 && player.pX+21 > x && player.pX-1 < x+mapSize){
+            checkPoint(4);
+        }//hits ceiling
+        if(player.pY+22 > y && player.pY+20 < y+10 && player.pX < x+mapSize && player.pX+20 > x){
+            checkPoint(4);
+        }//hits floor
+       if(player.pX+20 > x && player.pX+15 < x && player.pY < y+mapSize && player.pY+20 > y && player.xVel > 0){
+            checkPoint(4);
+        }//right side of character collision
+       if(player.pX < x+mapSize && player.pX > x+mapSize-1 && player.pY < y+mapSize && player.pY+20 > y && player.xVel < 0){
+            checkPoint(4);
+        }//left side of character collision
+    }//checkpoint 4 block collision
+    if(type === 7){
+        if(player.pY < y+mapSize && player.pY > y+mapSize-3 && player.pX+21 > x && player.pX-1 < x+mapSize){
+            checkPoint(5);
+        }//hits ceiling
+        if(player.pY+22 > y && player.pY+20 < y+10 && player.pX < x+mapSize && player.pX+20 > x){
+            checkPoint(5);
+        }//hits floor
+       if(player.pX+20 > x && player.pX+15 < x && player.pY < y+mapSize && player.pY+20 > y && player.xVel > 0){
+            checkPoint(5);
+        }//right side of character collision
+       if(player.pX < x+mapSize && player.pX > x+mapSize-1 && player.pY < y+mapSize && player.pY+20 > y && player.xVel < 0){
+            checkPoint(5);
+        }//left side of character collision
+    }//checkpoint 5 block collision
+    if(type === 8){
+        if(player.pY < y+mapSize && player.pY > y+mapSize-5 && player.pX+20 > x && player.pX < x+mapSize && player.yVel < 0){
+            player.yVel = 0.5;
+        }//hits ceiling
+        if(player.pY+22 > y && player.pY+20 < y+10 && player.pX < x+mapSize && player.pX+20 > x){
+            player.yVel = -6;
+        }//hits floor
+       if(player.pX+23 > x && player.pX+15 < x && player.pY < y+mapSize && player.pY+20 > y && player.xVel > 0){
+            player.xVel = 0;
+            if(keys[LEFT]){player.xVel -= 0.5;}
+        }//right side of character collision
+       if(player.pX-3 < x+mapSize && player.pX > x+mapSize-1 && player.pY < y+mapSize && player.pY+20 > y && player.xVel < 0){
+            player.xVel = 0;
+            if(keys[RIGHT]){player.xVel += 0.5;}
+        }//left side of character collision
+    }//main block collision
+};
+
+var charPhysics = function(){
+    if(devTools === false){
+        player.yVel += player.grav;
+        player.sY += player.yVel;
+        player.sX += player.xVel;
+        player.xVel *= 0.9;
+        if(keys[RIGHT]){player.xVel += 0.3;}
+        if(keys[LEFT]){player.xVel -= 0.3;}
+    }else{
+        if(keys[RIGHT]){player.sX += 4;}
+        if(keys[LEFT]){player.sX -= 4;}
+        if(keys[UP]){player.sY -= 4;}
+        if(keys[DOWN]){player.sY += 4;}
+    }
+};
+
+var readMap = function(){
+    noStroke();
+    for(var row = 0; row < room.length; row++){
+        for(var col = 0; col < room[row].length; col++){
+            var id = room[row][col];
+            switch(id){
+                /*case 0:
+                    fill(171, 163, 201);
+                    rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                    break;*///causes lag and pointless to have
+                case 1:
+                if(player.pX-800 < col*mapSize-player.sX && player.pX+800 > col*mapSize-player.sX && player.pY-800 < row*mapSize-player.sY && player.pY+800 > row*mapSize-player.sY){
+                    fill(115, 115, 115);
+                    rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                    if(player.pX-100 < col*mapSize-player.sX && player.pX+100 > col*mapSize-player.sX && player.pY-100 < row*mapSize-player.sY && player.pY+100 > row*mapSize-player.sY){
+                    collision(col*mapSize-player.sX,row*mapSize-player.sY, 1);
+                }
+                    }
+                    break;
+                case 2:
+                if(player.pX-800 < col*mapSize-player.sX && player.pX+800 > col*mapSize-player.sX && player.pY-800 < row*mapSize-player.sY && player.pY+800 > row*mapSize-player.sY){
+                    fill(255, 0, 0);
+                    rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                    if(player.pX-100 < col*mapSize-player.sX && player.pX+100 > col*mapSize-player.sX && player.pY-100 < row*mapSize-player.sY && player.pY+100 > row*mapSize-player.sY){
+                        collision(col*mapSize-player.sX,row*mapSize-player.sY, 2);
+                    }
+                }
+                    break;
+                case 3:
+                    fill(255, 255, 0);
+                    rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                    collision(col*mapSize-player.sX,row*mapSize-player.sY, 3);
+                    break;
+                case 4:
+                    fill(255, 255, 0);
+                    rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                    collision(col*mapSize-player.sX,row*mapSize-player.sY, 4);
+                    break;
+                case 5:
+                    collision(col*mapSize-player.sX,row*mapSize-player.sY, 1);
+                    break;
+                case 6:
+                    fill(255, 255, 0);
+                    rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                    collision(col*mapSize-player.sX,row*mapSize-player.sY, 5);
+                    break;
+                case 7:
+                    fill(255, 255, 0);
+                    rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                    collision(col*mapSize-player.sX,row*mapSize-player.sY, 6);
+                    break;
+                case 8:
+                    fill(255, 255, 0);
+                    rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                    collision(col*mapSize-player.sX,row*mapSize-player.sY, 7);
+                    break;
+                case 9:
+                    fill(128, 0, 128);
+                    rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                    collision(col*mapSize-player.sX,row*mapSize-player.sY, 8);
+                    break;
+            }
+        }
+    }
+};
+        
+       
+
+        
+devTools = false;
+reset();
+player.deaths = 0;
+
+
+draw = function() {
+    background(171, 163, 201);
+    if(player.yVel > 7){player.yVel = 7;}
+    if(keys[DOWN] && keys[UP] && devTools === true){devTools = false;}
+    readMap();
+    textSize(100);
+    fill(255, 255, 0);
+    text("You Win!!", 200-player.sX, 240-player.sY);
+    textSize(20);
+    fill(255, 100, 0);
+    text("Deaths:" + " " + player.deaths, width/16, height/16);
+    text("Time:" + " " + millis()/1000, width/16, height/16+20);
+    drawPlayer();
+    charPhysics();    
+};
+      
+      
+      
+    }};
+
+  // Get the canvas that ProcessingJS will use
+  var canvas = document.getElementById("mycanvas"); 
+  // Pass the function to ProcessingJS constructor
+  var processingInstance = new Processing(canvas, programCode); 
+  </script>
+</html>
