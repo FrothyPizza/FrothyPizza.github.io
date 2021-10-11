@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html> 
+  <head>
+    <title>Maze Game</title> 
+  </head>
+  <body>
+	<!--This draws the canvas on the webpage -->
+    <canvas id="mycanvas"></canvas> 
+  </body>
+ 
+  <!-- Include the processing.js library -->
+  <!-- See https://khanacademy.zendesk.com/hc/en-us/articles/202260404-What-parts-of-ProcessingJS-does-Khan-Academy-support- for differences -->
+  <script src="https://cdn.jsdelivr.net/processing.js/1.4.8/processing.min.js"></script> 
+  <script>
+  var programCode = function(processingInstance) {
+    with (processingInstance) {
+      size(800, 800); 
+      frameRate(60);
+        
+      // Start JS programming here
+{
+var keys = [];
+
+keyPressed = function() {
+keys[keyCode] = keys[key.toString().toLowerCase()] = true;
+};
+
+keyReleased = function() {
+keys[keyCode] = keys[key.toString().toLowerCase()] = false;
+};
+
+}//key Commands
+var mapSize = 70;//map block size
+var mapNum = round(random(1, 2));
+mapNum = 0;
+
+        
+       
+
+        
+var room = [[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,0,1,0,0,0,0,1,0,0,0,0,1,0,1,1,1,0,0,0,0,0,0,0,5,6,0,3,4,2,1],
+            [1,0,0,0,1,1,1,1,0,1,1,0,0,0,3,0,1,0,1,1,0,1,0,1,1,1,1,1,1,1,1],
+            [1,0,0,1,1,0,0,1,0,0,1,0,1,1,1,0,1,0,1,1,0,1,0,1,2,0,1,0,3,0,1],
+            [1,0,1,1,0,0,0,0,0,0,0,0,1,0,3,0,1,0,1,1,0,1,0,1,0,0,3,0,1,0,1],
+            [1,0,0,0,0,1,1,1,1,1,1,0,1,0,1,0,1,0,1,1,3,1,0,1,1,1,1,1,0,0,1],
+            [1,3,1,1,1,1,1,1,1,0,1,0,1,0,1,0,1,0,1,1,0,1,3,1,0,0,0,1,3,1,1],
+            [1,0,1,0,0,0,1,0,0,0,1,0,1,0,1,0,0,0,1,1,0,1,0,1,0,1,0,1,0,0,1],
+            [1,0,1,1,1,0,1,0,1,0,1,0,0,0,1,1,1,1,1,1,0,1,0,1,0,1,0,1,1,0,1],
+            [1,0,0,0,0,0,0,0,1,0,1,1,3,1,1,0,0,0,0,1,0,1,0,1,0,1,0,1,0,0,1],
+            [1,1,1,1,1,1,1,3,1,0,0,0,0,0,0,0,1,0,0,1,0,1,0,1,1,1,0,1,0,1,1],
+            [1,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,1,1,1,1,0,1,0,0,5,0,0,1,0,0,1],
+            [1,0,1,1,1,1,1,1,1,0,0,3,1,1,1,0,0,0,0,1,1,1,1,1,6,1,1,1,1,0,1],
+            [1,0,3,0,0,0,0,0,1,1,1,0,1,0,1,0,1,1,1,1,1,1,0,1,5,0,0,0,1,0,1],
+            [1,0,1,1,1,1,0,0,5,6,1,0,0,0,1,0,1,0,0,0,0,1,0,0,0,0,1,0,1,0,1],
+            [1,0,1,0,0,3,0,1,1,1,1,1,1,0,1,0,1,0,1,1,0,1,1,1,1,0,1,0,1,0,1],
+            [1,0,1,0,0,1,1,1,5,6,0,0,1,0,1,0,1,0,1,1,0,1,0,0,0,0,0,0,1,0,1],
+            [1,0,1,1,1,1,3,0,3,1,1,1,1,3,1,1,1,0,1,1,3,1,0,1,1,1,1,1,1,0,1],
+            [1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,3,0,0,1,0,0,0,3,0,0,0,0,0,0,3,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+            ];//map
+        
+        
+var room2 =[[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,0,3,0,0,5,0,0,0,0,1,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,3,1,0,1,6,1,0,1,0,1,0,0,0,1,0,0,0,1,1,1,1,3,1,1,1,1,1,1,3,1],
+            [1,0,1,0,1,5,1,4,1,0,1,0,1,1,1,1,1,1,1,0,0,1,0,1,3,0,3,2,1,0,1],
+            [1,3,1,0,1,3,1,0,1,4,0,3,0,0,0,0,0,0,1,1,0,1,0,1,0,1,1,1,1,3,1],
+            [1,0,1,0,1,0,1,0,1,1,1,1,1,1,1,1,1,0,0,1,0,0,0,1,3,0,3,0,3,0,1],
+            [1,3,1,0,1,3,1,0,1,0,0,0,0,0,0,0,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,0,1,3,1,0,1,0,1,0,1,1,1,1,1,0,0,1,0,0,0,0,0,0,0,0,3,0,0,1,1],
+            [1,0,1,5,1,3,1,0,0,0,1,0,3,0,1,1,0,1,1,1,1,1,1,1,1,1,0,1,5,5,1],
+            [1,0,1,6,1,0,1,1,1,1,1,3,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,6,6,1],
+            [1,0,1,5,1,3,1,0,0,0,0,0,1,1,0,1,1,1,1,1,1,0,1,0,1,1,1,1,6,2,1],
+            [1,0,3,0,1,0,1,0,1,1,1,1,1,1,0,0,5,6,5,5,0,0,1,0,3,0,1,1,1,1,1],
+            [1,3,1,1,1,3,1,3,1,0,0,0,0,1,1,1,1,1,1,6,1,1,1,1,1,3,0,0,0,0,1],
+            [1,0,3,0,0,0,0,0,1,1,1,0,0,0,1,0,0,0,1,5,0,0,0,0,1,1,1,1,1,0,1],
+            [1,3,1,1,1,1,0,0,0,0,1,0,1,0,3,0,0,0,1,0,1,0,1,0,0,0,0,0,1,0,1],
+            [1,0,1,0,0,3,0,1,1,1,1,0,1,3,1,1,1,1,1,0,1,0,1,1,1,1,1,0,1,0,1],
+            [1,0,1,0,0,1,1,1,0,0,0,0,1,0,3,0,0,1,1,0,1,0,1,2,4,0,1,0,1,0,1],
+            [1,0,1,1,1,1,0,0,0,1,1,3,1,1,1,1,0,1,1,3,1,0,1,1,1,0,1,3,1,0,1],
+            [1,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,3,0,1,0,0,0,0,0,1,0,3,0,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+            ];//map 2
+
+var room3 =[[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,2,3,0,3,0,3,0,3,0,3,0,3,6,1,0,0,3,0,3,0,0,0,3,0,0,0,3,0,0,0,3,0,0,0,3,0,3,0,3,0,3,0,3,5,6,2],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,5,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,0,3,0,3,0,3,0,3,0,3,0,0,0,3,0,1,0,0,0,0,0,0,0,4,2,0,1,0,3,0,1],
+            [1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,0,1,3,1,3,1],
+            [1,0,0,0,0,0,3,0,3,0,0,0,0,0,0,0,0,0,1,0,0,3,0,0,3,1,0,1,0,1,0,1],
+            [1,0,1,1,1,1,1,3,1,0,1,1,1,1,1,1,1,1,1,0,1,1,1,1,0,1,3,1,3,1,3,1],
+            [1,0,3,0,1,2,1,5,1,3,1,0,0,0,0,0,0,0,0,0,1,0,0,1,3,1,0,1,0,1,0,1],
+            [1,3,1,3,1,4,1,6,1,0,1,0,1,1,1,1,1,1,1,1,1,3,1,1,0,4,3,1,3,1,3,1],
+            [1,0,1,0,1,0,1,2,1,3,1,0,1,0,0,0,0,0,1,0,3,0,0,1,0,1,0,3,0,1,0,1],
+            [1,3,1,3,1,0,1,1,1,0,1,0,1,6,1,1,1,1,1,3,1,1,0,1,0,1,1,1,1,1,3,1],
+            [1,0,1,5,1,0,1,1,0,3,1,0,1,5,0,3,0,0,3,0,1,1,3,0,0,0,0,0,1,0,0,1],
+            [1,3,1,6,1,0,0,1,3,1,1,0,1,0,1,0,1,1,1,1,1,1,1,1,1,1,1,0,1,0,1,1],
+            [1,0,1,2,1,1,0,1,0,3,0,0,1,3,1,3,0,3,0,0,0,0,0,0,0,0,1,0,1,0,1],
+            [1,3,1,1,1,1,0,1,1,0,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,1,0,1,0,1],
+            [1,0,3,0,0,3,0,3,0,3,0,3,0,3,1,2,6,5,3,0,3,0,3,0,3,0,1,3,1,3,1],
+            [1,3,1,0,0,1,0,1,1,1,1,1,1,1,1,2,6,5,3,0,3,0,3,0,3,0,1,0,3,0,1],
+            [1,0,1,1,1,1,3,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,0,0,0,0,1,0,3,0,3,0,3,0,3,0,3,0,3,0,3,0,3,0,3,0,3,0,3,0,3,0,3,0,3,0,3,0,3,0,3,0,3,0,3,5,6,2],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+            ];//map 3
+        
+var room4 =[[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,2,6,5,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1],
+            [1,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,1],
+            [1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1],
+            [1,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,1],
+            [1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1],
+            [1,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,1],
+            [1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1],
+            [1,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,1],
+            [1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,0,3,0,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,1],
+            [1,7,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1],
+            [1,2,6,5,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,3,0,0,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+            ];//map 4
+            
+var player = {
+    sX: 0,
+    sY: 0,
+    touching: false//for debugging purposes
+};
+        
+        
+var hasBeaten = {
+    lvl1: false,
+    lvl2: false,
+    lvl3: false,
+    lvl4: false
+};
+
+var openLvls = false;//allow levels to be open
+        
+        
+var room0 =[[1,1,1,1,1,1,1,1,1,1],
+            [1,0,1,2,1,1,3,1,0,1],
+            [1,0,0,0,0,1,1,1,0,1],
+            [1,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,1],
+            [1,0,0,0,0,0,0,0,0,1],
+            [1,0,1,1,1,1,1,1,0,1],
+            [1,0,1,4,1,1,5,1,0,1],
+            [1,1,1,1,1,1,1,1,1,1]
+            ];
+
+var updateMap = function(){
+    if(hasBeaten.lvl1 === true){
+        room0=[[1,1,1,1,1,1,1,1,1,1],
+               [1,0,1,2,1,1,3,1,0,1],
+               [1,0,0,0,0,0,0,0,0,1],
+               [1,0,0,0,0,0,0,0,0,1],
+               [1,0,0,0,0,0,0,0,0,1],
+               [1,0,0,0,0,0,0,0,0,1],
+               [1,0,0,0,0,0,0,0,0,1],
+               [1,0,1,1,1,1,1,1,0,1],
+               [1,0,1,4,1,1,5,1,0,1],
+               [1,1,1,1,1,1,1,1,1,1]
+               ];
+    }
+    if(hasBeaten.lvl2 === true){
+        room0=[[1,1,1,1,1,1,1,1,1,1],
+               [1,0,1,2,1,1,3,1,0,1],
+               [1,0,0,0,0,0,0,0,0,1],
+               [1,0,0,0,0,0,0,0,0,1],
+               [1,0,0,0,0,0,0,0,0,1],
+               [1,0,0,0,0,0,0,0,0,1],
+               [1,0,0,0,0,0,0,0,0,1],
+               [1,0,0,0,0,1,1,1,0,1],
+               [1,0,1,4,1,1,5,1,0,1],
+               [1,1,1,1,1,1,1,1,1,1]
+               ];
+    }
+    if(hasBeaten.lvl3 === true || openLvls === true){
+        room0=[[1,1,1,1,1,1,1,1,1,1],
+               [1,0,1,2,1,1,3,1,0,1],
+               [1,0,0,0,0,0,0,0,0,1],
+               [1,0,0,0,0,0,0,0,0,1],
+               [1,0,0,0,0,0,0,0,0,1],
+               [1,0,0,0,0,0,0,0,0,1],
+               [1,0,0,0,0,0,0,0,0,1],
+               [1,0,0,0,0,0,0,0,0,1],
+               [1,0,1,4,1,1,5,1,0,1],
+               [1,1,1,1,1,1,1,1,1,1]
+               ];
+    }
+};
+        
+        
+
+var win = false;
+var drawPlayer = function(){
+    rect(width/2, height/2, 20, 20);
+};
+
+var reset = function(){
+    if(mapNum === 0){
+        player.sX = -50;
+        player.sY = 0;
+
+    }else{
+        if(mapNum === 4){
+            player.sY = 800;        
+            player.sX = -100;
+        }else{
+            player.sY = 700;        
+            player.sX = -100;
+        }
+    }
+};
+var loadMap = function(map){
+    if(map === 1){
+        mapNum = 1;
+    }
+    if(map === 2){
+        mapNum = 2;
+    }
+    if(map === 3){
+        mapNum = 3;
+    }
+    if(map === 4){
+        mapNum = 4;
+    }
+};
+var stopTime = false;
+var collision = function(x, y, type){
+    if(width/2 < x+mapSize && width/2+20 > x && height/2+20 > y && height/2 < y+mapSize){
+        if(type === -1){
+            loadMap(1);
+            reset();
+        }
+        if(type === -2){
+            loadMap(2);
+            reset();
+        }
+        if(type === -3){
+            loadMap(3);
+            reset();
+        }
+        if(type === -4){
+            loadMap(4);
+            reset();
+        }
+        if (type === 0){
+            trap = false;
+        }
+        if(type === 1){
+            player.touching = true;
+            reset();
+        }
+        if(type === 2){
+            player.touching = true;
+            textSize(90);
+            fill(0, 0, 0);
+            if(mapNum === 1){hasBeaten.lvl1 = true;}
+            if(mapNum === 2){hasBeaten.lvl2 = true;}
+            if(mapNum === 3){hasBeaten.lvl3 = true;}
+            if(mapNum === 4){hasBeaten.lvl4 = true; stopTime = true;}
+            win = true;
+
+            
+        }
+        if (type === 3){
+            trap = true;
+        }
+    }
+};//test for collisions
+                
+var i = 0;
+var j = 0;
+var flashBlock = 0;
+var flashCheck = function(){
+    i++;
+    if(i > 60){
+        flashBlock = 1;
+        j++;
+        if(j > 60){
+            i = 0;
+            j = 0;
+            flashBlock = 0;
+        }
+    }
+};
+var trap = false;
+
+
+noStroke();
+    var renderRoom0 = function(){
+        background(100, 150, 175);
+        player.touching = false;
+        for (var row = 0; row < room0.length; row++){
+            for (var col = 0; col < room0[row].length; col++){
+                var id = room0[row][col];
+                switch(id) {
+                    case 0:
+                        fill(75, 75, 75);
+                        collision(col*mapSize-player.sX,row*mapSize-player.sY, 0);
+                        //rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                        break;//empty space
+                    case 1:
+                        fill(255, 255, 255);
+                        rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                        collision(col*mapSize-player.sX, row*mapSize-player.sY, 1);
+                        break;//wall
+                    case 2:
+                        fill(0, 0, 0);
+                        rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                        collision(col*mapSize-player.sX, row*mapSize-player.sY, -1);
+                        break;//teleporter for room 1
+                    case 3:
+                        fill(0, 0, 0);
+                        rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                        collision(col*mapSize-player.sX, row*mapSize-player.sY, -2);
+                        break;//teleporter for room 2
+                    case 4:
+                        fill(0, 0, 0);
+                        rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                        collision(col*mapSize-player.sX, row*mapSize-player.sY, -3);
+                        break;//teleporter for room 3
+                    case 5:
+                        fill(0, 0, 0);
+                        rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                        collision(col*mapSize-player.sX, row*mapSize-player.sY, -4);
+                        break;//teleporter for room 4
+                }
+            }
+        }
+    };//render the starting room
+    var renderRoom1 = function(){
+        background(100, 150, 175);
+        player.touching = false;
+        for (var row = 0; row < room.length; row++){
+            for (var col = 0; col < room[row].length; col++){
+                var id = room[row][col];
+                switch(id) {
+                    case 0:
+                        fill(100, 150, 175);
+                        collision(col*mapSize-player.sX,row*mapSize-player.sY, 0);
+                        //rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                        break;//empty space
+                    case 1:
+                        fill(100,100, 100);
+                        rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                        collision(col*mapSize-player.sX, row*mapSize-player.sY, 1);
+                        break;//wall
+                    case 2:
+                        fill(255, 255, 0);
+                        rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                        collision(col*mapSize-player.sX, row*mapSize-player.sY, 2);
+                        break;//winning block
+                    case 3:
+                        if(flashBlock === 1){
+                            fill(100,100, 100);
+                            rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                            collision(col*mapSize-player.sX, row*mapSize-player.sY, 1);
+                        }
+                        if(flashBlock === 0){
+                            fill(100, 150, 175);
+                            rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                        }
+                        break;//flashing block
+                    case 4:
+                        fill(98, 141, 163);
+                        rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                        collision(col*mapSize-player.sX, row*mapSize-player.sY, 1);
+                        break;//trick block
+                    case 5:
+                        fill(100, 150, 175);
+                        rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                        collision(col*mapSize-player.sX, row*mapSize-player.sY, 3);
+                        break;//check for false block
+                    case 6:
+                        if(trap === true){
+                            fill(100,100, 100);
+                            rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                            collision(col*mapSize-player.sX, row*mapSize-player.sY, 1);
+                        }
+                        if(trap === false){
+                            fill(100, 150, 175);
+                            collision(col*mapSize-player.sX, row*mapSize-player.sY, 0);
+                            rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                        }
+                        break;
+                }
+            }
+        }
+    };//render map 1
+    var renderRoom2 = function(){
+        background(100, 150, 175);
+        player.touching = false;
+        for (var row = 0; row < room2.length; row++){
+            for (var col = 0; col < room2[row].length; col++){
+                var id = room2[row][col];
+                switch(id) {
+                    case 0:
+                        fill(100, 150, 175);
+                        collision(col*mapSize-player.sX,row*mapSize-player.sY, 0);
+                        //rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                        break;//empty space
+                    case 1:
+                        fill(100,100, 100);
+                        rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                        collision(col*mapSize-player.sX, row*mapSize-player.sY, 1);
+                        break;//wall
+                    case 2:
+                        fill(255, 255, 0);
+                        rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                        collision(col*mapSize-player.sX, row*mapSize-player.sY, 2);
+                        break;//winning block
+                    case 3:
+                        if(flashBlock === 1){
+                            fill(100,100, 100);
+                            rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                            collision(col*mapSize-player.sX, row*mapSize-player.sY, 1);
+                        }
+                        if(flashBlock === 0){
+                            fill(100, 150, 175);
+                            rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                        }
+                        break;//flashing block
+                    case 4:
+                        fill(98, 141, 163);
+                        rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                        collision(col*mapSize-player.sX, row*mapSize-player.sY, 1);
+                        break;//trick block
+                    case 5:
+                        fill(100, 150, 175);
+                        rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                        collision(col*mapSize-player.sX, row*mapSize-player.sY, 3);
+                        break;//check for false block
+                    case 6:
+                        if(trap === true){
+                            fill(100,100, 100);
+                            rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                            collision(col*mapSize-player.sX, row*mapSize-player.sY, 1);
+                        }
+                        if(trap === false){
+                            fill(100, 150, 175);
+                            collision(col*mapSize-player.sX, row*mapSize-player.sY, 0);
+                            rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                        }
+                        break;
+                }
+            }
+        }
+    };//render map 2
+    var renderRoom3 = function(){
+        background(100, 150, 175);
+        player.touching = false;
+        for (var row = 0; row < room3.length; row++){
+            for (var col = 0; col < room3[row].length; col++){
+                var id = room3[row][col];
+                switch(id) {
+                    case 0:
+                        fill(100, 150, 175);
+                        collision(col*mapSize-player.sX,row*mapSize-player.sY, 0);
+                        //rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                        break;//empty space
+                    case 1:
+                        fill(100,100, 100);
+                        rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                        collision(col*mapSize-player.sX, row*mapSize-player.sY, 1);
+                        break;//wall
+                    case 2:
+                        fill(255, 255, 0);
+                        rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                        collision(col*mapSize-player.sX, row*mapSize-player.sY, 2);
+                        break;//winning block
+                    case 3:
+                        if(flashBlock === 1){
+                            fill(100,100, 100);
+                            rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                            collision(col*mapSize-player.sX, row*mapSize-player.sY, 1);
+                        }
+                        if(flashBlock === 0){
+                            fill(100, 150, 175);
+                            rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                        }
+                        break;//flashing block
+                    case 4:
+                        fill(98, 141, 163);
+                        rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                        collision(col*mapSize-player.sX, row*mapSize-player.sY, 1);
+                        break;//trick block
+                    case 5:
+                        fill(100, 150, 175);
+                        rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                        collision(col*mapSize-player.sX, row*mapSize-player.sY, 3);
+                        break;//check for false block
+                    case 6:
+                        if(trap === true){
+                            fill(100,100, 100);
+                            rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                            collision(col*mapSize-player.sX, row*mapSize-player.sY, 1);
+                        }
+                        if(trap === false){
+                            fill(100, 150, 175);
+                            collision(col*mapSize-player.sX, row*mapSize-player.sY, 0);
+                            rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                        }
+                        break;
+                }
+            }
+        }
+    };//render map 3
+    var renderRoom4 = function(){
+        background(100, 150, 175);
+        player.touching = false;
+        for (var row = 0; row < room4.length; row++){
+            for (var col = 0; col < room4[row].length; col++){
+                var id = room4[row][col];
+                switch(id) {
+                    case 0:
+                        fill(100, 150, 175);
+                        collision(col*mapSize-player.sX,row*mapSize-player.sY, 0);
+                        //rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                        break;//empty space
+                    case 1:
+                        fill(100,100, 100);
+                        rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                        collision(col*mapSize-player.sX, row*mapSize-player.sY, 1);
+                        break;//wall
+                    case 2:
+                        fill(255, 255, 0);
+                        rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                        collision(col*mapSize-player.sX, row*mapSize-player.sY, 2);
+                        break;//winning block
+                    case 3:
+                        if(flashBlock === 1){
+                            fill(100,100, 100);
+                            rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                            collision(col*mapSize-player.sX, row*mapSize-player.sY, 1);
+                        }
+                        if(flashBlock === 0){
+                            fill(100, 150, 175);
+                            rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                        }
+                        break;//flashing block
+                    case 4:
+                        fill(98, 141, 163);
+                        rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                        collision(col*mapSize-player.sX, row*mapSize-player.sY, 1);
+                        break;//trick block
+                    case 5:
+                        fill(100, 150, 175);
+                        rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                        collision(col*mapSize-player.sX, row*mapSize-player.sY, 3);
+                        break;//check for false block
+                    case 6:
+                        if(trap === true){
+                            fill(100,100, 100);
+                            rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                            collision(col*mapSize-player.sX, row*mapSize-player.sY, 1);
+                        }
+                        if(trap === false){
+                            fill(100, 150, 175);
+                            collision(col*mapSize-player.sX, row*mapSize-player.sY, 0);
+                            rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                        }
+                        break;
+                    case 7:
+                        fill(100,100, 100);
+                        rect(col*mapSize-player.sX,row*mapSize-player.sY,mapSize,mapSize);
+                        collision(col*mapSize-player.sX, row*mapSize-player.sY, 0);
+                        break;
+                }
+            }
+        }
+    };//render map 3
+var time = millis();
+var move = function(){
+    if(keys[DOWN]){player.sY+=2;}
+    if(keys[UP]){player.sY-=2;}
+    if(keys[LEFT]){player.sX-=2;}
+    if(keys[RIGHT]){player.sX+=2;}
+};
+var deBug = false;
+reset();
+player.touching = true;
+var winCount = 0;
+reset();
+var speedRun = false;
+        
+        
+        
+/*var sandBoxMode = function(){
+    if(mapNum === 0){
+        fill(255, 200, 50);
+        rect(0, 175, 135, 50);
+        if(speedRun = true){
+            fill(0, 0, 0);
+        }else{
+            fill(255, 255, 255);
+        }
+        rect(50, 200, 20, 20);
+        textSize(15);
+        stroke(0, 0, 0);
+        text("SPEEDRUN MODE", 0, 200);
+            if(keys[s]){
+                if(speedRun === true){
+                    speedRun = false;
+                }else{
+                    speedRun = true;
+                }
+            }
+    }
+    
+    
+};*/
+        
+        
+        
+        
+
+draw = function() {
+    noStroke();
+    flashCheck();
+    updateMap();
+    fill(255,0,0);
+    if(mapNum === 0){renderRoom0();}
+    if(mapNum === 1){renderRoom1();}
+    if(mapNum === 2){renderRoom2();}
+    if(mapNum === 3){renderRoom3();}
+    if(mapNum === 4){renderRoom4();}
+    move();
+    drawPlayer();
+    if(deBug === true){
+        fill(255, 0, 0);
+        textSize(12);
+        text(player.sX + ", " + player.sY + ", " + player.touching, width-90, height-10);
+    }
+    fill(0, 0, 0);
+    if(win === true){
+        textSize(width/4.4);
+        text("YOU WIN", 0, height/2);
+        winCount++;
+        if(winCount > 300){
+            mapNum = 0;
+            reset();
+            win = false;
+            winCount = 0;
+        }
+    }          
+    fill(255, 0, 0);
+    textSize(20);  
+    text(time/1000, 0, 20);
+
+    if(stopTime === false){    
+        time = millis();
+    }
+};
+
+
+
+
+    }};
+
+  // Get the canvas that ProcessingJS will use
+  var canvas = document.getElementById("mycanvas"); 
+  // Pass the function to ProcessingJS constructor
+  var processingInstance = new Processing(canvas, programCode); 
+  </script>
+</html>
