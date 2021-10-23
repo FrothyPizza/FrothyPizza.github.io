@@ -1,18 +1,4 @@
 
-/*
-    ****Hal's Tower (game) Improved Engine****
-    
-    Any line explaining how to add a new kind of block is marked with //////////////////////////////////////////
-    at the end
-    
-    To add a checkpoint, you don't have to touch any code other than the map
-        - just put a C where you want the checkpoint, it will automatically figure out the spawn position
-    
-    S is where the game starts, the player spawn coords are automatically set to where this is at the beginning of the game
-    
-    
-    
-*/
 
 var keys = [];
 
@@ -39,8 +25,6 @@ String.prototype.replaceAt = function(index, replacement) {
 
 var canvas = document.getElementById('canvas');
 
-// you can change the canvas width and height if you please ///////////////////////////////////////////////////////////////////////////
-// it will not break the game 
 canvas.width = 600;
 canvas.height = 600;
 var fullScreen = true;
@@ -65,10 +49,7 @@ const BLOCK_SIZE = 40;
 const COLLISION_MARGIN = 7;
 
 
-// Add a new name to this list for a new block type with a character ///////////////////////////////////////////////////////////////////////////
-// i.e.
-// exampleBlock: 'E'
-// call BLOCKS.example to access which character it is
+
 var BLOCKS = {
     ground: 'B',
     invisibleGround: 'I',
@@ -87,14 +68,8 @@ var BLOCKS = {
 var flashingBlockTimer = 0;
 var FRAMES_PER_FLASH = 60;
 
-// map converter is here /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// map converter is here 
 // https://replit.com/@HaroldSeamans/Hals-Tower-Map-Format-Converter#Main.java
-// you need to fork the code and change the input file to whatever map you want to convert
-//     - you might need to make a repl.it account to do this
-// you WILL need to do slightly more editing of the map to make it work
-//     - make sure the entire thing is wrapped in []
-//     - make sure you have var map = before the opening [
-//     - end the entire thing with a single semicolon
 var map =  [
             "BBBB.................",
             "B..B.................",
@@ -368,10 +343,7 @@ var map =  [
             "BRRRRRRRRBBBRRRRRRRRB",];
 
 
-// you can mess with these /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// i'd reccomend adding a new variable to this list whenever you have a new value
-// i.e.
-// bounceHeight: -4.5,
+
 const playerConstants = {
     grav: 0.1,
     jumpHeight: -4.6,
@@ -446,7 +418,6 @@ function completlyRestart() {
 
 // collisionProtrusion is how far out of the block the hitbox protrudes
 // boxWidth is how much shorter the hitbox should be
-// don't touch this code
 function collidingWithLeftOfBlock(blockX, blockY, collisionProtrusion=0, boxWidth=0) {
     return player.x + playerConstants.width > blockX - collisionProtrusion && player.x + playerConstants.width < blockX + COLLISION_MARGIN &&
            player.y + playerConstants.height > blockY + boxWidth && player.y < blockY + BLOCK_SIZE - boxWidth;
@@ -499,8 +470,6 @@ function renderMapAndHandleCollisions(){
             
             fill(100, 100, 100);
             switch(map[y][x]){
-                // add a new case to this if you want to change the color of rendering for the new block ///////////////////////////////////////////////////////////
-                // just follow the same format
                 case BLOCKS.ground:
                     fill(100, 100, 100);
                     break;
@@ -532,8 +501,6 @@ function renderMapAndHandleCollisions(){
                     break;
             }
 
-            // Add the new block type here if you want to render it /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            // must have || (which means "or") before the next block added
             if(map[y][x] == BLOCKS.ground || 
                map[y][x] == BLOCKS.red || 
                map[y][x] == BLOCKS.checkpoint || 
@@ -557,7 +524,6 @@ function renderMapAndHandleCollisions(){
 
             
             // Handle collisions here /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            // map[y][x] is used to find which block is currently being checked for
 
 
             if(map[y][x] == BLOCKS.checkpoint) {
