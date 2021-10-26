@@ -530,6 +530,9 @@ function renderMapAndHandleCollisions(){
                 if(collidingWithBlock(blockX, blockY)) {
                     player.spawnX = blockX + BLOCK_SIZE/2 - playerConstants.width/2;
                     player.spawnY = blockY + BLOCK_SIZE - playerConstants.height;
+                    
+                    localStorage.setItem('spawnX', player.spawnX.toString());
+                    localStorage.setItem('spawnY', player.spawnY.toString());
                 }
             }
             
@@ -654,8 +657,17 @@ function secondsElapsed() {
 
 var devtools = false;
 
+if(localStorage.getItem('spawnX')) {
+    player.spawnX = parseFloat(localStorage.getItem('spawnX'));
+    player.spawnY = parseFloat(localStorage.getItem('spawnY'));
+    
+    //alert(parseFloat(localStorage.getItem('spawnX')));
+} else {
+	completlyRestart();
+}
+resetPlayer();
 
-completlyRestart();
+//completlyRestart();
 window.setInterval(() => {
 
     if(fullScreen) {
