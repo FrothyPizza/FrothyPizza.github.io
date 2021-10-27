@@ -666,7 +666,7 @@ if(localStorage.getItem('spawnX')) {
     player.spawnX = parseFloat(localStorage.getItem('spawnX'));
     player.spawnY = parseFloat(localStorage.getItem('spawnY'));
 	
-    if(localStorage.getItem('deaths)) {
+    if(localStorage.getItem('deaths')) {
 	player.deaths = parseFloat(localStorage.getItem('deaths'));
 	savedTime = parseFloat(localStorage.getItem('time'));
     }
