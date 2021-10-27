@@ -339,7 +339,7 @@ var map =  [
             "R...................B",
             "BB..................B",
             "B....B..............B",
-            "B.........S.........B",
+            "B........CS.........B",
             "BRRRRRRRRBBBRRRRRRRRB",];
 
 
@@ -695,7 +695,9 @@ window.setInterval(() => {
     context.fillRect(0, 0, canvas.width, canvas.height);
     
     
-
+    if(keys[82]) {
+	completlyRestart();    
+    }
     
     /*
     if(keys[38]) player.y -= 5;
