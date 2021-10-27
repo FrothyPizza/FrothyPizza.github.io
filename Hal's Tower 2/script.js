@@ -696,7 +696,10 @@ window.setInterval(() => {
     
     
     if(keys[82]) {
+
+	alert("The game is restarting. Reload to prevent the restart");
 	completlyRestart();    
+	resetPlayer();
     }
     
     /*
