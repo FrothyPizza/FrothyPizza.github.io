@@ -361,7 +361,8 @@ var player = {
     spawnX: 0,
     spawnY: 0,
     deaths: 0,
-    hasWon: false
+    hasWon: false,
+    savedTime: 0
 };
 
 
@@ -541,7 +542,9 @@ function renderMapAndHandleCollisions(){
                    collidingWithBottomOfBlock(blockX, blockY, 1) || 
                    collidingWithRightOfBlock(blockX, blockY, 1, 1) || 
                    collidingWithLeftOfBlock(blockX, blockY, 1, 1)) {
-                    resetPlayer();   
+                    resetPlayer(); 
+                    localStorage.setItem('deaths', player.deaths.toString());
+                    localStorage.setItem('time', player.savedTime.toString());
                 }
             }
 
@@ -644,6 +647,7 @@ function updateView(){
     
 }
 
+var savedTime = 0;
 var startDate = new Date();
 var startTime = startDate.getTime();
 function secondsElapsed() {
@@ -651,8 +655,9 @@ function secondsElapsed() {
     var time_now = date_now.getTime ();
     var time_diff = time_now - startTime;
     var seconds_elapsed = time_diff / 1000;
-
-    return seconds_elapsed; 
+	
+    player.savedTime = seconds_elapsed + savedTime;
+    return seconds_elapsed + savedTime; 
 }
 
 var devtools = false;
@@ -660,6 +665,11 @@ var devtools = false;
 if(localStorage.getItem('spawnX')) {
     player.spawnX = parseFloat(localStorage.getItem('spawnX'));
     player.spawnY = parseFloat(localStorage.getItem('spawnY'));
+	
+    if(localStorage.getItem('deaths)) {
+	player.deaths = parseFloat(localStorage.getItem('deaths'));
+	savedTime = parseFloat(localStorage.getItem('time'));
+    }
     
     //alert(parseFloat(localStorage.getItem('spawnX')));
 } else {
