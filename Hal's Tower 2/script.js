@@ -720,7 +720,7 @@ window.setInterval(() => {
     fill(255, 0, 0);
     context.font = "20px Arial";
     context.fillText("Deaths: " + player.deaths, 50, 50);
-    context.fillText("Time: " + secondsElapsed()toFixed(2), 50, 70);
+    context.fillText("Time: " + secondsElapsed().toFixed(2), 50, 70);
     
     
     if(player.hasWon) {
