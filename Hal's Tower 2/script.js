@@ -710,6 +710,11 @@ function handleCollisions() {
                 if(collidingWithBlock(blockX, blockY)) {
                     player.spawnX = blockX + BLOCK_SIZE/2 - playerConstants.width/2;
                     player.spawnY = blockY + BLOCK_SIZE - playerConstants.height;
+
+                    localStorage.setItem('spawnX', player.spawnX.toString());
+                    localStorage.setItem('spawnY', player.spawnY.toString());
+                    localStorage.setItem('deaths', player.deaths.toString());
+                    localStorage.setItem('time', player.savedTime.toString());
                 }
             }
             
@@ -719,6 +724,8 @@ function handleCollisions() {
                    collidingWithRightOfBlock(blockX, blockY, 1, 1) || 
                    collidingWithLeftOfBlock(blockX, blockY, 1, 1)) {
                     resetPlayer(player); 
+                    localStorage.setItem('deaths', player.deaths.toString());
+                    localStorage.setItem('time', player.savedTime.toString());
                 }
             }
 
