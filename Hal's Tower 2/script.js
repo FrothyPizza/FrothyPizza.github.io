@@ -17,6 +17,7 @@ const RIGHT = 39;
 const LEFT = 37;
 const UP = 38;
 const DOWN = 40;
+const ESC = 27;
 
 String.prototype.replaceAt = function(index, replacement) {
     return this.substr(0, index) + replacement + this.substr(index + replacement.length);
@@ -339,7 +340,7 @@ var map =  [
             "R...................B",
             "BB..................B",
             "B....B..............B",
-            "B........CS.........B",
+            "B.........S.........B",
             "BRRRRRRRRBBBRRRRRRRRB",];
 
 
@@ -409,6 +410,8 @@ function completlyRestart() {
     player.y = player.spawnY;
     
     player.hasWon = false;
+
+
 } 
 
 
@@ -446,7 +449,177 @@ function collidingWithBlock(blockX, blockY, collisionProtrusion=0) {
 
 
            
-function renderMapAndHandleCollisions(){
+// function renderMapAndHandleCollisions(){
+//     ++flashingBlockTimer;
+//     for(var y = 0; y < map.length; ++y) {
+//         for(var x = 0; x < map[y].length; ++x) {
+            
+//             if(flashingBlockTimer % FRAMES_PER_FLASH == 0) {
+                
+//                 if(map[y][x] == BLOCKS.flashing)
+//                     map[y] = map[y].replaceAt(x, BLOCKS.flashingOff);
+//                 else if(map[y][x] == BLOCKS.flashingOff)
+//                     map[y] = map[y].replaceAt(x, BLOCKS.flashing);
+//                 flashingBlockTimer = 0;
+//             }
+            
+
+//             let blockX = x * BLOCK_SIZE;
+//             let blockY = y * BLOCK_SIZE;         
+            
+//             if(blockX - view.x > canvas.width) continue;
+//             if(blockX - view.x < 0 - BLOCK_SIZE) continue;
+//             if(blockY - view.y > canvas.height) continue;
+//             if(blockY - view.y < 0 - BLOCK_SIZE) continue;
+            
+//             fill(100, 100, 100);
+//             switch(map[y][x]){
+//                 case BLOCKS.ground:
+//                     fill(100, 100, 100);
+//                     break;
+//                 case BLOCKS.disappearing:
+//                     fill(80, 80, 80);
+//                     break;
+//                 case BLOCKS.win:
+//                     fill(57, 255, 20);
+//                     break;
+//                 case BLOCKS.notThere:
+//                     fill(120, 120, 120);
+//                     break;
+//                 case BLOCKS.flashing:
+//                     fill(120, 120, 120);
+//                     break;
+//                 case BLOCKS.flashingOff:
+//                     fill(175, 167, 205);
+//                     break;
+//                 case BLOCKS.red:
+//                     fill(255, 0, 0);
+//                     break;
+//                 case BLOCKS.checkpoint:
+//                     fill(255, 255, 0);
+//                     break;
+//                 case BLOCKS.bounce:
+//                     fill(255, 0, 255);
+//                     break;
+//                 default:
+//                     break;
+//             }
+
+//             if(map[y][x] == BLOCKS.ground || 
+//                map[y][x] == BLOCKS.red || 
+//                map[y][x] == BLOCKS.checkpoint || 
+//                map[y][x] == BLOCKS.bounce ||
+//                map[y][x] == BLOCKS.flashing ||
+//                map[y][x] == BLOCKS.flashingOff ||
+//                map[y][x] == BLOCKS.disappearing ||
+//                map[y][x] == BLOCKS.notThere ||
+//                map[y][x] == BLOCKS.win) {
+                
+//                 rect(blockX, blockY, BLOCK_SIZE+1, BLOCK_SIZE+1);   
+//             }
+            
+//             if(map[y][x] == BLOCKS.win) {
+//                 if(collidingWithBlock(blockX, blockY)) {
+//                     player.hasWon = true;   
+//                     player.x = BLOCK_SIZE * 1.5;
+//                     player.y = BLOCK_SIZE * 1.5;
+//                 }
+//             }
+
+            
+//             // Handle collisions here /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+//             if(map[y][x] == BLOCKS.checkpoint) {
+//                 if(collidingWithBlock(blockX, blockY)) {
+//                     player.spawnX = blockX + BLOCK_SIZE/2 - playerConstants.width/2;
+//                     player.spawnY = blockY + BLOCK_SIZE - playerConstants.height;
+                    
+//                     localStorage.setItem('spawnX', player.spawnX.toString());
+//                     localStorage.setItem('spawnY', player.spawnY.toString());
+//                     localStorage.setItem('deaths', player.deaths.toString());
+//                     localStorage.setItem('time', player.savedTime.toString());
+//                 }
+//             }
+            
+//             if(map[y][x] == BLOCKS.red) {
+//                 if(collidingWithTopOfBlock(blockX, blockY, 1) || 
+//                    collidingWithBottomOfBlock(blockX, blockY, 1) || 
+//                    collidingWithRightOfBlock(blockX, blockY, 1, 1) || 
+//                    collidingWithLeftOfBlock(blockX, blockY, 1, 1)) {
+//                     resetPlayer(); 
+//                     localStorage.setItem('deaths', player.deaths.toString());
+//                     localStorage.setItem('time', player.savedTime.toString());
+//                 }
+//             }
+
+//             if(map[y][x] == BLOCKS.bounce) {
+//                 if(collidingWithTopOfBlock(blockX, blockY, 0, 0)) {
+//                     player.yVel = playerConstants.bounceHeight;
+//                     player.y = blockY-playerConstants.height;
+//                 }
+//                 if(collidingWithBottomOfBlock(blockX, blockY, -1, 2)){
+//                     player.y = blockY+BLOCK_SIZE;
+//                     player.yVel = -playerConstants.bounceHeight;
+//                 }
+//                 if(collidingWithLeftOfBlock(blockX, blockY, 0, 2)) {
+//                     player.xVel = -playerConstants.horizontalBounce;
+//                     player.x = blockX-playerConstants.width;
+//                 }
+//                 if(collidingWithRightOfBlock(blockX, blockY, 0, 2)) {
+//                     player.xVel = playerConstants.horizontalBounce;
+//                     player.x = blockX+BLOCK_SIZE;
+//                 }
+
+
+//             }
+            
+//             // This is the main block collision checks /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//             // If you want there to be a block that acts the same as a normal block with some changed functionality,
+//             // i.e. a block that only bounces you to the left if you're colliding with the left,
+//             // then you can use any of these cases with the new block
+//             // make sure you copy all of this code
+//             if(map[y][x] == BLOCKS.ground || map[y][x] == BLOCKS.invisibleGround || map[y][x] == BLOCKS.flashing || map[y][x] == BLOCKS.disappearing) {
+//                 if(collidingWithTopOfBlock(blockX, blockY, 0, 2)) {
+//                     // if moving up, then don't allow for a jump
+//                     var shouldntJump = false;
+//                     if(player.yVel < 0) shouldntJump = true;
+                    
+//                     player.yVel = 0;
+//                     player.y = blockY-playerConstants.height;
+//                     //player.grav = 0;
+//                     if(keys[UP] && !shouldntJump) {
+//                         player.yVel = playerConstants.jumpHeight;
+//                         if(map[y][x] == BLOCKS.disappearing) {
+//                             map[y] = map[y].replaceAt(x, BLOCKS.hasDisappeared);    
+//                         }
+                        
+//                     }
+                    
+
+
+//                 }
+//                 if(collidingWithBottomOfBlock(blockX, blockY, 0, 2)){
+//                     player.y = blockY+BLOCK_SIZE;
+//                     player.yVel = 0;
+//                 }
+//                 if(collidingWithLeftOfBlock(blockX, blockY, 0, 2)) {
+//                     player.xVel = 0;
+//                     player.x = blockX-playerConstants.width;
+//                 }
+//                 if(collidingWithRightOfBlock(blockX, blockY, 0, 2)) {
+//                     player.xVel = 0;
+//                     player.x = blockX+BLOCK_SIZE;
+//                 }
+
+
+//             }
+            
+            
+//         }
+//     }
+// }
+function updateAndRenderMap() {
     ++flashingBlockTimer;
     for(var y = 0; y < map.length; ++y) {
         for(var x = 0; x < map[y].length; ++x) {
@@ -514,6 +687,16 @@ function renderMapAndHandleCollisions(){
                 
                 rect(blockX, blockY, BLOCK_SIZE+1, BLOCK_SIZE+1);   
             }
+        }
+    }
+}
+
+           
+function handleCollisions() {
+    for(var y = 0; y < map.length; ++y) {
+        for(var x = 0; x < map[y].length; ++x) {
+            let blockX = x * BLOCK_SIZE;
+            let blockY = y * BLOCK_SIZE;
             
             if(map[y][x] == BLOCKS.win) {
                 if(collidingWithBlock(blockX, blockY)) {
@@ -523,17 +706,10 @@ function renderMapAndHandleCollisions(){
                 }
             }
 
-            
-            // Handle collisions here /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
             if(map[y][x] == BLOCKS.checkpoint) {
                 if(collidingWithBlock(blockX, blockY)) {
                     player.spawnX = blockX + BLOCK_SIZE/2 - playerConstants.width/2;
                     player.spawnY = blockY + BLOCK_SIZE - playerConstants.height;
-                    
-                    localStorage.setItem('spawnX', player.spawnX.toString());
-                    localStorage.setItem('spawnY', player.spawnY.toString());
                 }
             }
             
@@ -542,9 +718,7 @@ function renderMapAndHandleCollisions(){
                    collidingWithBottomOfBlock(blockX, blockY, 1) || 
                    collidingWithRightOfBlock(blockX, blockY, 1, 1) || 
                    collidingWithLeftOfBlock(blockX, blockY, 1, 1)) {
-                    resetPlayer(); 
-                    localStorage.setItem('deaths', player.deaths.toString());
-                    localStorage.setItem('time', player.savedTime.toString());
+                    resetPlayer(player); 
                 }
             }
 
@@ -568,22 +742,13 @@ function renderMapAndHandleCollisions(){
 
 
             }
-            
-            // This is the main block collision checks /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            // If you want there to be a block that acts the same as a normal block with some changed functionality,
-            // i.e. a block that only bounces you to the left if you're colliding with the left,
-            // then you can use any of these cases with the new block
-            // make sure you copy all of this code
+
             if(map[y][x] == BLOCKS.ground || map[y][x] == BLOCKS.invisibleGround || map[y][x] == BLOCKS.flashing || map[y][x] == BLOCKS.disappearing) {
                 if(collidingWithTopOfBlock(blockX, blockY, 0, 2)) {
-                    // if moving up, then don't allow for a jump
-                    var shouldntJump = false;
-                    if(player.yVel < 0) shouldntJump = true;
                     
                     player.yVel = 0;
                     player.y = blockY-playerConstants.height;
-                    //player.grav = 0;
-                    if(keys[UP] && !shouldntJump) {
+                    if(keys[UP]) {
                         player.yVel = playerConstants.jumpHeight;
                         if(map[y][x] == BLOCKS.disappearing) {
                             map[y] = map[y].replaceAt(x, BLOCKS.hasDisappeared);    
@@ -638,18 +803,34 @@ function renderPlayer() {
 
 }
 
+function lerp(a, b, t) {
+    return a + (b-a) * t;
+}
+function constrain(a, b, c) {
+    if(a < b) return b;
+    if(a > c) return c;
+    return a;
+}
 
-
+// Make the view smoothly follow the player
 function updateView(){
+
+    width = canvas.width;
+    height = canvas.height;
+
+    viewSmoothness = 0.1;
+    view.x = lerp(view.x, player.x - width/2, viewSmoothness);
+    view.y = lerp(view.y, player.y - height/2, viewSmoothness);
     
-    view.x = player.x - canvas.width/2 - playerConstants.width/2;
-    view.y = player.y - canvas.height/2 - playerConstants.height/2;
-    
+    view.y = constrain(view.y, 0, map.length * BLOCK_SIZE - height);
+    // view.x = player.x - canvas.width/2 - playerConstants.width/2;
+    // view.y = player.y - canvas.height/2 - playerConstants.height/2;
 }
 
 var savedTime = 0;
 var startDate = new Date();
 var startTime = startDate.getTime();
+var pauseTime = 0;
 function secondsElapsed() {
     var date_now = new Date ();
     var time_now = date_now.getTime ();
@@ -657,6 +838,8 @@ function secondsElapsed() {
     var seconds_elapsed = time_diff / 1000;
 	
     player.savedTime = seconds_elapsed + savedTime;
+
+    if(paused) return pauseTime;
     return seconds_elapsed + savedTime; 
 }
 
@@ -677,50 +860,120 @@ if(localStorage.getItem('spawnX')) {
 }
 resetPlayer();
 
-//completlyRestart();
-window.setInterval(() => {
 
+var resumeButton = document.getElementById('resume');
+var restartButton = document.getElementById('restart');
+var creditsButton = document.getElementById('credits');
+
+restartButton.onclick = function() {
+    if(confirm("Would you really like to restart? This will erase your progress.")) {
+        completlyRestart();
+        pause();
+    }
+}
+
+resumeButton.onclick = function() {
+    pause();
+}
+
+creditsButton.onclick = function() {
+    if(creditsContents.style.display == 'none') {
+        creditsContents.style.display = "block";
+    } else {
+        creditsContents.style.display = "none";
+    }
+
+}
+
+
+// Make it so that when escape is pressed, the game pauses and displays the pause menu
+// The buttons are resume, restart, and credits
+// When the resume button is pressed, the game resumes
+// When the restart button is pressed, the game restarts
+// When the credits button is pressed, the game displays the credits
+// The credits are displayed in the pause menu
+var paused = false;
+function pause() {
+    if(!paused) {
+        savedTime = secondsElapsed();
+        startTime = new Date().getTime();
+        pauseTime = savedTime;
+        creditsContents.style.display = "none";
+
+
+        document.getElementById('pauseMenu').style.visibility = 'visible';
+        paused = true;
+
+    } else {
+        document.getElementById('pauseMenu').style.visibility = 'hidden';
+
+        paused = false;
+        startTime = new Date().getTime();
+    }
+}
+
+view.x = player.x - canvas.width/2 - playerConstants.width/2;
+view.y = player.y - canvas.height/2 - playerConstants.height/2;
+window.setInterval(() => {
+    
     if(fullScreen) {
         canvas.width = document.documentElement.clientWidth;
         canvas.height = document.documentElement.clientHeight;
     }
-    
-    if(devtools && keys[32]){
-        player.spawnX = player.x;
-        player.spawnY = player.y;
+
+    if(keys[ESC]) {
+        pause();
+        keys[ESC] = false;
     }
+
 
     fill(171, 163, 201);
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.fillRect(0, 0, canvas.width, canvas.height);
     
-    
-    if(keys[82]) {
-	alert("The game is restarting. Reload the page to prevent the restart");
-	completlyRestart();    
-	resetPlayer();
-	keys[82] = false;
+    if(!paused) {
+        // if escape is pressed, pause the game
+
+
+        if(devtools && keys[32]){
+            player.spawnX = player.x;
+            player.spawnY = player.y;
+        }
+
+
+        
+        // if(keys[82]) {
+        //     alert("The game is restarting. Reload the page to prevent the restart");
+        //     completlyRestart();    
+        //     resetPlayer();
+        //     keys[82] = false;
+        // }
+        
+        /*
+        if(keys[38]) player.y -= 5;
+        if(keys[40]) player.y += 5;
+        if(keys[37]) player.x -= 5;
+        if(keys[39]) player.x += 5;
+        */
+        
+        //if(keys[40]) player.y += 5;
+        
+
+
+        if(keys[RIGHT]) player.xVel += 0.3;
+        if(keys[LEFT]) player.xVel -= 0.3;
+
+
     }
-    
-    /*
-    if(keys[38]) player.y -= 5;
-    if(keys[40]) player.y += 5;
-    if(keys[37]) player.x -= 5;
-    if(keys[39]) player.x += 5;
-    */
-    
-    //if(keys[40]) player.y += 5;
-    
-
-
-    updatePlayerPhysics();
-    if(keys[RIGHT]) player.xVel += 0.3;
-    if(keys[LEFT]) player.xVel -= 0.3;
-
-    renderMapAndHandleCollisions(0, 0);
-    updateView();
+    updateAndRenderMap();
 
     renderPlayer();
+    handleCollisions();
+    updatePlayerPhysics();
+
+
+    updateView();
+
     
     fill(255, 0, 0);
     context.font = "20px Arial";
@@ -733,9 +986,6 @@ window.setInterval(() => {
         context.font = "200px Arial";
         context.fillText("YOU WIN", 100, 200);
     }
-
-
-
 }, 1000/60);
 
 
