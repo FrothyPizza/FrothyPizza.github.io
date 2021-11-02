@@ -619,8 +619,7 @@ function collidingWithBlock(blockX, blockY, collisionProtrusion=0) {
 //         }
 //     }
 // }
-function updateAndRenderMap() {
-    ++flashingBlockTimer;
+function renderMap() {
     for(var y = 0; y < map.length; ++y) {
         for(var x = 0; x < map[y].length; ++x) {
             
@@ -693,6 +692,8 @@ function updateAndRenderMap() {
 
            
 function handleCollisions() {
+    ++flashingBlockTimer;
+
     for(var y = 0; y < map.length; ++y) {
         for(var x = 0; x < map[y].length; ++x) {
             let blockX = x * BLOCK_SIZE;
@@ -938,9 +939,15 @@ window.setInterval(() => {
     context.clearRect(0, 0, canvas.width, canvas.height);
     context.fillRect(0, 0, canvas.width, canvas.height);
     
-    if(!paused) {
-        // if escape is pressed, pause the game
 
+    renderMap();
+
+    renderPlayer();
+
+
+    if(!paused) {
+        handleCollisions();
+        updatePlayerPhysics();
 
         if(devtools && keys[32]){
             player.spawnX = player.x;
@@ -970,16 +977,13 @@ window.setInterval(() => {
         if(keys[RIGHT]) player.xVel += 0.3;
         if(keys[LEFT]) player.xVel -= 0.3;
 
+        updateView();
 
     }
-    updateAndRenderMap();
-
-    renderPlayer();
-    handleCollisions();
-    updatePlayerPhysics();
 
 
-    updateView();
+
+
 
     
     fill(255, 0, 0);
