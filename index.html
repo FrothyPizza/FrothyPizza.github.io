@@ -17,6 +17,14 @@
             <p>The improved camera now smoothly follows the player.</p>
             <p>Minor bug fixes.</p>
             <p>Music will be added soon.</p>
+        <script>
+            function OpenInNewTab(url) {
+              var win = window.open(url, '_blank');
+              win.focus();
+              OpenInNewTab(url);
+            }
+        </script>
+        <button onclick="OpenInNewTab("https://google.com")">Click Me</button>
     </body>
 
 </html>
