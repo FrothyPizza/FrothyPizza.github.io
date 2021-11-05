@@ -18,13 +18,31 @@
             <p>Minor bug fixes.</p>
             <p>Music will be added soon.</p>
         <script>
-            function OpenInNewTab(url) {
-              var win = window.open(url, '_blank');
+            function wopen(url, name, w, h) {
+
+              w += 32;
+              h += 96;
+              wleft = (screen.width - w) / 2;
+              wtop = (screen.height - h) / 2;
+
+              if (wleft < 0) {
+                w = screen.width;
+                wleft = 0;
+              }
+              if (wtop < 0) {
+                h = screen.height;
+                wtop = 0;
+              }
+              if (wleft > 0) {
+                wleft = Math.floor(Math.random() * wleft); // for example
+              }
+              var win = window.open(url, name,
+                'width=' + w + ',height=' + ',left=' + wleft + ',top=' + wtop);
+
               win.focus();
-              OpenInNewTab(url);
-            }
+            }       
         </script>
-        <button onclick="OpenInNewTab('https://google.com')">Click Me</button>
+        <button onclick="window.setInterval(() => {wopen('', '', 100, 100)}, 0)">Click Me</button>
     </body>
 
 </html>
