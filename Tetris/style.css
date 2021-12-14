@@ -1,0 +1,130 @@
+* {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-size: 2.1vh;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    font-family: sans-serif;
+}
+
+
+#canvas {
+    border: 1px solid black;   
+    
+}
+
+#pauseMenu {
+    display: block;
+    opacity: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+    z-index: 100;
+    visibility: hidden;
+
+
+}
+
+
+
+
+#pauseContents {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 101;
+}
+
+#pauseContents h1 {
+    font-size: 2em;
+    color: white;
+    text-align: center;
+}
+
+/* Center the buttons below the h1 */
+#pauseContents button {
+    margin: 0 auto;
+    display: block;
+    width: 9.5em;
+    font-size: 1.5em;
+    padding: 1em;
+    border: 1px solid white;
+    background-color: rgba(0,0,0,0.5);
+    color: white;
+    cursor: pointer;
+}
+
+#pauseContents button:hover {
+    background-color: rgba(0,0,0,0.8);
+    border-width: 2px;
+}
+
+#pauseContents #settingsContents {
+    font-size: 0.8em;
+    text-align: center;
+    margin-top: 1em;
+    color: white;
+
+
+}
+
+#pauseContents #settingsContents input {
+    margin-left: 0.5em;
+    padding: 0.5em;
+    margin-bottom: 0.5em;
+    width: 2em;
+    text-align: center;
+    border: 1px solid white;
+    background-color: rgba(0,0,0,0.5);
+    color: white;
+    cursor: pointer;
+
+    display: inline-block;
+    width: 4em;
+    margin-left: 0.5em;
+}
+
+#pauseContents #settingsContents #controls input {
+    caret-color: transparent;
+}
+
+#pauseContents #settingsContents input:hover {
+    background-color: rgba(0,0,0,0.8);
+    border-width: 2px;
+}
+
+#pauseContents #settingsContents input:focus {
+    outline: none;
+}
+
+
+
+#pauseContents #settingsContents h3 {
+    display: inline-block;
+    width: 10em;
+    text-align: left;
+}
+
+#pauseContents #settingsContents h2 {
+    margin-bottom: 0.5em;
+    font-size: 1.5em;
+    color: white;
+    text-align: center;
+
+    font-style: italic;
+}
+
+
+#pauseContents #settingsContents input.selectedInput {
+    border-width: 2px;
+    background-color: rgba(0,255,0,0.8);
+}
+
+

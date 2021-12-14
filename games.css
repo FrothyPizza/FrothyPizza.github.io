@@ -1,0 +1,82 @@
+
+
+#game-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+
+
+    align-items: center;
+    justify-items: center;
+
+    margin: 0 auto;
+
+    margin: 2em 4em;
+}
+
+
+.game-icon-container {
+    cursor: pointer;
+
+    width: 18em;
+    height: 18em;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-direction: column;
+
+
+    transition: 0.3s all;
+
+    user-select: none;
+
+    padding: 0;
+    border-radius: 0.5em;
+}
+
+
+.game-icon-container:hover {
+    background-color: lightgray;
+}
+.game-icon-container:hover img {
+    filter: brightness(0.9);
+}
+.game-icon-container:active {
+    background-color: gray;
+}
+.game-icon-container:active img {
+    filter: brightness(0.8);
+}
+
+.game-icon-container img {
+    border-radius: 9999px;
+    height: 75%;
+    width: 75%;
+
+    transition: 0.3s all;
+}
+
+
+
+
+.game-icon-text {
+    
+    font-size: 1.5em;
+    text-align: center;
+    margin-top: 0.3em;
+
+    transition: 0.3s all;
+
+    font-weight: bold;
+
+    background: rgba(0,0,0,0.1);
+    border-radius: 9999px;
+    padding: 0.2em;
+    width: 75%;
+
+
+}
+
+
