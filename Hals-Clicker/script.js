@@ -1,4 +1,5 @@
 let clickCount = 0; 
+let totalBlocksProduced = 0;
 let clicksPerSecond = 0;
 let towers = [];
 let clickMultiplier = 1;
@@ -25,6 +26,11 @@ class Tower {
 		price.innerHTML = "Price: " + this.price.toLocaleString();;//Math.round(this.price)//
 		owned.innerHTML = "Owned: " + this.owned.toLocaleString();;//Math.round(this.owned)//
 
+		// update tooltip to say how many blocks per second
+		let tooltip = document.getElementById(this.name + "tooltip");
+		tooltip.innerHTML = "Total BPS: " + (this.autoCPS * this.owned * this.multiplier).toLocaleString() +
+			"<br>Single BPS: " + (this.autoCPS * this.multiplier).toLocaleString();
+		
 	}
 
 	buy() {
@@ -38,7 +44,7 @@ class Tower {
 
 	updateAll(time) {
 		clickCount += this.autoCPS * this.owned * time * this.multiplier;
-
+		totalBlocksProduced += this.autoCPS * this.owned * time * this.multiplier;
 	}
 
 
@@ -49,7 +55,7 @@ class Tower {
 
 
 
-function addTower(name, price, autoCPS, tooltipText="") {
+function addTower(name, price, autoCPS, tooltipText="hello") {
 
 	let container = document.getElementById('towers');
 
@@ -61,7 +67,13 @@ function addTower(name, price, autoCPS, tooltipText="") {
 
 	tower.innerHTML = '<button>'+name+'</button><div class="tower-information"><p class="price">Price: 0</p><p class="owned">Owned: 0</p></div>';
 
-
+	// add tooltip
+	let tooltip = document.createElement('span');
+	tooltip.id = name + "tooltip";
+	tooltip.classList.add('tooltiptext');
+	tooltip.innerHTML = tooltipText;
+	tower.childNodes[0].appendChild(tooltip);
+	tower.childNodes[0].classList.add('tooltip');
 
 
 	container.appendChild(tower);
@@ -112,6 +124,11 @@ class Upgrade {
 			this.callback();
 
 			boughtUpgrades.push(this.name);
+
+			// update all towers
+			for(let i = 0; i < towers.length; ++i) {
+				towers[i].updateInnerHTML();
+			}
 		};
 	}
 }
@@ -142,6 +159,7 @@ function updateTowerUpgrades() {
 function updateClickHTML() {
 	
 	clickCounter.textContent = "Blocks produced: " + clickCount.toLocaleString();//Math.round(clickCount);
+	totalBlocks.textContent = "Total blocks produced: " + totalBlocksProduced.toLocaleString();//Math.round(totalBlocksProduced);
 
 	let cps = 0;
 	for(let i = 0; i < towers.length; ++i) {
@@ -153,6 +171,7 @@ function updateClickHTML() {
 
 function clickBlock() {
 	clickCount += clickMultiplier;
+	totalBlocksProduced += clickMultiplier;
 
 	updateClickHTML();
 }
