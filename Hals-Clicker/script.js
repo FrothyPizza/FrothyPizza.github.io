@@ -158,8 +158,9 @@ function updateTowerUpgrades() {
 
 function updateClickHTML() {
 	
-	clickCounter.textContent = "Blocks produced: " + clickCount.toLocaleString();//Math.round(clickCount);
-	totalBlocks.textContent = "Total blocks produced: " + totalBlocksProduced.toLocaleString();//Math.round(totalBlocksProduced);
+	clickCounter.textContent = "Blocks produced: " + Math.round(clickCount).toLocaleString();//Math.round(clickCount);
+	totalBlocks.innerHTML = "Total blocks produced:" +
+	"<br>" + Math.round(totalBlocksProduced).toLocaleString();//Math.round(totalBlocksProduced);
 
 	let cps = 0;
 	for(let i = 0; i < towers.length; ++i) {
