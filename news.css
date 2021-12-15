@@ -1,12 +1,43 @@
 body {
     background-color: #ffffff;
     color: #000000;
-    font-size: 12px;
-    margin: 0;
+    margin: 10px;
     padding: 0;
     text-align: center;
 }
 
+section {
+    margin: 0 auto;
+    max-width: 800px;
+
+    margin-top: 2em;
+
+    text-align: left;
+    border: 1px solid #000000;
+    border-radius: 10px;
+    padding: 10px;
+
+}
+
+h1 {
+    font-size: 2em;
+    font-weight: bold;
+
+
+    text-align: center;
+}
+
+h2 {
+    font-size: 1.5em;
+    font-weight: bold;
+
+    text-align: left;
+}
+
 p {
+    text-align: left;
+    text-indent: 1em;
+    font-size: 1em;
+    
 
 }

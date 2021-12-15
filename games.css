@@ -17,6 +17,8 @@
 
 .game-icon-container {
     cursor: pointer;
+    text-decoration: none;
+    color: black;
 
     width: 18em;
     height: 18em;
@@ -79,4 +81,16 @@
 
 }
 
-
+@media only screen and (max-width: 924px) {
+    #game-container {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+    }
+}
+    
+@media only screen and (max-width: 630px) {
+    #game-container {
+        grid-template-columns: repeat(1, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+    }
+}

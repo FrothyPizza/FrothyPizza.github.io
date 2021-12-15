@@ -28,7 +28,7 @@ nav {
     margin-top: 1em;
 }
 
-a {
+.nav-button {
     font-size: x-large;
 
     text-decoration: none;
@@ -38,12 +38,12 @@ a {
     border-radius: 0.25em;
 }
 
-a:hover {
+.nav-button:hover {
     background-color: #e5e5e5;
     transition: 0.3s;
 }
 
-a:active {
+.nav-button:active {
     background-color: #ccc;
 }
 
