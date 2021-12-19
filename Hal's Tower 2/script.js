@@ -886,6 +886,22 @@ class SnowHandler {
 let snowHandler = new SnowHandler();
 
 
+if(CHRISTMAS_UPDATE) {
+    var myAudio = new Audio('music/Jingle_Bells.mp3');
+    myAudio.addEventListener('ended', function() {
+        this.currentTime = 0;
+        this.play();
+    }, false);
+
+    document.addEventListener('keydown', function(e) {
+        // if the music has not been played yet, play it
+        if(myAudio.paused) {
+            myAudio.play();
+        }
+    });
+
+}
+
 
 view.x = player.x - canvas.width/2 - playerConstants.width/2;
 view.y = player.y - canvas.height/2 - playerConstants.height/2;
