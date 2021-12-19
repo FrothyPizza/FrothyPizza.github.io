@@ -211,9 +211,104 @@ function fullyPerformMove(gameState, mino, moves, nextList) {
 
 
 function findSoftDropMoves(gameState, minoIndex) {
+    // this function finds all of the moves that require moving the tetromino down
 
 
+    // example of a right overhang hole
+    // # # .
+    // # . .
+    // # # .
 
+    // example of a left overhang hole
+    // . # #
+    // . . #
+    // . # #
+    let rightOverhangHoles = [];
+    let leftOverhangHoles = [];
+
+
+    let holes = findAllHoles(gameState);
+
+    for (let i = 0; i < holes.length; ++i) {
+        let x = holes[i].x;
+        let y = holes[i].y;
+        if(gameState.matrix[x + 1 + y*WIDTH] < 0) {
+            rightOverhangHoles.push(holes[i]);
+        }
+        if(gameState.matrix[x - 1 + y*WIDTH] < 0) {
+            leftOverhangHoles.push(holes[i]);
+        }
+    }
+
+    let moves = [];
+    
+    let orientations = 1;
+    if(minoIndex == MINO_J || minoIndex == MINO_L || minoIndex == MINO_T)
+        orientations = 4;
+    else if(minoIndex == MINO_S || minoIndex == MINO_Z || minoIndex == MINO_I)
+        orientations = 2;
+    
+    for(let o = 0; o < orientations; ++o) {
+        let rotation = null;
+        if(o == 1) rotation = ROT_CW;
+        else if(o == 2) rotation = ROT_CCW;
+        else if(o == 3) rotation = ROT_180;
+
+        for(let i = 0; i < rightOverhangHoles.length; ++i) {
+            let move = [];
+
+            let tetromino = new Tetromino(minoIndex);
+            if(rotation != null) {
+                if(rotation == ROT_CW) gameState.rotate(tetromino, 1);
+                else if(rotation == ROT_CCW) gameState.rotate(tetromino, -1);
+                else if(rotation == ROT_180) gameState.rotate(tetromino, 2);
+                move.push(rotation);
+            }
+
+            let hole = rightOverhangHoles[i];
+
+            let leftMostBlock = 100;
+            let rightMostBlock = -1;
+            for(let j = 0; j < tetromino.data.length; ++j) {
+                if(tetromino.data[j].x + tetromino.x < leftMostBlock) {
+                    leftMostBlock = tetromino.data[j].x;
+                }
+                if(tetromino.data[j].x + tetromino.x > rightMostBlock) {
+                    rightMostBlock = tetromino.data[j].x;
+                }
+            }
+            let moveX = hole.x - leftMostBlock;
+
+            if(rightMostBlock + moveX > WIDTH - 1) {
+                move.push(MOVE_RR);
+            } else if(moveX > 0) {
+                for(let j = 0; j < moveX; ++j) {
+                    move.push(MOVE_R);
+                }
+            } else if (moveX < 0) {
+                for(let j = 0; j < -moveX; ++j) {
+                    move.push(MOVE_L);
+                }
+            }
+
+            move.push(MOVE_DD);
+            move.push(MOVE_L);
+            move.push(MOVE_HD);
+
+            // test the move to see if it works
+            let gameStateCopy = gameState.clone();
+            fullyPerformMove(gameStateCopy, tetromino, move, []);
+            // if the position of one of the tetromino's blocks is at the hole, then the move is valid
+            for(let j = 0; j < tetromino.data.length; ++j) {
+                if(tetromino.data[j].x + tetromino.x == hole.x && tetromino.data[j].y + tetromino.y == hole.y) {
+                    moves.push(move);
+                }
+            }
+        }
+    }
+
+
+    return moves;
 }
 
 
@@ -237,6 +332,13 @@ function findAllHoles(gameState) {
 
     return holes;
 }
+
+
+
+
+
+
+
 
 function findAllUniqueMoves(gameState, minoIndex) {
     let endMinos = [];
@@ -299,7 +401,7 @@ function findAllUniqueMoves(gameState, minoIndex) {
 
 
 
-function getMoves(mino, gameState=null) {
+function getMoves(mino, gameState) {
 
 
     // if (mino == MINO_S || mino == MINO_Z)
@@ -321,6 +423,11 @@ function getMoves(mino, gameState=null) {
     } else if(mino == MINO_I) {
         moves = I_MOVES.slice();
     }
+
+    // let softDropMoves = findSoftDropMoves(gameState, mino);
+    // for(let i = 0; i < softDropMoves.length; ++i) {
+    //     moves.push(softDropMoves[i]);
+    // }
 
     // if(gameState != null) {
     //     let uniqueMoves = findAllUniqueMoves(gameState, mino);
@@ -528,96 +635,11 @@ function evaluateAttackScore(attack, clear, tSpin) {
 
 
 
-
-
-
-
-
-
-function findBestMoves(gameState, mino, nextList) {
-
-    let allMoves = getMoves(mino);
-    let bestMoves = [];
-    
-    for (let i = 0; i < allMoves.length; ++i) {
-        let newMino = new Tetromino(mino);
-        let newGameState = gameState.clone();
-        
-        // Copy the move into move
-        let move = allMoves[i].slice();
-
-        fullyPerformMove(newGameState, newMino, move, nextList);
-        let clear = newGameState.lastClear;
-        let attack = newGameState.lastAttack;
-        let tSpin = newGameState.lastTSpin;
-        
-        let attackScore = evaluateAttackScore(attack, clear, tSpin);
-        let moveScore = evaluate(newGameState);
-
-        let score = attackScore + moveScore;
-
-        bestMoves.push({
-            moves: move,
-            score: score
-        });
-    }
-
-    if(gameState.canHold) {
-        let holdNext = nextList.slice();
-        let holdState = gameState.clone();
-        let holdMino = new Tetromino(mino);
-        holdState.performHold(holdMino, holdNext);
-
-        let allMovesWithHold = getMoves(holdMino.mino);
-        for (let i = 0; i < allMovesWithHold.length; ++i) {
-            let newMino = new Tetromino(holdMino);
-            let newGameState = holdState.clone();
-            let move = allMovesWithHold[i].slice();
-
-            fullyPerformMove(newGameState, newMino, move, nextList);
-            let clear = newGameState.lastClear;
-            let attack = newGameState.lastAttack;
-            let tSpin = newGameState.lastTSpin;
-            
-            let attackScore = evaluateAttackScore(attack, clear, tSpin);
-            let moveScore = evaluate(newGameState);
-
-            let score = attackScore + moveScore + AIfactors.holdPenalty;
-
-            bestMoves.push({
-                moves: [HOLD],
-                score: score
-            });
-        }
-    }
-
-    // Sort the moves by score
-    bestMoves.sort(function(a, b) {
-        return b.score - a.score;
-    });
-
-    // remove all moves that are hold other than the first
-    let holdIndecies = [];
-    for (let i = 0; i < bestMoves.length; ++i) {
-        if (bestMoves[i].moves[0] == HOLD) holdIndecies.push(i);
-    }
-    for (let i = holdIndecies.length - 1; i >= 1; --i) {
-        bestMoves.splice(holdIndecies[i], 1);
-    }
-
-    
-
-    return bestMoves;
-}
-
-
-
-
 // TODO: beam search
 let ai_nodes_evaluated = 0;
 function findBestMovesDFS(gameState, mino, nextList, depth, maxDepth) {
 
-    let allMoves = getMoves(mino);
+    let allMoves = getMoves(mino, gameState);
     let bestMoves = [];
     
     for (let i = 0; i < allMoves.length; ++i) {
@@ -665,7 +687,7 @@ function findBestMovesDFS(gameState, mino, nextList, depth, maxDepth) {
         let holdMino = new Tetromino(mino);
         holdState.performHold(holdMino, holdNext);
 
-        let allMovesWithHold = getMoves(holdMino.mino);
+        let allMovesWithHold = getMoves(holdMino.mino, holdState);
         for (let i = 0; i < allMovesWithHold.length; ++i) {
             let newMino = new Tetromino(holdMino);
             let newGameState = holdState.clone();
@@ -723,3 +745,88 @@ function findBestMovesDFS(gameState, mino, nextList, depth, maxDepth) {
 
     return bestMoves;
 }
+
+
+
+
+
+
+// function findBestMoves(gameState, mino, nextList) {
+
+//     let allMoves = getMoves(mino);
+//     let bestMoves = [];
+    
+//     for (let i = 0; i < allMoves.length; ++i) {
+//         let newMino = new Tetromino(mino);
+//         let newGameState = gameState.clone();
+        
+//         // Copy the move into move
+//         let move = allMoves[i].slice();
+
+//         fullyPerformMove(newGameState, newMino, move, nextList);
+//         let clear = newGameState.lastClear;
+//         let attack = newGameState.lastAttack;
+//         let tSpin = newGameState.lastTSpin;
+        
+//         let attackScore = evaluateAttackScore(attack, clear, tSpin);
+//         let moveScore = evaluate(newGameState);
+
+//         let score = attackScore + moveScore;
+
+//         bestMoves.push({
+//             moves: move,
+//             score: score
+//         });
+//     }
+
+//     if(gameState.canHold) {
+//         let holdNext = nextList.slice();
+//         let holdState = gameState.clone();
+//         let holdMino = new Tetromino(mino);
+//         holdState.performHold(holdMino, holdNext);
+
+//         let allMovesWithHold = getMoves(holdMino.mino);
+//         for (let i = 0; i < allMovesWithHold.length; ++i) {
+//             let newMino = new Tetromino(holdMino);
+//             let newGameState = holdState.clone();
+//             let move = allMovesWithHold[i].slice();
+
+//             fullyPerformMove(newGameState, newMino, move, nextList);
+//             let clear = newGameState.lastClear;
+//             let attack = newGameState.lastAttack;
+//             let tSpin = newGameState.lastTSpin;
+            
+//             let attackScore = evaluateAttackScore(attack, clear, tSpin);
+//             let moveScore = evaluate(newGameState);
+
+//             let score = attackScore + moveScore + AIfactors.holdPenalty;
+
+//             bestMoves.push({
+//                 moves: [HOLD],
+//                 score: score
+//             });
+//         }
+//     }
+
+//     // Sort the moves by score
+//     bestMoves.sort(function(a, b) {
+//         return b.score - a.score;
+//     });
+
+//     // remove all moves that are hold other than the first
+//     let holdIndecies = [];
+//     for (let i = 0; i < bestMoves.length; ++i) {
+//         if (bestMoves[i].moves[0] == HOLD) holdIndecies.push(i);
+//     }
+//     for (let i = holdIndecies.length - 1; i >= 1; --i) {
+//         bestMoves.splice(holdIndecies[i], 1);
+//     }
+
+    
+
+//     return bestMoves;
+// }
+
+
+
+

@@ -299,6 +299,10 @@ class PlayerTetrisGame {
             this.gameState.rotate(this.curMino, 2);
         }
 
+        // if keycode f is pressed ///////////////////////////////////
+        if (keyCode == 70) {
+            console.log(findSoftDropMoves(this.gameState, this.curMino));
+        }
 
 
 
