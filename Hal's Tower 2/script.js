@@ -1,4 +1,4 @@
-
+let CHRISTMAS_UPDATE = true;
 
 var keys = [];
 
@@ -31,13 +31,19 @@ canvas.height = 600;
 var fullScreen = true;
 var context = canvas.getContext('2d');
 
+if(fullScreen) {
+    canvas.width = document.documentElement.clientWidth;
+    canvas.height = document.documentElement.clientHeight;
+}
+
 var view = {
     x: 0,
     y: 0
 };
 
-function fill(r, g, b){
-    context.fillStyle = 'rgb('+r+', '+g+', '+b+')';    
+function fill(r, g, b, a=1) {
+    // context.fillStyle = 'rgb('+r+', '+g+', '+b+')';
+    context.fillStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
 }
 
 function rect(x, y, w, h){
@@ -46,12 +52,23 @@ function rect(x, y, w, h){
     context.fillRect(x - view.x, y - view.y, w, h);   
 }
 
+function ellipse(x, y, w, h) {
+    context.beginPath();
+    context.ellipse(x - view.x, y - view.y, w, h, 0, 0, 2 * Math.PI);
+    context.fill();
+}
+
+function random(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 const BLOCK_SIZE = 40;
 const COLLISION_MARGIN = 7;
 
 
 
 var BLOCKS = {
+    empty: '.',
     ground: 'B',
     invisibleGround: 'I',
     red: 'R',
@@ -363,11 +380,19 @@ var player = {
     spawnY: 0,
     deaths: 0,
     hasWon: false,
-    savedTime: 0
+    savedTime: 0,
+    lastDeathX: 0,
+    lastDeathY: 0,
+    lastDeathTime: Date.now(),
 };
 
 
 function resetPlayer() {
+
+    player.lastDeathX = player.x;
+    player.lastDeathY = player.y;
+    player.lastDeathTime = Date.now();
+
     
     player.x = player.spawnX;
     player.y = player.spawnY;
@@ -448,177 +473,6 @@ function collidingWithBlock(blockX, blockY, collisionProtrusion=0) {
 
 
 
-           
-// function renderMapAndHandleCollisions(){
-//     ++flashingBlockTimer;
-//     for(var y = 0; y < map.length; ++y) {
-//         for(var x = 0; x < map[y].length; ++x) {
-            
-//             if(flashingBlockTimer % FRAMES_PER_FLASH == 0) {
-                
-//                 if(map[y][x] == BLOCKS.flashing)
-//                     map[y] = map[y].replaceAt(x, BLOCKS.flashingOff);
-//                 else if(map[y][x] == BLOCKS.flashingOff)
-//                     map[y] = map[y].replaceAt(x, BLOCKS.flashing);
-//                 flashingBlockTimer = 0;
-//             }
-            
-
-//             let blockX = x * BLOCK_SIZE;
-//             let blockY = y * BLOCK_SIZE;         
-            
-//             if(blockX - view.x > canvas.width) continue;
-//             if(blockX - view.x < 0 - BLOCK_SIZE) continue;
-//             if(blockY - view.y > canvas.height) continue;
-//             if(blockY - view.y < 0 - BLOCK_SIZE) continue;
-            
-//             fill(100, 100, 100);
-//             switch(map[y][x]){
-//                 case BLOCKS.ground:
-//                     fill(100, 100, 100);
-//                     break;
-//                 case BLOCKS.disappearing:
-//                     fill(80, 80, 80);
-//                     break;
-//                 case BLOCKS.win:
-//                     fill(57, 255, 20);
-//                     break;
-//                 case BLOCKS.notThere:
-//                     fill(120, 120, 120);
-//                     break;
-//                 case BLOCKS.flashing:
-//                     fill(120, 120, 120);
-//                     break;
-//                 case BLOCKS.flashingOff:
-//                     fill(175, 167, 205);
-//                     break;
-//                 case BLOCKS.red:
-//                     fill(255, 0, 0);
-//                     break;
-//                 case BLOCKS.checkpoint:
-//                     fill(255, 255, 0);
-//                     break;
-//                 case BLOCKS.bounce:
-//                     fill(255, 0, 255);
-//                     break;
-//                 default:
-//                     break;
-//             }
-
-//             if(map[y][x] == BLOCKS.ground || 
-//                map[y][x] == BLOCKS.red || 
-//                map[y][x] == BLOCKS.checkpoint || 
-//                map[y][x] == BLOCKS.bounce ||
-//                map[y][x] == BLOCKS.flashing ||
-//                map[y][x] == BLOCKS.flashingOff ||
-//                map[y][x] == BLOCKS.disappearing ||
-//                map[y][x] == BLOCKS.notThere ||
-//                map[y][x] == BLOCKS.win) {
-                
-//                 rect(blockX, blockY, BLOCK_SIZE+1, BLOCK_SIZE+1);   
-//             }
-            
-//             if(map[y][x] == BLOCKS.win) {
-//                 if(collidingWithBlock(blockX, blockY)) {
-//                     player.hasWon = true;   
-//                     player.x = BLOCK_SIZE * 1.5;
-//                     player.y = BLOCK_SIZE * 1.5;
-//                 }
-//             }
-
-            
-//             // Handle collisions here /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-//             if(map[y][x] == BLOCKS.checkpoint) {
-//                 if(collidingWithBlock(blockX, blockY)) {
-//                     player.spawnX = blockX + BLOCK_SIZE/2 - playerConstants.width/2;
-//                     player.spawnY = blockY + BLOCK_SIZE - playerConstants.height;
-                    
-//                     localStorage.setItem('spawnX', player.spawnX.toString());
-//                     localStorage.setItem('spawnY', player.spawnY.toString());
-//                     localStorage.setItem('deaths', player.deaths.toString());
-//                     localStorage.setItem('time', player.savedTime.toString());
-//                 }
-//             }
-            
-//             if(map[y][x] == BLOCKS.red) {
-//                 if(collidingWithTopOfBlock(blockX, blockY, 1) || 
-//                    collidingWithBottomOfBlock(blockX, blockY, 1) || 
-//                    collidingWithRightOfBlock(blockX, blockY, 1, 1) || 
-//                    collidingWithLeftOfBlock(blockX, blockY, 1, 1)) {
-//                     resetPlayer(); 
-//                     localStorage.setItem('deaths', player.deaths.toString());
-//                     localStorage.setItem('time', player.savedTime.toString());
-//                 }
-//             }
-
-//             if(map[y][x] == BLOCKS.bounce) {
-//                 if(collidingWithTopOfBlock(blockX, blockY, 0, 0)) {
-//                     player.yVel = playerConstants.bounceHeight;
-//                     player.y = blockY-playerConstants.height;
-//                 }
-//                 if(collidingWithBottomOfBlock(blockX, blockY, -1, 2)){
-//                     player.y = blockY+BLOCK_SIZE;
-//                     player.yVel = -playerConstants.bounceHeight;
-//                 }
-//                 if(collidingWithLeftOfBlock(blockX, blockY, 0, 2)) {
-//                     player.xVel = -playerConstants.horizontalBounce;
-//                     player.x = blockX-playerConstants.width;
-//                 }
-//                 if(collidingWithRightOfBlock(blockX, blockY, 0, 2)) {
-//                     player.xVel = playerConstants.horizontalBounce;
-//                     player.x = blockX+BLOCK_SIZE;
-//                 }
-
-
-//             }
-            
-//             // This is the main block collision checks /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//             // If you want there to be a block that acts the same as a normal block with some changed functionality,
-//             // i.e. a block that only bounces you to the left if you're colliding with the left,
-//             // then you can use any of these cases with the new block
-//             // make sure you copy all of this code
-//             if(map[y][x] == BLOCKS.ground || map[y][x] == BLOCKS.invisibleGround || map[y][x] == BLOCKS.flashing || map[y][x] == BLOCKS.disappearing) {
-//                 if(collidingWithTopOfBlock(blockX, blockY, 0, 2)) {
-//                     // if moving up, then don't allow for a jump
-//                     var shouldntJump = false;
-//                     if(player.yVel < 0) shouldntJump = true;
-                    
-//                     player.yVel = 0;
-//                     player.y = blockY-playerConstants.height;
-//                     //player.grav = 0;
-//                     if(keys[UP] && !shouldntJump) {
-//                         player.yVel = playerConstants.jumpHeight;
-//                         if(map[y][x] == BLOCKS.disappearing) {
-//                             map[y] = map[y].replaceAt(x, BLOCKS.hasDisappeared);    
-//                         }
-                        
-//                     }
-                    
-
-
-//                 }
-//                 if(collidingWithBottomOfBlock(blockX, blockY, 0, 2)){
-//                     player.y = blockY+BLOCK_SIZE;
-//                     player.yVel = 0;
-//                 }
-//                 if(collidingWithLeftOfBlock(blockX, blockY, 0, 2)) {
-//                     player.xVel = 0;
-//                     player.x = blockX-playerConstants.width;
-//                 }
-//                 if(collidingWithRightOfBlock(blockX, blockY, 0, 2)) {
-//                     player.xVel = 0;
-//                     player.x = blockX+BLOCK_SIZE;
-//                 }
-
-
-//             }
-            
-            
-//         }
-//     }
-// }
 function renderMap() {
     for(var y = 0; y < map.length; ++y) {
         for(var x = 0; x < map[y].length; ++x) {
@@ -640,6 +494,9 @@ function renderMap() {
             if(blockX - view.x < 0 - BLOCK_SIZE) continue;
             if(blockY - view.y > canvas.height) continue;
             if(blockY - view.y < 0 - BLOCK_SIZE) continue;
+
+
+ 
             
             fill(100, 100, 100);
             switch(map[y][x]){
@@ -683,9 +540,18 @@ function renderMap() {
                map[y][x] == BLOCKS.disappearing ||
                map[y][x] == BLOCKS.notThere ||
                map[y][x] == BLOCKS.win) {
+                    
+                rect(blockX, blockY, BLOCK_SIZE+1, BLOCK_SIZE+1);  
                 
-                rect(blockX, blockY, BLOCK_SIZE+1, BLOCK_SIZE+1);   
+
             }
+
+            if(CHRISTMAS_UPDATE && map[y][x] == BLOCKS.ground && map[y-1][x] == BLOCKS.empty) {
+                fill(255, 255, 255);
+                rect(blockX, blockY - 2, BLOCK_SIZE, 2);
+            }
+
+
         }
     }
 }
@@ -801,14 +667,28 @@ function updatePlayerPhysics() {
     player.x += player.xVel;
     
     player.xVel *= 0.9;
-
 }
 
 
-function renderPlayer() {
-    fill(100, 100, 100);
-    rect(player.x, player.y, playerConstants.width, playerConstants.height);   
 
+function renderPlayer() {
+    if(!CHRISTMAS_UPDATE) {
+        fill(100, 100, 100);
+        rect(player.x, player.y, playerConstants.width, playerConstants.height);   
+    } else {
+        // draw a checkered green and red pattern
+        fill(10, 151, 24);
+        rect(player.x, player.y, playerConstants.width/2, playerConstants.height/2);
+        rect(player.x+playerConstants.width/2, player.y+playerConstants.height/2, playerConstants.width/2, playerConstants.height/2);
+        fill(195, 15, 22);
+        rect(player.x, player.y+playerConstants.height/2, playerConstants.width/2, playerConstants.height/2);
+        rect(player.x+playerConstants.width/2, player.y, playerConstants.width/2, playerConstants.height/2);
+        
+    }
+
+    let alpha = (Date.now() - player.lastDeathTime) / 1000;
+    fill(195, 15, 22, 1-alpha);    
+    rect(player.lastDeathX, player.lastDeathY, playerConstants.width, playerConstants.height);
 }
 
 function lerp(a, b, t) {
@@ -920,6 +800,93 @@ function pause() {
     }
 }
 
+
+
+class Particle {
+    constructor(x, y, xVel, yVel, color, size, lifetime) {
+        this.x = x;
+        this.y = y;
+        this.xVel = xVel;
+        this.yVel = yVel;
+        this.color = color;
+        this.size = size;
+
+        this.lifetime = lifetime;
+    }
+
+    update() {
+        this.x += this.xVel;
+        this.y += this.yVel;
+    }
+
+    render() {
+        fill(this.color.r, this.color.g, this.color.b, this.color.a);
+        context.beginPath();
+        context.ellipse(this.x, this.y, this.size, this.size, 0, 0, 2 * Math.PI);
+        context.closePath();
+        context.fill();
+
+    }
+}
+
+class SnowHandler {
+    constructor() {
+        this.reset();
+    }
+
+    update() {
+        for(let i = this.particles.length-1; i >= 0; i--) {
+            this.particles[i].update();
+            this.particles[i].lifetime--;
+            if(this.particles[i].lifetime <= 0 || this.particles[i].y > canvas.height + 100) {
+                this.particles.splice(i, 1);
+            }
+        }
+
+        if(Math.random() < 0.2) {
+            this.addParticle();
+        }
+    }
+
+    render() {
+        for(let i = 0; i < this.particles.length; i++) {
+            this.particles[i].render();
+        }
+    }
+
+    reset() {
+        this.particles = [];
+
+        for(let i = 0; i < 100; i++) {
+            this.addParticle(true);
+        }
+    }
+
+    addParticle(randomPos) {
+        let color = {r: 255, g: 255, b: 255, a: 100};
+        let x = Math.random() * canvas.width;
+        let y = -100;
+        if(randomPos) {
+            y = Math.random() * (canvas.height + 100) - 50;
+        }
+
+        let xVel = Math.random() * 0.5 - 0.25;
+        let yVel = Math.random() * 1 + 0.5;
+        let size = Math.random() * 2 + 1;
+
+        this.particles.push(new Particle(x, y, xVel, yVel, color, size, 10000));
+    }
+}
+
+
+
+
+
+
+let snowHandler = new SnowHandler();
+
+
+
 view.x = player.x - canvas.width/2 - playerConstants.width/2;
 view.y = player.y - canvas.height/2 - playerConstants.height/2;
 window.setInterval(() => {
@@ -940,10 +907,15 @@ window.setInterval(() => {
     context.fillRect(0, 0, canvas.width, canvas.height);
     
 
+
     renderMap();
 
     renderPlayer();
 
+    if(CHRISTMAS_UPDATE) {
+        snowHandler.update();
+        snowHandler.render();
+    }
 
     if(!paused) {
         handleCollisions();
