@@ -99,6 +99,7 @@ class Player {
 
         this.spawnX = x;
         this.spawnY = y;
+        this.spawnGravity = this.gravity;
 
         this.deathX = 0;
         this.deathY = 0;
@@ -111,12 +112,13 @@ class Player {
         if(localStorage.getItem('spawnX3') !== null) {
             this.spawnX = parseFloat(localStorage.getItem('spawnX3'));
             this.spawnY = parseFloat(localStorage.getItem('spawnY3'));
+            this.gravity = parseFloat(localStorage.getItem('gravity3'));
             this.restart();
             this.deathAnimationTimer = this.deathAnimationTimeMS + 1;
         } else {
             localStorage.setItem('spawnX3', this.spawnX);
             localStorage.setItem('spawnY3', this.spawnY);
-            alert('New player!');
+            localStorage.setItem('gravity3', this.gravity);
         }
 
 
@@ -159,11 +161,13 @@ class Player {
                 if(map[i][j] === MAP_BLOCK_TYPES.spawn) {
                     this.spawnX = j * BLOCK_SIZE + BLOCK_SIZE / 4;
                     this.spawnY = (i+1) * BLOCK_SIZE - this.height;
+                    this.spawnGravity = this.defaultGravity;
                 }
             }
         }
         this.x = this.spawnX;
         this.y = this.spawnY;
+        this.gravity = this.spawnGravity;
         this.xVel = 0;
         this.yVel = 0;
         this.speed = this.defaultSpeed;
@@ -179,6 +183,7 @@ class Player {
 
         this.x = this.spawnX;
         this.y = this.spawnY;
+        this.gravity = this.spawnGravity;
         this.xVel = 0;
         this.yVel = 0;
         this.speed = this.defaultSpeed;
@@ -241,6 +246,7 @@ function collidePlayerWithBlock(player, blockType, blockX, blockY) {
                 if(player.gravity < 0 && keys['ArrowUp']) {
                     if(player.gravity < 0) {
                         player.yVel = -player.jumpForce;
+                        player.y += 0.1;
                     }
                 } else {
                     player.yVel = 0;
@@ -283,6 +289,7 @@ function collidePlayerWithBlock(player, blockType, blockX, blockY) {
 
             localStorage.setItem('spawnX3', player.spawnX);
             localStorage.setItem('spawnY3', player.spawnY);
+            localStorage.setItem('gravity3', player.gravity);
         }
     }
 
@@ -466,6 +473,14 @@ window.setInterval(() => {
 
         if(delta > 10) {
             delta = 10;
+        }
+
+        if(keys['r']) {
+            player.hardRestart();
+        }
+        if(keys['ArrowDown']) {
+            player.y -= 200 * delta/1000;
+            player.yVel = 0;
         }
         
         player.update(delta);
