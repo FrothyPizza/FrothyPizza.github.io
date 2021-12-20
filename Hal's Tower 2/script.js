@@ -546,7 +546,7 @@ function renderMap() {
 
             }
 
-            if(CHRISTMAS_UPDATE && map[y][x] == BLOCKS.ground && map[y-1][x] == BLOCKS.empty) {
+            if(CHRISTMAS_UPDATE && map[y][x] == BLOCKS.ground && y > 0 && map[y-1][x] == BLOCKS.empty) {
                 fill(255, 255, 255);
                 rect(blockX, blockY - 2, BLOCK_SIZE, 2);
             }
