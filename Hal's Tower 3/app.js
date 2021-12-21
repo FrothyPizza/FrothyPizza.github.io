@@ -5,19 +5,64 @@
 /*
 TODO:
 - add death counter
-- track which level you're on
+- double jump block
+- speed up block
+
 
 
 
 
 */
-const VERSON = "0.0.1";
+const VERSON = "0.1.2";
 if(localStorage.getItem("verson") != VERSON) {
     localStorage.clear();
     localStorage.setItem("verson", VERSON);
 }
+document.title = "Hal's Tower 3 - v" + VERSON;
 
+class Clock {
+    constructor() {
+        this.startTime = 0;
+        this.elapsedTime = 0;
+        this.pausedTime = 0;
+        this.isPaused = false;
+        this.isStarted = false;
+    }
 
+    start() {
+        this.startTime = Date.now();
+        this.isStarted = true;
+        this.isPaused = false;
+    }
+
+    pause() {
+        if (this.isStarted && !this.isPaused) {
+            this.isPaused = true;
+            this.pausedTime = Date.now();
+        }
+    }
+
+    resume() {
+        if (this.isStarted && this.isPaused) {
+            this.isPaused = false;
+            this.startTime += (Date.now() - this.pausedTime);
+        }
+    }
+
+    getElapsedTime() {
+        if (this.isStarted && !this.isPaused) {
+            this.elapsedTime = Date.now() - this.startTime;
+        }
+        return this.elapsedTime;
+    }
+
+    restart() {
+        this.startTime = Date.now();
+        this.elapsedTime = 0;
+        this.isStarted = true;
+        this.isPaused = false;
+    }
+}
 
 
 let keys = [];
@@ -129,6 +174,11 @@ class Player {
         this.deathX = 0;
         this.deathY = 0;
 
+        this.speedUpSpeed = 400;
+        let speedUpTimer = 0;
+        this.speedUpTimeMS = 5000;
+        let highJumpTimer = 0;
+
         
         this.deathAnimationTimeMS = 300;
         this.deathAnimationTimer = this.deathAnimationTimeMS + 1;
@@ -154,9 +204,20 @@ class Player {
 
     }
 
+        
+
     draw() {
         fill(204, 204, 204);
         rect(Math.round(this.x), Math.round(this.y), this.width, this.height, view);
+
+        // draw a teal blue bar at the right of the player to indicate how much time they have left sped up
+        fill(0, 200, 200, 0.8);
+        let fraction = 1 - (Date.now() - this.speedUpTimer) / this.speedUpTimeMS;
+        if(fraction > 0) {
+            rect(Math.round(this.x), Math.round(this.y + (1-fraction)*this.height), 5, Math.round(this.height * fraction), view);
+            
+        }
+
 
         if(Date.now() - this.deathAnimationTimer > this.deathAnimationTimeMS) {
             this.deathAnimationTimer = 0;
@@ -182,6 +243,11 @@ class Player {
         this.x += this.xVel * delta / 1000;
         this.y += this.yVel * delta / 1000;
 
+        if(Date.now() - this.speedUpTimer < this.speedUpTimeMS) {
+            this.speed = this.speedUpSpeed;
+        } else {
+            this.speed = this.defaultSpeed;
+        }
 
     }
 
@@ -204,6 +270,7 @@ class Player {
         this.gravity = this.defaultGravity;
 
         this.deathAnimationTimer = 0;
+        this.speedUpTimer = 0;
     }
 
     restart() {
@@ -218,6 +285,8 @@ class Player {
         this.yVel = 0;
         this.speed = this.defaultSpeed;
         this.gravity = this.defaultGravity;
+
+        this.speedUpTimer = 0;
 
 
     }
@@ -254,7 +323,7 @@ function collidingWithBlock(player, blockX, blockY, collisionProtrusion=0) {
 
 
 function collidePlayerWithBlock(player, blockType, blockX, blockY) {
-    if(blockType === MAP_BLOCK_TYPES.block) {
+    if(blockType === MAP_BLOCK_TYPES.block || blockType === MAP_BLOCK_TYPES.flashingOn) {
         if(collidingWithTopOfBlock(player, blockX, blockY, 0, 2)) {
             if(player.gravity > 0) {
                 if(player.yVel > 0) {
@@ -274,13 +343,29 @@ function collidePlayerWithBlock(player, blockType, blockX, blockY) {
             }
         }
         if(collidingWithBottomOfBlock(player, blockX, blockY, 0, 2)){
-            if(player.yVel < 0) {
-                if(player.gravity < 0 && (keys['ArrowUp'] || keys['w'])) {
-                    if(player.gravity < 0) {
+            // if(player.yVel < 0) {
+            //     if(player.gravity < 0 && (keys['ArrowUp'] || keys['w'])) {
+            //         if(player.gravity < 0) {
+            //             player.yVel = -player.jumpForce;
+            //             player.y += 0.1;
+            //         }
+            //     } else {
+            //         player.yVel = 0;
+            //         player.y = blockY+BLOCK_SIZE;
+            //     }
+            // }
+            if(player.gravity < 0) {
+                if(player.yVel < 0) {
+                    if(keys['ArrowUp'] || keys['w']) {
                         player.yVel = -player.jumpForce;
                         player.y += 0.1;
+                    } else {
+                        player.yVel = 0;
+                        player.y = blockY+BLOCK_SIZE;
                     }
-                } else {
+                }
+            } else {
+                if(player.yVel < 0) {
                     player.yVel = 0;
                     player.y = blockY+BLOCK_SIZE;
                 }
@@ -297,7 +382,7 @@ function collidePlayerWithBlock(player, blockType, blockX, blockY) {
     }
 
     if(blockType === MAP_BLOCK_TYPES.red) {
-        if(collidingWithBlock(player, blockX, blockY, 0)) {
+        if(collidingWithBlock(player, blockX, blockY, -0.1)) {
             player.restart();
         }
     }
@@ -311,6 +396,12 @@ function collidePlayerWithBlock(player, blockType, blockX, blockY) {
     if(blockType === MAP_BLOCK_TYPES.gravityDown) {
         if(collidingWithBlock(player, blockX, blockY, -1)) {
             player.gravity = Math.abs(player.gravity);
+        }
+    }
+
+    if(blockType === MAP_BLOCK_TYPES.speedUp) {
+        if(collidingWithBlock(player, blockX, blockY, 0)) {
+            player.speedUpTimer = Date.now();
         }
     }
 
@@ -403,6 +494,10 @@ function drawMap() {
                     fill(255, 255, 255, 0.8);
                     rect(blockPos.x, blockPos.y, BLOCK_SIZE, BLOCK_SIZE, view);
                     break;
+                case MAP_BLOCK_TYPES.flashingOn:
+                    fill(255, 255, 255, 0.8);
+                    rect(blockPos.x, blockPos.y, BLOCK_SIZE, BLOCK_SIZE, view);
+                    break;                    
                 case MAP_BLOCK_TYPES.red:
                     fill(255, 0, 0);
                     rect(blockPos.x, blockPos.y, BLOCK_SIZE, BLOCK_SIZE, view);
@@ -417,21 +512,24 @@ function drawMap() {
                     fill(205, 40, 205, 0.8);
                     rect(blockPos.x, blockPos.y, BLOCK_SIZE, BLOCK_SIZE, view);
                     fill(255, 0, 255);
-                    // triangle(blockPos.x + BLOCK_SIZE/6, blockPos.y + BLOCK_SIZE/6, 
-                    //     blockPos.x + BLOCK_SIZE/6, blockPos.y + BLOCK_SIZE * 5/6,
-                    //     blockPos.x, blockPos.y + BLOCK_SIZE/2, view);
-                    // triangle(blockPos.x + BLOCK_SIZE * 5/6, blockPos.y + BLOCK_SIZE/6,
-                    //     blockPos.x + BLOCK_SIZE * 5/6, blockPos.y + BLOCK_SIZE * 5/6,
-                    //     blockPos.x + BLOCK_SIZE, blockPos.y + BLOCK_SIZE/2, view);
                     triangle(blockPos.x + BLOCK_SIZE/6, blockPos.y + BLOCK_SIZE * 5/6,
                         blockPos.x + BLOCK_SIZE * 5/6, blockPos.y + BLOCK_SIZE * 5/6,
                         blockPos.x + BLOCK_SIZE/2, blockPos.y + BLOCK_SIZE, view);
                     triangle(blockPos.x + BLOCK_SIZE/6, blockPos.y + BLOCK_SIZE/6,
                         blockPos.x + BLOCK_SIZE * 5/6, blockPos.y + BLOCK_SIZE/6,
                         blockPos.x + BLOCK_SIZE/2, blockPos.y, view);
-
                     rect(Math.round(blockPos.x + BLOCK_SIZE/4), Math.round(blockPos.y + BLOCK_SIZE/4), BLOCK_SIZE/2, BLOCK_SIZE/2, view);
                     break;  
+                case MAP_BLOCK_TYPES.speedUp:
+                    fill(0, 128, 238);
+                    rect(blockPos.x, blockPos.y, BLOCK_SIZE, BLOCK_SIZE, view);
+                    fill(0, 0, 0, 0.1);
+                    rect(Math.round(blockPos.x + BLOCK_SIZE/8), Math.round(blockPos.y + BLOCK_SIZE/4), BLOCK_SIZE/2, BLOCK_SIZE/2, view);
+                    fill(0, 0, 0, 0.2);
+                    rect(Math.round(blockPos.x + BLOCK_SIZE/4), Math.round(blockPos.y + BLOCK_SIZE/4), BLOCK_SIZE/2, BLOCK_SIZE/2, view);
+                    fill(0, 64, 128);
+                    rect(Math.round(blockPos.x + BLOCK_SIZE*3/8), Math.round(blockPos.y + BLOCK_SIZE/4), BLOCK_SIZE/2, BLOCK_SIZE/2, view);                    
+                    break;
                 case MAP_BLOCK_TYPES.gravityDown:
                     fill(10, 255, 100, 0.8);
                     rect(blockPos.x, blockPos.y, BLOCK_SIZE, BLOCK_SIZE, view);
@@ -455,6 +553,28 @@ function drawMap() {
     }
 }
 
+String.prototype.replaceAt = function(index, replacement) {
+    return this.substr(0, index) + replacement+ this.substr(index + replacement.length);
+}
+
+let flashingBlockTimer = Date.now();
+function updateMap() {
+    if(Date.now() - flashingBlockTimer > TIME_PER_FLASH_MS) {
+        console.log("flashing");
+        for(let y = 0; y < map.length; y++) {
+            for(let x = 0; x < map[0].length; x++) {
+                if(map[y][x] === MAP_BLOCK_TYPES.flashingOn) {
+                    map[y] = map[y].replaceAt(x, MAP_BLOCK_TYPES.flashingOff);
+                    
+                } else if(map[y][x] === MAP_BLOCK_TYPES.flashingOff) {
+                    map[y] = map[y].replaceAt(x, MAP_BLOCK_TYPES.flashingOn);
+                }
+            }
+        }
+        flashingBlockTimer = Date.now();
+    }
+}
+
 
 let framesRendered = 0;
 let lastFrameTime = 0;
@@ -463,6 +583,31 @@ let renderFPS = 0;
 let framesUpdated = 0;
 let lastUpdateTime = 0;
 let updateFPS = 0;
+
+
+// level editor stuff
+// canvas.onclick = function(e) {
+//     let x = Math.floor((e.clientX - canvas.offsetLeft + view.x) / BLOCK_SIZE);
+//     let y = Math.floor((e.clientY - canvas.offsetTop + view.y) / BLOCK_SIZE);
+//     if(x >= 0 && x < map[0].length && y >= 0 && y < map.length) {
+//         if(map[y][x] === MAP_BLOCK_TYPES.block) {
+//             map[y] = map[y].replaceAt(x, MAP_BLOCK_TYPES.empty);
+//         } else if(map[y][x] === MAP_BLOCK_TYPES.empty) {
+//             map[y] = map[y].replaceAt(x, MAP_BLOCK_TYPES.block);
+//         }
+//     }
+// }
+// document.addEventListener("keydown", function(e) {
+//     if(e.key === 'Enter') {
+//         navigator.clipboard.writeText(JSON.stringify(map)).then(function() {
+//             console.log('Async: Copying to clipboard was successful!');
+//           }, function(err) {
+//             console.error('Async: Could not copy text: ', err);
+//           });
+        
+//     }
+// });
+
 
 
 function gameLoop() {
@@ -490,7 +635,7 @@ function gameLoop() {
     drawMap();
     player.draw();
 
-    
+
     // draw fps
     fill(255, 255, 255);
     context.font = "20px Arial";
@@ -511,7 +656,7 @@ view.y = player.y;
 let lastUpdateStamp = performance.now();
 window.setInterval(() => {
     // Update /////////////////////////////////////////////////////////////
-    for(let i = 0; i < 4; i++) {
+    for(let i = 0; i < 8; i++) {
         let delta = (performance.now() - lastUpdateStamp);
         lastUpdateStamp = performance.now();
 
@@ -529,6 +674,8 @@ window.setInterval(() => {
         
         player.update(delta);
         handlePlayerCollisions(player);
+
+        updateMap();
 
         ++framesUpdated;
         if(performance.now() - lastUpdateTime > 1000) {
