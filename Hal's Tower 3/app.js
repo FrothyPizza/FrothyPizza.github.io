@@ -485,6 +485,12 @@ function gameLoop() {
     fill(3, 3, 10);
     rect(0, 0, canvas.width, canvas.height);
 
+
+
+    drawMap();
+    player.draw();
+
+    
     // draw fps
     fill(255, 255, 255);
     context.font = "20px Arial";
@@ -494,10 +500,6 @@ function gameLoop() {
     // draw the level the player is on at the top right
     let level = player.acquiredCheckpoints.length + 1;
     context.fillText(`Level: ${level}`, canvas.width - 100, 20);
-
-
-    drawMap();
-    player.draw();
 
 
 } gameLoop();
