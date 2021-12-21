@@ -35,11 +35,11 @@ function constrain(a, b, c) {
 function updateView(player){
 
     if(Date.now() - player.deathAnimationTimer < player.deathAnimationTimeMS) {
-        targetX = player.deathX;
-        targetY = player.deathY;
+        targetX = player.deathX - player.width / 2;
+        targetY = player.deathY - player.height / 2;
     } else {
-        targetX = player.x;
-        targetY = player.y;
+        targetX = player.x - player.width / 2;
+        targetY = player.y - player.height / 2;
     }
 
     let width = canvas.width;
@@ -139,10 +139,10 @@ class Player {
     }
 
     update(delta) {
-        if(keys['ArrowRight']) {
+        if(keys['ArrowRight'] || keys['d']) {
             this.x += this.speed * delta / 1000;
         }
-        if(keys['ArrowLeft']) {
+        if(keys['ArrowLeft'] || keys['a']) {
             this.x -= this.speed * delta / 1000;
         }
 
@@ -226,7 +226,7 @@ function collidePlayerWithBlock(player, blockType, blockX, blockY) {
         if(collidingWithTopOfBlock(player, blockX, blockY, 0, 2)) {
             if(player.gravity > 0) {
                 if(player.yVel > 0) {
-                    if(keys['ArrowUp']) {
+                    if(keys['ArrowUp'] || keys['w']) {
                         if(player.gravity > 0) {
                             player.yVel = player.jumpForce;
                             player.y -= 0.1;
@@ -243,7 +243,7 @@ function collidePlayerWithBlock(player, blockType, blockX, blockY) {
         }
         if(collidingWithBottomOfBlock(player, blockX, blockY, 0, 2)){
             if(player.yVel < 0) {
-                if(player.gravity < 0 && keys['ArrowUp']) {
+                if(player.gravity < 0 && (keys['ArrowUp'] || keys['w'])) {
                     if(player.gravity < 0) {
                         player.yVel = -player.jumpForce;
                         player.y += 0.1;
@@ -467,7 +467,7 @@ view.y = player.y;
 let lastUpdateStamp = performance.now();
 window.setInterval(() => {
     // Update /////////////////////////////////////////////////////////////
-    for(let i = 0; i < 8; i++) {
+    for(let i = 0; i < 4; i++) {
         let delta = (performance.now() - lastUpdateStamp);
         lastUpdateStamp = performance.now();
 
@@ -478,7 +478,7 @@ window.setInterval(() => {
         if(keys['r']) {
             player.hardRestart();
         }
-        if(keys['ArrowDown']) {
+        if(keys['ArrowDown'] || keys['s']) {
             player.y -= 200 * delta/1000;
             player.yVel = 0;
         }
