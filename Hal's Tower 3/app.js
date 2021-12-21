@@ -1,3 +1,25 @@
+
+
+
+
+/*
+TODO:
+- add death counter
+- track which level you're on
+
+
+
+
+*/
+const VERSON = "0.0.1";
+if(localStorage.getItem("verson") != VERSON) {
+    localStorage.clear();
+    localStorage.setItem("verson", VERSON);
+}
+
+
+
+
 let keys = [];
 document.addEventListener('keydown', event => {
     keys[event.key] = true;
@@ -51,6 +73,9 @@ function updateView(player){
     view.y = lerp(view.y, targetY - height/2, viewSmoothness);
     
     view.y = constrain(view.y, 0, map.length * BLOCK_SIZE - height);
+
+
+
 
 }
 
@@ -108,17 +133,22 @@ class Player {
         this.deathAnimationTimeMS = 300;
         this.deathAnimationTimer = this.deathAnimationTimeMS + 1;
 
+        this.acquiredCheckpoints = [];
+
         this.hardRestart();
         if(localStorage.getItem('spawnX3') !== null) {
             this.spawnX = parseFloat(localStorage.getItem('spawnX3'));
             this.spawnY = parseFloat(localStorage.getItem('spawnY3'));
             this.gravity = parseFloat(localStorage.getItem('gravity3'));
+            console.log(localStorage.getItem('checkpoints3'));
+            this.acquiredCheckpoints = JSON.parse(localStorage.getItem('checkpoints3'));
             this.restart();
             this.deathAnimationTimer = this.deathAnimationTimeMS + 1;
         } else {
             localStorage.setItem('spawnX3', this.spawnX);
             localStorage.setItem('spawnY3', this.spawnY);
             localStorage.setItem('gravity3', this.gravity);
+            localStorage.setItem('checkpoints3', JSON.stringify(this.acquiredCheckpoints));
         }
 
 
@@ -191,6 +221,8 @@ class Player {
 
 
     }
+
+
 
 }
 let player = new Player(100, 100);
@@ -290,6 +322,12 @@ function collidePlayerWithBlock(player, blockType, blockX, blockY) {
             localStorage.setItem('spawnX3', player.spawnX);
             localStorage.setItem('spawnY3', player.spawnY);
             localStorage.setItem('gravity3', player.gravity);
+
+            // if the checkpoint array doesn't have this checkpoint, add it
+            if(!player.acquiredCheckpoints.includes(blockX + ',' + blockY)) {
+                player.acquiredCheckpoints.push(blockX + ',' + blockY);
+                localStorage.setItem('checkpoints3', JSON.stringify(player.acquiredCheckpoints));
+            }
         }
     }
 
@@ -452,6 +490,10 @@ function gameLoop() {
     context.font = "20px Arial";
     context.fillText(`FPS: ${renderFPS}`, 5, 20);
     context.fillText(`UPS: ${updateFPS}`, 5, 40);
+
+    // draw the level the player is on at the top right
+    let level = player.acquiredCheckpoints.length + 1;
+    context.fillText(`Level: ${level}`, canvas.width - 100, 20);
 
 
     drawMap();
