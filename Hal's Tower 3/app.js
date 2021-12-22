@@ -6,14 +6,12 @@
 TODO:
 - add death counter
 - double jump block
-- speed up block
-
 
 
 
 
 */
-const VERSON = "0.1.2";
+const VERSON = "0.2.1";
 if(localStorage.getItem("verson") != VERSON) {
     localStorage.clear();
     localStorage.setItem("verson", VERSON);
@@ -114,10 +112,24 @@ function updateView(player){
 
     let viewSmoothness = 0.01;
 
+
     view.x = lerp(view.x, targetX - width/2, viewSmoothness);
     view.y = lerp(view.y, targetY - height/2, viewSmoothness);
     
+    // console.log(view.y - player.y);
+    if(Math.abs(player.yVel) > 300) {
+        if(targetY - view.y > canvas.height * 4/5) {
+            view.y = targetY - canvas.height * 4/5;
+        }
+        if(targetY - view.y < canvas.height * 1/8) {
+            view.y = targetY - canvas.height * 1/8;
+        }
+
+    }
+
     view.y = constrain(view.y, 0, map.length * BLOCK_SIZE - height);
+
+
 
 
 
@@ -157,13 +169,16 @@ class Player {
         this.y = y;
         this.xVel = 0;
         this.yVel = 0;
-        this.jumpForce = -435;
+        this.defaultJumpForce = -435;
+        this.jumpForce = this.defaultJumpForce;
         this.defaultSpeed = 195;
         this.defaultGravity = 800;
         this.gravity = this.defaultGravity;
         this.speed = this.defaultSpeed;
         this.width = BLOCK_SIZE / 2;
         this.height = BLOCK_SIZE / 2;
+
+        this.lastTimerGrounded = 0;
 
         this.bounceForce = -600;
 
@@ -175,9 +190,19 @@ class Player {
         this.deathY = 0;
 
         this.speedUpSpeed = 400;
-        let speedUpTimer = 0;
+        this.speedUpTimer = 0;
         this.speedUpTimeMS = 5000;
-        let highJumpTimer = 0;
+        this.speedTrail = []; // [{x: 0, y: 0, time: 0}]
+        this.speedTrailTimer = 0;
+        this.speedTrailLifetime = 500;
+
+        this.highJumpForce = -580;
+        this.highJumpTimeMS = 8000;
+        this.highJumpTimer = 0;
+        this.highJumpTrail = []; // [{x: 0, y: 0, time: 0}]
+        this.highJumpTrailTimer = 0;
+        this.highJumpTrailLifetime = 500; 
+
 
         
         this.deathAnimationTimeMS = 300;
@@ -189,7 +214,7 @@ class Player {
         if(localStorage.getItem('spawnX3') !== null) {
             this.spawnX = parseFloat(localStorage.getItem('spawnX3'));
             this.spawnY = parseFloat(localStorage.getItem('spawnY3'));
-            this.gravity = parseFloat(localStorage.getItem('gravity3'));
+            this.spawnGravity = parseFloat(localStorage.getItem('gravity3'));
             console.log(localStorage.getItem('checkpoints3'));
             this.acquiredCheckpoints = JSON.parse(localStorage.getItem('checkpoints3'));
             this.restart();
@@ -207,18 +232,65 @@ class Player {
         
 
     draw() {
+
+        // draw the speed trail
+        for(let i = 0; i < this.speedTrail.length; i++) {
+            if(Date.now() - this.speedTrail[i].time > this.speedTrailLifetime) {
+                this.speedTrail.splice(i, 1);
+                i--;
+            } else {
+                let trail = this.speedTrail[i];
+                let alpha = 1 - (Date.now() - trail.time) / this.speedTrailLifetime;
+                fill(0, 200, 200, alpha);
+                rect(Math.round(trail.x), Math.round(trail.y), this.width, this.height, view);
+            }
+        }
+
+        // every tenth of a second, add a speed trail point
+        if(Date.now() - this.speedTrailTimer > 100 && Date.now() - this.speedUpTimer < this.speedUpTimeMS) {
+            this.speedTrailTimer = Date.now();
+            this.speedTrail.push({x: this.x, y: this.y, time: Date.now()});
+        }
+
+        // draw the high jump trail
+        for(let i = 0; i < this.highJumpTrail.length; i++) {
+            if(Date.now() - this.highJumpTrail[i].time > this.highJumpTrailLifetime) {
+                this.highJumpTrail.splice(i, 1);
+                i--;
+            } else {
+                let trail = this.highJumpTrail[i];
+                let alpha = 1 - (Date.now() - trail.time) / this.highJumpTrailLifetime;
+                fill(0, 230, 100, alpha);
+                rect(Math.round(trail.x), Math.round(trail.y), this.width, this.height, view);
+            }
+        }
+
+        // every seventh of a second, add a high jump trail point
+        if(Date.now() - this.lastTimerGrounded > 10 && Date.now() - this.highJumpTrailTimer > 1000/7 && Date.now() - this.highJumpTimer < this.highJumpTimeMS) {
+            this.highJumpTrailTimer = Date.now();
+            this.highJumpTrail.push({x: this.x, y: this.y, time: Date.now()});
+        }
+
+
+        // draw the player
         fill(204, 204, 204);
         rect(Math.round(this.x), Math.round(this.y), this.width, this.height, view);
 
         // draw a teal blue bar at the right of the player to indicate how much time they have left sped up
-        fill(0, 200, 200, 0.8);
+        fill(0, 240, 240, 0.9);
         let fraction = 1 - (Date.now() - this.speedUpTimer) / this.speedUpTimeMS;
         if(fraction > 0) {
             rect(Math.round(this.x), Math.round(this.y + (1-fraction)*this.height), 5, Math.round(this.height * fraction), view);
-            
         }
 
+        // draw the jump bar
+        fill(0, 230, 100, 0.8);
+        fraction = 1 - (Date.now() - this.highJumpTimer) / this.highJumpTimeMS;
+        if(fraction > 0) {
+            rect(Math.round(this.x + this.width-5), Math.round(this.y + (1-fraction)*this.height), 5, Math.round(this.height * fraction), view);
+        }
 
+        // draw the death animation
         if(Date.now() - this.deathAnimationTimer > this.deathAnimationTimeMS) {
             this.deathAnimationTimer = 0;
         } else {
@@ -249,6 +321,13 @@ class Player {
             this.speed = this.defaultSpeed;
         }
 
+        if(Date.now() - this.highJumpTimer < this.highJumpTimeMS) {
+            this.jumpForce = this.highJumpForce;
+        } else {
+            this.jumpForce = this.defaultJumpForce;
+        }
+
+
     }
 
     hardRestart() {
@@ -267,10 +346,11 @@ class Player {
         this.xVel = 0;
         this.yVel = 0;
         this.speed = this.defaultSpeed;
-        this.gravity = this.defaultGravity;
+        // this.gravity = this.defaultGravity;
 
         this.deathAnimationTimer = 0;
         this.speedUpTimer = 0;
+        this.highJumpTimer = 0;
     }
 
     restart() {
@@ -284,9 +364,10 @@ class Player {
         this.xVel = 0;
         this.yVel = 0;
         this.speed = this.defaultSpeed;
-        this.gravity = this.defaultGravity;
+        // this.gravity = this.defaultGravity;
 
         this.speedUpTimer = 0;
+        this.highJumpTimer = 0;
 
 
     }
@@ -330,44 +411,41 @@ function collidePlayerWithBlock(player, blockType, blockX, blockY) {
                     if(keys['ArrowUp'] || keys['w']) {
                         if(player.gravity > 0) {
                             player.yVel = player.jumpForce;
-                            player.y -= 0.1;
+                            player.y = blockY-player.height;
+                            // player.y -= 0.1;
                         }
                     } else {
                         player.yVel = 0;
                         player.y = blockY-player.height;
+                        player.lastTimerGrounded = Date.now();
                     }
                 }
             } else {
-                player.yVel = 0;
-                player.y = blockY-player.height;
+                if(player.yVel > 0) {
+                    player.yVel = 0;
+                    player.y = blockY-player.height;
+                    player.lastTimerGrounded = Date.now();
+                }
             }
         }
         if(collidingWithBottomOfBlock(player, blockX, blockY, 0, 2)){
-            // if(player.yVel < 0) {
-            //     if(player.gravity < 0 && (keys['ArrowUp'] || keys['w'])) {
-            //         if(player.gravity < 0) {
-            //             player.yVel = -player.jumpForce;
-            //             player.y += 0.1;
-            //         }
-            //     } else {
-            //         player.yVel = 0;
-            //         player.y = blockY+BLOCK_SIZE;
-            //     }
-            // }
             if(player.gravity < 0) {
                 if(player.yVel < 0) {
                     if(keys['ArrowUp'] || keys['w']) {
                         player.yVel = -player.jumpForce;
-                        player.y += 0.1;
+                        player.y = blockY+BLOCK_SIZE;
+                        // player.y += 0.1;
                     } else {
                         player.yVel = 0;
                         player.y = blockY+BLOCK_SIZE;
+                        player.lastTimerGrounded = Date.now();
                     }
                 }
             } else {
                 if(player.yVel < 0) {
                     player.yVel = 0;
                     player.y = blockY+BLOCK_SIZE;
+                    player.lastTimerGrounded = Date.now();
                 }
             }
         }
@@ -405,10 +483,17 @@ function collidePlayerWithBlock(player, blockType, blockX, blockY) {
         }
     }
 
+    if(blockType === MAP_BLOCK_TYPES.highJump) {
+        if(collidingWithBlock(player, blockX, blockY, 0)) {
+            player.highJumpTimer = Date.now();
+        }
+    }
+
     if(blockType === MAP_BLOCK_TYPES.checkpoint) {
         if(collidingWithBlock(player, blockX, blockY, 0)) {
             player.spawnX = blockX + BLOCK_SIZE / 4;
             player.spawnY = blockY + BLOCK_SIZE - player.height;
+            player.spawnGravity = player.gravity;
 
             localStorage.setItem('spawnX3', player.spawnX);
             localStorage.setItem('spawnY3', player.spawnY);
@@ -442,6 +527,7 @@ function collidePlayerWithBlock(player, blockType, blockX, blockY) {
 }
 
 function handlePlayerCollisions(player) {
+
     let startX = Math.floor(player.x / BLOCK_SIZE);
     let startY = Math.floor(player.y / BLOCK_SIZE);
     let endX = Math.floor((player.x + player.width) / BLOCK_SIZE);
@@ -484,6 +570,10 @@ function drawMap() {
 
 
     for(let y = startY; y <= endY; y++) {
+        let startX = Math.floor(view.x / BLOCK_SIZE) - 1;
+        let endX = Math.floor((view.x + canvas.width) / BLOCK_SIZE) + 1;
+        startX = Math.max(startX, 0);
+        endX = Math.min(endX, map[y].length-1);
         for(let x = startX; x <= endX; x++) {
             let blockPos = {x: x * BLOCK_SIZE, y: y * BLOCK_SIZE};
 
@@ -530,6 +620,15 @@ function drawMap() {
                     fill(0, 64, 128);
                     rect(Math.round(blockPos.x + BLOCK_SIZE*3/8), Math.round(blockPos.y + BLOCK_SIZE/4), BLOCK_SIZE/2, BLOCK_SIZE/2, view);                    
                     break;
+                case MAP_BLOCK_TYPES.highJump:
+                    fill(0, 238, 138);
+                    rect(blockPos.x, blockPos.y, BLOCK_SIZE, BLOCK_SIZE, view);
+                    fill(0, 0, 0, 0.1);
+                    triangle(blockPos.x + BLOCK_SIZE/4, blockPos.y + BLOCK_SIZE*3/4,
+                        blockPos.x + BLOCK_SIZE*3/4, blockPos.y + BLOCK_SIZE*3/4,
+                        blockPos.x + BLOCK_SIZE/2, blockPos.y + BLOCK_SIZE/4, view);
+
+                    break;
                 case MAP_BLOCK_TYPES.gravityDown:
                     fill(10, 255, 100, 0.8);
                     rect(blockPos.x, blockPos.y, BLOCK_SIZE, BLOCK_SIZE, view);
@@ -560,9 +659,8 @@ String.prototype.replaceAt = function(index, replacement) {
 let flashingBlockTimer = Date.now();
 function updateMap() {
     if(Date.now() - flashingBlockTimer > TIME_PER_FLASH_MS) {
-        console.log("flashing");
         for(let y = 0; y < map.length; y++) {
-            for(let x = 0; x < map[0].length; x++) {
+            for(let x = 0; x < map[y].length; x++) {
                 if(map[y][x] === MAP_BLOCK_TYPES.flashingOn) {
                     map[y] = map[y].replaceAt(x, MAP_BLOCK_TYPES.flashingOff);
                     
@@ -631,7 +729,6 @@ function gameLoop() {
     rect(0, 0, canvas.width, canvas.height);
 
 
-
     drawMap();
     player.draw();
 
@@ -645,6 +742,9 @@ function gameLoop() {
     // draw the level the player is on at the top right
     let level = player.acquiredCheckpoints.length + 1;
     context.fillText(`Level: ${level}`, canvas.width - 100, 20);
+
+
+
 
 
 } gameLoop();
@@ -668,8 +768,13 @@ window.setInterval(() => {
             player.hardRestart();
         }
         if(keys['ArrowDown'] || keys['s']) {
-            player.y -= 200 * delta/1000;
+            if(player.gravity > 0) player.y -= 200 * delta/1000;
+            else player.y += 200 * delta/1000;
             player.yVel = 0;
+        }
+        if(keys[' ']) {
+            player.spawnX = player.x;
+            player.spawnY = player.y;
         }
         
         player.update(delta);
