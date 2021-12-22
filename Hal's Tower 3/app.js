@@ -11,7 +11,7 @@ TODO:
 
 
 */
-const VERSON = "0.2.1";
+const VERSON = "0.3.2";
 if(localStorage.getItem("verson") != VERSON) {
     localStorage.clear();
     localStorage.setItem("verson", VERSON);
@@ -161,7 +161,7 @@ function random(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 const BLOCK_SIZE = 50;
-const COLLISION_MARGIN = 5;
+const COLLISION_MARGIN = 8;
 
 class Player {
     constructor(x, y) {
