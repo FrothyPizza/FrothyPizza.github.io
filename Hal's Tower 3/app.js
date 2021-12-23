@@ -346,6 +346,8 @@ class Player {
             this.jumpForce = this.defaultJumpForce;
         }
 
+        console.log(Date.now() - this.lastTimerGrounded);
+
         // console.log(Date.now() - this.lastTimerGrounded);
         if(isMobile) { 
             for(let i = 0; i < touches.length; ++i) {
@@ -464,7 +466,7 @@ function collidePlayerWithBlock(player, blockType, blockX, blockY) {
                 if(player.yVel > 0) {
                     player.yVel = 0;
                     player.y = blockY-player.height;
-                    player.lastTimerGrounded = Date.now();
+                    // player.lastTimerGrounded = Date.now();
                 }
             }
         }
@@ -485,7 +487,7 @@ function collidePlayerWithBlock(player, blockType, blockX, blockY) {
                 if(player.yVel < 0) {
                     player.yVel = 0;
                     player.y = blockY+BLOCK_SIZE;
-                    player.lastTimerGrounded = Date.now();
+                    // player.lastTimerGrounded = Date.now();
                 }
             }
         }
