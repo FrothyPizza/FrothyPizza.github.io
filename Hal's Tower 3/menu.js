@@ -11,6 +11,6 @@ startButton.onclick = () => {
 
     let music = new Audio(musicFiles[0]);
     music.loop = true;
-    music.volume = 0.05;
+    music.volume = 0.3;
     music.play();
 }
