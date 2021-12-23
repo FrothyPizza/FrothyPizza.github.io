@@ -72,9 +72,6 @@ window.mobileAndTabletCheck = function() {
     return check;
   };
 let isMobile = mobileAndTabletCheck();
-if(isMobile) {
-    // alert("Mobile");
-}
 
 let touches = [];
 if(isMobile) {
@@ -749,8 +746,8 @@ let updateFPS = 0;
 
 
 
-function gameLoop() {
-    window.requestAnimationFrame(gameLoop);
+function renderLoop() {
+    window.requestAnimationFrame(renderLoop);
 
 
     ++framesRendered;
@@ -784,93 +781,61 @@ function gameLoop() {
     let level = player.acquiredCheckpoints.length + 1;
     context.fillText(`Level: ${level}`, canvas.width - 100, 20);
 
+}
 
 
-
-
-} gameLoop();
-
-
-view.x = player.x;
-view.y = player.y;
 
 let lastUpdateStamp = performance.now();
-window.setInterval(() => {
-    // Update /////////////////////////////////////////////////////////////
-    for(let i = 0; i < 8; i++) {
-        let delta = (performance.now() - lastUpdateStamp);
-        lastUpdateStamp = performance.now();
-
-        if(delta > 10) {
-            delta = 10;
+function updateLoop() {
+        // Update /////////////////////////////////////////////////////////////
+        for(let i = 0; i < 8; i++) {
+            let delta = (performance.now() - lastUpdateStamp);
+            lastUpdateStamp = performance.now();
+    
+            if(delta > 10) {
+                delta = 10;
+            }
+    
+            if(keys['r']) {
+                player.hardRestart();
+            }
+            // if(keys['ArrowDown'] || keys['s']) {
+            //     if(player.gravity > 0) player.y -= 200 * delta/1000;
+            //     else player.y += 200 * delta/1000;
+            //     player.yVel = 0;
+            // }
+            // if(keys[' ']) {
+            //     player.spawnX = player.x;
+            //     player.spawnY = player.y;
+            // }
+            
+            player.update(delta);
+            handlePlayerCollisions(player);
+    
+            updateMap();
+    
+            ++framesUpdated;
+            if(performance.now() - lastUpdateTime > 1000) {
+                updateFPS = framesUpdated;
+                framesUpdated = 0;
+                lastUpdateTime = performance.now();
+            }
         }
-
-        if(keys['r']) {
-            player.hardRestart();
-        }
-        if(keys['ArrowDown'] || keys['s']) {
-            if(player.gravity > 0) player.y -= 200 * delta/1000;
-            else player.y += 200 * delta/1000;
-            player.yVel = 0;
-        }
-        if(keys[' ']) {
-            player.spawnX = player.x;
-            player.spawnY = player.y;
-        }
-        
-        player.update(delta);
-        handlePlayerCollisions(player);
-
-        updateMap();
-
-        ++framesUpdated;
-        if(performance.now() - lastUpdateTime > 1000) {
-            updateFPS = framesUpdated;
-            framesUpdated = 0;
-            lastUpdateTime = performance.now();
-        }
-    }
-
-    updateView(player);
-
-}, 1000/250);
+    
+        updateView(player);
+}
 
 
 
+function startGame() {    
+    view.x = player.x - canvas.width/2;
+    view.y = player.y - canvas.height/2;
 
+    renderLoop();
+    
+    window.setInterval(() => {
+        updateLoop();
+    }, 1000/250);
+}
 
-
-
-// let lastTime = performance.now();
-// window.setInterval(() => {
-
-//     if(fullScreen) {
-//         canvas.width = document.documentElement.clientWidth;
-//         canvas.height = document.documentElement.clientHeight;
-//     }
-
-//     // Update /////////////////////////////////////////////////////////////
-//     for(let i = 0; i < 3; i++) {
-//         let delta = (performance.now() - lastTime);
-//         lastTime = performance.now();
-
-//         if(delta > 32) {
-//             delta = 32;
-//         }
-
-//         console.log(delta);
-
-
-//         player.update(delta);
-//         handlePlayerCollisions(player);
-//     }
-
-
-
-//     // Draw ///////////////////////////////////////////////////////////////
-//     fill(3, 3, 10);
-//     rect(0, 0, canvas.width, canvas.height);
-
-//     drawMap();
-//     player.draw();
-// }, 1000/60);
+// startGame();

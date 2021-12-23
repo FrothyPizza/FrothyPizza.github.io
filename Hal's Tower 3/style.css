@@ -3,10 +3,38 @@
     padding: 0;
     overflow: hidden;
 
+
+}
+
+canvas {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+}
+
+#start-menu {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    z-index: 1;
+}
+
+#start-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -50px;
+    margin-left: -50px;
+    cursor: pointer;
+    z-index: 1;
+}
+
+#hals-tower-3-image {
+    display: none;
 }
