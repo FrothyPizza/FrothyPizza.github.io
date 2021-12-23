@@ -346,7 +346,6 @@ class Player {
             this.jumpForce = this.defaultJumpForce;
         }
 
-        console.log(Date.now() - this.lastTimerGrounded);
 
         // console.log(Date.now() - this.lastTimerGrounded);
         if(isMobile) { 
