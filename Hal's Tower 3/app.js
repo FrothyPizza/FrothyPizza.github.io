@@ -1,58 +1,14 @@
 
 
 
+const DEVELOPER_MODE = true;
 
-
-const VERSON = "0.3.2";
+const VERSON = "0.5.0";
 if(localStorage.getItem("verson") != VERSON) {
     localStorage.clear();
     localStorage.setItem("verson", VERSON);
 }
 document.title = "Hal's Tower 3 - v" + VERSON;
-
-class Clock {
-    constructor() {
-        this.startTime = 0;
-        this.elapsedTime = 0;
-        this.pausedTime = 0;
-        this.isPaused = false;
-        this.isStarted = false;
-    }
-
-    start() {
-        this.startTime = Date.now();
-        this.isStarted = true;
-        this.isPaused = false;
-    }
-
-    pause() {
-        if (this.isStarted && !this.isPaused) {
-            this.isPaused = true;
-            this.pausedTime = Date.now();
-        }
-    }
-
-    resume() {
-        if (this.isStarted && this.isPaused) {
-            this.isPaused = false;
-            this.startTime += (Date.now() - this.pausedTime);
-        }
-    }
-
-    getElapsedTime() {
-        if (this.isStarted && !this.isPaused) {
-            this.elapsedTime = Date.now() - this.startTime;
-        }
-        return this.elapsedTime;
-    }
-
-    restart() {
-        this.startTime = Date.now();
-        this.elapsedTime = 0;
-        this.isStarted = true;
-        this.isPaused = false;
-    }
-}
 
 
 let keys = [];
@@ -161,16 +117,20 @@ function rect(x, y, w, h, view={x: 0, y: 0}) {
 }
 function triangle(x1, y1, x2, y2, x3, y3, view={x: 0, y: 0}) {
     context.beginPath();
-    context.moveTo(Math.round(x1 - view.x), Math.round(y1 - view.y));
-    context.lineTo(Math.round(x2 - view.x), Math.round(y2 - view.y));
-    context.lineTo(Math.round(x3 - view.x), Math.round(y3 - view.y));
+    context.moveTo(Math.round(Math.round(x1) - view.x), Math.round(Math.round(y1) - view.y));
+    context.lineTo(Math.round(Math.round(x2) - view.x), Math.round(Math.round(y2) - view.y));
+    context.lineTo(Math.round(Math.round(x3) - view.x), Math.round(Math.round(y3) - view.y));
     context.fill();
 }
 
 function ellipse(x, y, w, h, view={x: 0, y: 0}) {
     context.beginPath();
-    context.ellipse(x - view.x, y - view.y, w, h, 0, 0, 2 * Math.PI);
+    context.ellipse(Math.round(Math.round(x) - view.x), Math.round(Math.round(y) - view.y), w, h, 0, 0, 2 * Math.PI);
     context.fill();
+}
+
+function drawImage(img, x, y, width, height, view={x: 0, y: 0}) {
+    context.drawImage(img, Math.round(x - view.x), Math.round(y - view.y), width, height);
 }
 
 function random(min, max) {
@@ -181,6 +141,9 @@ const COLLISION_MARGIN = 8;
 
 class Player {
     constructor(x, y) {
+        this.skin = new Image();
+        this.loadSkin("images/skins/default-skin.png");
+
         this.x = x;
         this.y = y;
         this.xVel = 0;
@@ -219,6 +182,10 @@ class Player {
         this.highJumpTrailTimer = 0;
         this.highJumpTrailLifetime = 500; 
 
+        this.gravityChangingTimer = 0;
+        this.gravityChangingTimeMS = 10000;
+        this.gravityMode = false;
+
 
         
         this.deathAnimationTimeMS = 300;
@@ -243,6 +210,10 @@ class Player {
         }
 
 
+    }
+
+    loadSkin(src) {
+        this.skin.src = src;
     }
 
         
@@ -288,9 +259,22 @@ class Player {
         }
 
 
-        // draw the player
-        fill(204, 204, 204);
-        rect(Math.round(this.x), Math.round(this.y), this.width, this.height, view);
+        // // draw the player
+        // fill(204, 204, 204);
+        // rect(Math.round(this.x), Math.round(this.y), this.width, this.height, view);
+
+        // draw the player's image
+        // if the image is invalid, use the default skin
+        if(!this.skin.complete) {
+            fill(204, 204, 204);
+            rect(Math.round(this.x), Math.round(this.y), this.width, this.height, view);
+        } else {
+            // context.drawImage(this.skin, Math.round(this.x - view.x), Math.round(this.y - view.y), this.width, this.height);
+            drawImage(this.skin, Math.round(this.x), Math.round(this.y), this.width, this.height, view);
+        }
+
+        
+
 
         // draw a teal blue bar at the right of the player to indicate how much time they have left sped up
         fill(0, 240, 240, 0.9);
@@ -306,6 +290,16 @@ class Player {
             rect(Math.round(this.x + this.width-5), Math.round(this.y + (1-fraction)*this.height), 5, Math.round(this.height * fraction), view);
         }
 
+        // draw the golden gravity changing bar in the middle
+        if(Date.now() - this.gravityChangingTimer < this.gravityChangingTimeMS) {
+            fill(255, 255, 0, 0.8);
+            fraction = 1 - (Date.now() - this.gravityChangingTimer) / this.gravityChangingTimeMS;
+            if(fraction > 0) {
+                rect(Math.round(this.x + this.width/2 - 5), Math.round(this.y + (1-fraction)*this.height), 5, Math.round(this.height * fraction), view);
+            }
+        }
+
+
         // draw the death animation
         if(Date.now() - this.deathAnimationTimer > this.deathAnimationTimeMS) {
             this.deathAnimationTimer = 0;
@@ -313,6 +307,22 @@ class Player {
             let a = (Date.now() - this.deathAnimationTimer) / this.deathAnimationTimeMS;
             fill(255, 0, 0, 1-a);
             rect(Math.round(this.deathX), Math.round(this.deathY), this.width, this.height, view);
+        }
+
+
+        // draw a faint blue arrow next to the player to indicate the direction of gravity
+        if(Date.now() - this.gravityChangingTimer < this.gravityChangingTimeMS) {
+            if(this.gravity < 0) {
+                fill(0, 0, 255, 0.5);
+                triangle(this.x + this.width, this.y + this.height/2,
+                    this.x + this.width + 20, this.y + this.height/2,
+                    this.x + this.width + 10, this.y + this.height/2 - 10, view);
+            } else if(this.gravity > 0) {
+                fill(0, 0, 255, 0.5);
+                triangle(this.x + this.width, this.y + this.height/2,
+                    this.x + this.width + 20, this.y + this.height/2,
+                    this.x + this.width + 10, this.y + this.height/2 + 10, view);
+            }
         }
 
     }
@@ -365,6 +375,21 @@ class Player {
             }
         }
 
+        if(Date.now() - this.gravityChangingTimer > this.gravityChangingTimeMS) {
+            this.gravityMode = false;
+        } else {
+            this.gravityMode = true;
+        }
+
+
+        if(this.gravityMode) {
+            if(keys['ArrowUp'] || keys['w']) {
+                this.gravity = -this.gravity;
+                keys['ArrowUp'] = false;
+                keys['w'] = false;
+            }
+        }
+
 
     }
 
@@ -389,6 +414,7 @@ class Player {
         this.deathAnimationTimer = 0;
         this.speedUpTimer = 0;
         this.highJumpTimer = 0;
+        this.gravityChangingTimer = 0;
     }
 
     restart() {
@@ -406,6 +432,7 @@ class Player {
 
         this.speedUpTimer = 0;
         this.highJumpTimer = 0;
+        this.gravityChangingTimer = 0;
 
 
     }
@@ -497,7 +524,7 @@ function collidePlayerWithBlock(player, blockType, blockX, blockY) {
         }
     }
 
-    if(blockType === MAP_BLOCK_TYPES.red) {
+    if(blockType === MAP_BLOCK_TYPES.red || blockType === MAP_BLOCK_TYPES.redFlashOn) {
         if(collidingWithBlock(player, blockX, blockY, -0.1)) {
             player.restart();
         }
@@ -527,6 +554,20 @@ function collidePlayerWithBlock(player, blockType, blockX, blockY) {
         }
     }
 
+    if(blockType === MAP_BLOCK_TYPES.gravityChangeMode) {
+        if(collidingWithBlock(player, blockX, blockY, 0)) {
+            player.gravityChangingTimer = Date.now();
+        }
+    }
+
+    if(blockType === MAP_BLOCK_TYPES.statusClear) {
+        if(collidingWithBlock(player, blockX, blockY, 0)) {
+            player.gravityChangingTimer = 0;
+            player.speedUpTimer = 0;
+            player.highJumpTimer = 0;
+        }
+    }
+
     if(blockType === MAP_BLOCK_TYPES.checkpoint) {
         if(collidingWithBlock(player, blockX, blockY, 0)) {
             player.spawnX = blockX + BLOCK_SIZE / 4;
@@ -546,10 +587,10 @@ function collidePlayerWithBlock(player, blockType, blockX, blockY) {
     }
 
     if(blockType === MAP_BLOCK_TYPES.bounce) {
-        if(collidingWithTopOfBlock(player, blockX, blockY, 0, 2)) {
+        if(collidingWithTopOfBlock(player, blockX, blockY, 0, 2) && player.yVel > 0) {
             player.yVel = player.bounceForce;
         }
-        if(collidingWithBottomOfBlock(player, blockX, blockY, 0, 2)){
+        if(collidingWithBottomOfBlock(player, blockX, blockY, 0, 2) && player.yVel < 0) {
             player.yVel = -player.bounceForce;
         }
         if(collidingWithLeftOfBlock(player, blockX, blockY, 0, 2)) {
@@ -625,9 +666,21 @@ function drawMap() {
                 case MAP_BLOCK_TYPES.flashingOn:
                     fill(255, 255, 255, 0.8);
                     rect(blockPos.x, blockPos.y, BLOCK_SIZE, BLOCK_SIZE, view);
-                    break;                    
+                    break;                   
+                case MAP_BLOCK_TYPES.flashingOff:
+                    fill(255, 255, 255, 0.1);
+                    rect(blockPos.x, blockPos.y, BLOCK_SIZE, BLOCK_SIZE, view);
+                    break; 
                 case MAP_BLOCK_TYPES.red:
                     fill(255, 0, 0);
+                    rect(blockPos.x, blockPos.y, BLOCK_SIZE, BLOCK_SIZE, view);
+                    break;
+                case MAP_BLOCK_TYPES.redFlashOn:
+                    fill(255, 0, 0);
+                    rect(blockPos.x, blockPos.y, BLOCK_SIZE, BLOCK_SIZE, view);
+                    break;
+                case MAP_BLOCK_TYPES.redFlashOff:
+                    fill(255, 0, 0, 0.2);
                     rect(blockPos.x, blockPos.y, BLOCK_SIZE, BLOCK_SIZE, view);
                     break;
                 case MAP_BLOCK_TYPES.checkpoint:
@@ -665,7 +718,14 @@ function drawMap() {
                     triangle(blockPos.x + BLOCK_SIZE/4, blockPos.y + BLOCK_SIZE*3/4,
                         blockPos.x + BLOCK_SIZE*3/4, blockPos.y + BLOCK_SIZE*3/4,
                         blockPos.x + BLOCK_SIZE/2, blockPos.y + BLOCK_SIZE/4, view);
-
+                    break;
+                case MAP_BLOCK_TYPES.statusClear:
+                    // draw brown block
+                    fill(205, 133, 63);
+                    rect(blockPos.x, blockPos.y, BLOCK_SIZE, BLOCK_SIZE, view);
+                    // draw black ellipse in the middle
+                    fill(0, 0, 0);
+                    ellipse(blockPos.x + BLOCK_SIZE/2, blockPos.y + BLOCK_SIZE/2, BLOCK_SIZE/2, BLOCK_SIZE/2, view);
                     break;
                 case MAP_BLOCK_TYPES.gravityDown:
                     fill(10, 255, 100, 0.8);
@@ -683,6 +743,19 @@ function drawMap() {
                              blockPos.x + BLOCK_SIZE*3/4, blockPos.y + BLOCK_SIZE/2,
                              blockPos.x + BLOCK_SIZE/2, blockPos.y + BLOCK_SIZE/4, view);
                     break;
+                case MAP_BLOCK_TYPES.gravityChangeMode:
+                    // fill a golden color
+                    fill(255, 215, 0);
+                    rect(blockPos.x, blockPos.y, BLOCK_SIZE, BLOCK_SIZE, view);
+                    // draw a green arrow pointing up and down
+                    fill(10, 100, 255, 0.8);
+                    triangle(blockPos.x + BLOCK_SIZE/4, blockPos.y + BLOCK_SIZE/2,
+                        blockPos.x + BLOCK_SIZE*3/4, blockPos.y + BLOCK_SIZE/2,
+                        blockPos.x + BLOCK_SIZE/2, blockPos.y + BLOCK_SIZE*5/6, view);
+                    triangle(blockPos.x + BLOCK_SIZE/4, blockPos.y + BLOCK_SIZE/2,
+                        blockPos.x + BLOCK_SIZE*3/4, blockPos.y + BLOCK_SIZE/2,
+                        blockPos.x + BLOCK_SIZE/2, blockPos.y + BLOCK_SIZE/6, view);
+                    break;
                 default:
                     break;
             }
@@ -695,6 +768,7 @@ String.prototype.replaceAt = function(index, replacement) {
 }
 
 let flashingBlockTimer = Date.now();
+let redFlahsingBlockTimer = Date.now();
 function updateMap() {
     if(Date.now() - flashingBlockTimer > TIME_PER_FLASH_MS) {
         for(let y = 0; y < map.length; y++) {
@@ -708,6 +782,21 @@ function updateMap() {
             }
         }
         flashingBlockTimer = Date.now();
+    }
+    if(Date.now() - redFlahsingBlockTimer > TIME_PER_FLASH_MS) {
+        for(let y = 0; y < map.length; y++) {
+            for(let x = 0; x < map[y].length; x++) {
+                if(map[y][x] === MAP_BLOCK_TYPES.redFlashOn) {
+                    map[y] = map[y].replaceAt(x, MAP_BLOCK_TYPES.redFlashOff);
+                    
+                } else if(map[y][x] === MAP_BLOCK_TYPES.redFlashOff) {
+                    map[y] = map[y].replaceAt(x, MAP_BLOCK_TYPES.redFlashOn);
+                }
+
+
+            }
+        }
+        redFlahsingBlockTimer = Date.now();
     }
 }
 
@@ -777,9 +866,9 @@ function renderLoop() {
     context.fillText(`FPS: ${renderFPS}`, 5, 20);
     context.fillText(`UPS: ${updateFPS}`, 5, 40);
 
-    // draw the level the player is on at the top right
+    // draw the level the player is on at the top middle
     let level = player.acquiredCheckpoints.length + 1;
-    context.fillText(`Level: ${level}`, canvas.width - 100, 20);
+    context.fillText(`Level: ${level}`, canvas.width/2 - context.measureText(`Level: ${level}`).width/2, 20);
 
 }
 
@@ -799,15 +888,26 @@ function updateLoop() {
             if(keys['r']) {
                 player.hardRestart();
             }
-            // if(keys['ArrowDown'] || keys['s']) {
-            //     if(player.gravity > 0) player.y -= 200 * delta/1000;
-            //     else player.y += 200 * delta/1000;
-            //     player.yVel = 0;
-            // }
-            // if(keys[' ']) {
-            //     player.spawnX = player.x;
-            //     player.spawnY = player.y;
-            // }
+
+            if(DEVELOPER_MODE) {
+                if(keys['ArrowDown']) {
+                    if(player.gravity > 0) player.y -= 200 * delta/1000;
+                    else player.y += 200 * delta/1000;
+                    player.yVel = 0;
+                }
+                if(keys[' ']) {
+                    player.spawnX = player.x;
+                    player.spawnY = player.y;
+                }
+                if(keys['d']) {
+                    player.restart();
+                }
+                if(keys['u']) {
+                    player.y -= BLOCK_SIZE * 3;
+                    player.yVel = 0;
+                    keys['u'] = false;
+                }
+            }
             
             player.update(delta);
             handlePlayerCollisions(player);

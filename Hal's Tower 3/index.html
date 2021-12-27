@@ -9,12 +9,30 @@
     <body>
         <canvas id="canvas" width="800" height="600"></canvas>
         <div id="start-menu">
-            <img src="images/start-image.png" alt="start image" id="hals-tower-3-image">
-            <button id="start-button">Start</button>
+            <img src="images/start-image.png" alt="start image" id="hals-tower-3-image" style="opacity: 0;">
+            <button id="start-button" style="opacity: 0;">Start</button>
         </div>
+        <div id="now-playing-container">
+            <p id="now-playing-title">Now Playing:</p>
+            <p id="now-playing"><i>Upward</i> - Ethan Hill</p>
+        </div>
+        <nav id="side-buttons">
+            <button id="pause-button">Pause</button>
+            <button id="skin-menu-button">Skins</button>
+        </nav>
+        <section id="skin-select-menu" class="slide-in-from-top">
+            <h1>Select a Skin</h1>
+            <div id="skin-grid">
+                <img src="images/skins/default-skin.png" alt="default-skin" id="default-skin" class="skin">
+                <img src="images/skins/light-blue-skin.png" alt="light-blue-skin" id="light-blue-skin" class="locked skin">
+                <img src="images/skins/green-spotted.png" alt="green-spotted" id="green-spotted" class="locked skin">
+                <img src="images/skins/stupid-red.png" alt="stupid-red" id="stupid-red" class="locked skin">
+                <!-- <img src="images/skins/peter-griffin.png" alt="peter-skin" id="peter-skin" class="locked skin"> -->
+            </div>
+        </section>
+        
         <script src="map.js"></script>
         <script src="menu.js"></script>
-        <script src="music.js"></script>
         <script src="app.js"></script>
     </body>
 </html>
