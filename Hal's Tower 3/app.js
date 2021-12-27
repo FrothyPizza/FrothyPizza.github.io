@@ -11,6 +11,7 @@ if(localStorage.getItem("verson") != VERSON) {
 document.title = "Hal's Tower 3 - v" + VERSON;
 
 
+
 let keys = [];
 document.addEventListener('keydown', event => {
     keys[event.key] = true;
@@ -144,6 +145,8 @@ class Player {
         this.skin = new Image();
         this.loadSkin("images/skins/default-skin.png");
 
+        this.deaths = 0;
+
         this.x = x;
         this.y = y;
         this.xVel = 0;
@@ -194,10 +197,13 @@ class Player {
         this.acquiredCheckpoints = [];
 
         this.hardRestart();
+        if(localStorage.getItem('deaths3') === null) localStorage.setItem('deaths3', 0);
+
         if(localStorage.getItem('spawnX3') !== null) {
             this.spawnX = parseFloat(localStorage.getItem('spawnX3'));
             this.spawnY = parseFloat(localStorage.getItem('spawnY3'));
             this.spawnGravity = parseFloat(localStorage.getItem('gravity3'));
+            this.deaths = parseInt(localStorage.getItem('deaths3'));
             console.log(localStorage.getItem('checkpoints3'));
             this.acquiredCheckpoints = JSON.parse(localStorage.getItem('checkpoints3'));
             this.restart();
@@ -207,6 +213,7 @@ class Player {
             localStorage.setItem('spawnY3', this.spawnY);
             localStorage.setItem('gravity3', this.gravity);
             localStorage.setItem('checkpoints3', JSON.stringify(this.acquiredCheckpoints));
+            localStorage.setItem('deaths3', this.deaths);
         }
 
 
@@ -313,12 +320,12 @@ class Player {
         // draw a faint blue arrow next to the player to indicate the direction of gravity
         if(Date.now() - this.gravityChangingTimer < this.gravityChangingTimeMS) {
             if(this.gravity < 0) {
-                fill(0, 0, 255, 0.5);
+                fill(0, 200, 211, 0.9);
                 triangle(this.x + this.width, this.y + this.height/2,
                     this.x + this.width + 20, this.y + this.height/2,
                     this.x + this.width + 10, this.y + this.height/2 - 10, view);
             } else if(this.gravity > 0) {
-                fill(0, 0, 255, 0.5);
+                fill(0, 200, 211, 0.9);
                 triangle(this.x + this.width, this.y + this.height/2,
                     this.x + this.width + 20, this.y + this.height/2,
                     this.x + this.width + 10, this.y + this.height/2 + 10, view);
@@ -527,6 +534,8 @@ function collidePlayerWithBlock(player, blockType, blockX, blockY) {
     if(blockType === MAP_BLOCK_TYPES.red || blockType === MAP_BLOCK_TYPES.redFlashOn) {
         if(collidingWithBlock(player, blockX, blockY, -0.1)) {
             player.restart();
+            ++player.deaths;
+            localStorage.setItem('deaths3', player.deaths);
         }
     }
 
@@ -869,6 +878,10 @@ function renderLoop() {
     // draw the level the player is on at the top middle
     let level = player.acquiredCheckpoints.length + 1;
     context.fillText(`Level: ${level}`, canvas.width/2 - context.measureText(`Level: ${level}`).width/2, 20);
+
+    // draw the player's death count at the top middle
+    context.fillText(`Deaths: ${player.deaths}`, canvas.width/2 - context.measureText(`Deaths: ${player.deaths}`).width/2, 40);
+
 
 }
 
