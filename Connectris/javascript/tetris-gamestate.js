@@ -630,7 +630,7 @@ class TetrisGameState {
 
                 this.pasteToMatrix(mino);
 
-                this.lastClear = this.clearLines();
+                if(CLEAR_LINES) this.lastClear = this.clearLines();
                 this.lastAttack = this.getAttack(this.lastTSpin, mino.mino, this.lastClear);
 
 

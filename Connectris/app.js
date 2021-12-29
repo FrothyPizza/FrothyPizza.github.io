@@ -257,6 +257,9 @@ ymargin.onchange = () => {
 tilesToWin.onchange = () => {
     TILES_IN_A_ROW_TO_WIN = parseInt(tilesToWin.value);
 }
+clearLines.onchange = () => {
+    CLEAR_LINES = clearLines.checked;
+}
 matrixWidth.value = WIDTH;
 matrixHeight.value = HEIGHT;
 ymargin.value = YMARGIN;
