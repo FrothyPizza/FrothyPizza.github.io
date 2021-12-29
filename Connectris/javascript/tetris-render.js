@@ -96,10 +96,9 @@ function renderTetris(context, position, tileSize, gameState, mino, nextList, AI
 
     // Draw next list
     let next = new Tetromino(mino);
-    curPlayer = mino.player;
     for (let i = 0; i < PREVIEWS; ++i) {
-        next.setTetromino(nextList[i]);
-        if(curPlayer == 1) {
+        next.setTetromino(nextList[i], next.player);
+        if(next.player == 1) {
             next.player = 2;
         } else {
             next.player = 1;
@@ -115,6 +114,7 @@ function renderTetris(context, position, tileSize, gameState, mino, nextList, AI
             context.fill();
         }
     }
+
 
     // Draw hold
     if (gameState.hold >= 0 && gameState.hold < 7) {

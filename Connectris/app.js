@@ -260,6 +260,9 @@ tilesToWin.onchange = () => {
 clearLines.onchange = () => {
     CLEAR_LINES = clearLines.checked;
 }
+previews.onchange = () => {
+    PREVIEWS = previews.value;
+}
 matrixWidth.value = WIDTH;
 matrixHeight.value = HEIGHT;
 ymargin.value = YMARGIN;
