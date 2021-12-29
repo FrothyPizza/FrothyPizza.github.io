@@ -1,7 +1,7 @@
 
 
 
-const DEVELOPER_MODE = false;
+const DEVELOPER_MODE = true; 
 
 const VERSON = "0.5.0";
 if(localStorage.getItem("verson") != VERSON) {
@@ -450,6 +450,68 @@ class Player {
 let player = new Player(100, 100);
 
 
+class Projectile {
+    constructor(x, y, angle) {
+        this.x = x;
+        this.y = y;
+        this.angle = angle;
+        this.speed = 1200;
+        this.width = 5;
+        this.height = 5;
+        this.gravity = Math.abs(player.gravity);
+        this.xVel = Math.cos(angle) * this.speed;
+        this.yVel = Math.sin(angle) * this.speed;
+        this.lifetime = Date.now() + 1000;
+    }
+
+    draw() {
+        fill(255, 0, 0);
+        rect(Math.round(this.x), Math.round(this.y), this.width, this.height, view);
+    }
+
+    update(delta) {
+        this.x += this.xVel * delta / 1000;
+        this.y += this.yVel * delta / 1000;
+        this.yVel += this.gravity * delta / 1000;
+    }
+}
+let projectiles = [];
+let shootTimer = 0;
+const SHOOT_DELAY_MS = 1500;
+
+function updateProjectiles(player, delta) {
+    for(let i = 0; i < projectiles.length; ++i) {
+        projectiles[i].update(delta);
+        if(projectiles[i].lifetime < Date.now()) {
+            projectiles.splice(i, 1);
+            --i;
+            continue;
+        }
+
+        let block = map[Math.floor(projectiles[i].y / BLOCK_SIZE)][Math.floor(projectiles[i].x / BLOCK_SIZE)];
+        if(block !== MAP_BLOCK_TYPES.empty && block !== MAP_BLOCK_TYPES.projectileLauncher) {
+            projectiles.splice(i, 1);
+            --i;
+            continue;
+        }
+
+        // if colliding with player
+        if(Math.abs(projectiles[i].x - player.x) < player.width/2 + projectiles[i].width/2 &&
+            Math.abs(projectiles[i].y - player.y) < player.height/2 + projectiles[i].height/2) {
+            player.restart();
+            projectiles.splice(i, 1);
+            --i;
+        }
+    }
+}
+
+function drawProjectiles() {
+    for(let i = 0; i < projectiles.length; ++i) {
+        projectiles[i].draw();
+    }
+}
+
+
 // collisionProtrusion is how far out of the block the hitbox protrudes
 // boxWidth is how much shorter the hitbox should be
 function collidingWithLeftOfBlock(player, blockX, blockY, collisionProtrusion=0, boxWidth=0) {
@@ -644,8 +706,12 @@ function handlePlayerCollisions(player) {
 }
 
 
+function getProjectileLauncherAngle(launcherX, launcherY, player, delta) {
+    return Math.atan2(player.y - launcherY, player.x - launcherX) + Math.PI;
 
-function drawMap() {
+
+}
+function drawMap(delta) {
     let startY = Math.floor(view.y / BLOCK_SIZE) - 1;
     let endY = Math.floor((view.y + canvas.height) / BLOCK_SIZE) + 1;
     startY = Math.max(startY, 0);
@@ -656,6 +722,13 @@ function drawMap() {
     startX = Math.max(startX, 0);
     endX = Math.min(endX, map[0].length-1);
 
+
+    // the length of the bar is based on the flashing block timer
+    let barLength = BLOCK_SIZE * (1 - (Date.now() - flashingBlockTimer) / TIME_PER_FLASH_MS);
+    let inverseBarLength = BLOCK_SIZE - barLength;
+
+    let shootBarLength = BLOCK_SIZE * (1 - (Date.now() - shootTimer) / SHOOT_DELAY_MS);
+    
 
     for(let y = startY; y <= endY; y++) {
         let startX = Math.floor(view.x / BLOCK_SIZE) - 1;
@@ -675,10 +748,16 @@ function drawMap() {
                 case MAP_BLOCK_TYPES.flashingOn:
                     fill(255, 255, 255, 0.8);
                     rect(blockPos.x, blockPos.y, BLOCK_SIZE, BLOCK_SIZE, view);
+                    // draw the bar as a thin rectangle in the middle of the block that closes from bottom to top
+                    fill(0, 0, 0, 0.2);
+                    rect(blockPos.x + BLOCK_SIZE / 2 - barLength / 2, blockPos.y + BLOCK_SIZE / 2, barLength, BLOCK_SIZE / 15, view);
                     break;                   
                 case MAP_BLOCK_TYPES.flashingOff:
                     fill(255, 255, 255, 0.1);
                     rect(blockPos.x, blockPos.y, BLOCK_SIZE, BLOCK_SIZE, view);
+                    fill(0, 0, 0, 0.2);
+                    rect(blockPos.x + BLOCK_SIZE / 2 - barLength / 2, blockPos.y + BLOCK_SIZE / 2, barLength, BLOCK_SIZE / 15, view);
+                    // rect(blockPos.x + BLOCK_SIZE / 2 - inverseBarLength / 2, blockPos.y + BLOCK_SIZE / 2, inverseBarLength, BLOCK_SIZE / 8, view);
                     break; 
                 case MAP_BLOCK_TYPES.red:
                     fill(255, 0, 0);
@@ -687,10 +766,14 @@ function drawMap() {
                 case MAP_BLOCK_TYPES.redFlashOn:
                     fill(255, 0, 0);
                     rect(blockPos.x, blockPos.y, BLOCK_SIZE, BLOCK_SIZE, view);
+                    fill(139, 0, 0, 0.5);
+                    rect(blockPos.x + BLOCK_SIZE / 2 - barLength / 2, blockPos.y + BLOCK_SIZE / 2, barLength, BLOCK_SIZE / 15, view);
                     break;
                 case MAP_BLOCK_TYPES.redFlashOff:
                     fill(255, 0, 0, 0.2);
                     rect(blockPos.x, blockPos.y, BLOCK_SIZE, BLOCK_SIZE, view);
+                    fill(255, 100, 100, 0.1);
+                    rect(blockPos.x + BLOCK_SIZE / 2 - barLength / 2, blockPos.y + BLOCK_SIZE / 2, barLength, BLOCK_SIZE / 15, view);
                     break;
                 case MAP_BLOCK_TYPES.checkpoint:
                     fill(240, 240, 0);
@@ -765,20 +848,43 @@ function drawMap() {
                         blockPos.x + BLOCK_SIZE*3/4, blockPos.y + BLOCK_SIZE/2,
                         blockPos.x + BLOCK_SIZE/2, blockPos.y + BLOCK_SIZE/6, view);
                     break;
+                case MAP_BLOCK_TYPES.projectileLauncher:
+                    // draw a triangle pointing towards the angle
+                    let angle = getProjectileLauncherAngle(blockPos.x, blockPos.y, player, delta);
+                    context.save();
+                    fill(255, 0, 0);
+                    context.translate(blockPos.x + BLOCK_SIZE/2 - view.x, blockPos.y + BLOCK_SIZE/2 - view.y);
+                    context.rotate(angle);
+                    triangle(-BLOCK_SIZE/4, 0,
+                        BLOCK_SIZE/4, BLOCK_SIZE/4, 
+                        BLOCK_SIZE/4, -BLOCK_SIZE/4);
+                    // draw the shoot bar
+                    let bar = shootBarLength / 2;
+                    fill(0, 0, 0, 0.5);
+                    rect(-BLOCK_SIZE/4, -BLOCK_SIZE/4, shootBarLength/2, BLOCK_SIZE/2);
+
+                    context.restore();
+                    break;
                 default:
                     break;
             }
         }
     }
+
+    drawProjectiles();
 }
 
 String.prototype.replaceAt = function(index, replacement) {
     return this.substr(0, index) + replacement+ this.substr(index + replacement.length);
 }
 
+
+
+
+
 let flashingBlockTimer = Date.now();
 let redFlahsingBlockTimer = Date.now();
-function updateMap() {
+function updateMap(player, delta) {
     if(Date.now() - flashingBlockTimer > TIME_PER_FLASH_MS) {
         for(let y = 0; y < map.length; y++) {
             for(let x = 0; x < map[y].length; x++) {
@@ -807,6 +913,31 @@ function updateMap() {
         }
         redFlahsingBlockTimer = Date.now();
     }
+
+
+    let startY = Math.floor(view.y / BLOCK_SIZE) - 1;
+    let endY = Math.floor((view.y + canvas.height) / BLOCK_SIZE) + 1;
+    startY = Math.max(startY, 0);
+    endY = Math.min(endY, map.length-1);
+    
+    let startX = Math.floor(view.x / BLOCK_SIZE) - 1;
+    let endX = Math.floor((view.x + canvas.width) / BLOCK_SIZE) + 1;
+    startX = Math.max(startX, 0);
+    endX = Math.min(endX, map[0].length-1);
+    if(Date.now() - shootTimer > SHOOT_DELAY_MS) {
+        for(let y = startY; y <= endY; y++) {
+            for(let x = startX; x <= endX; x++) {
+                if(map[y][x] == MAP_BLOCK_TYPES.projectileLauncher) {
+                    let angle = getProjectileLauncherAngle(x*BLOCK_SIZE, y*BLOCK_SIZE, player, delta) + Math.PI;
+                    let projectile = new Projectile(x*BLOCK_SIZE + BLOCK_SIZE/2, y*BLOCK_SIZE + BLOCK_SIZE/2, angle);
+                    projectiles.push(projectile);
+                }
+            }
+        }
+        shootTimer = Date.now();
+    }
+
+    updateProjectiles(player, delta);
 }
 
 
@@ -843,10 +974,12 @@ let updateFPS = 0;
 // });
 
 
-
+let renderingDeltaTimer = performance.now();
 function renderLoop() {
     window.requestAnimationFrame(renderLoop);
 
+    let delta = performance.now() - renderingDeltaTimer;
+    renderingDeltaTimer = performance.now();
 
     ++framesRendered;
     if(performance.now() - lastFrameTime > 1000) {
@@ -865,7 +998,7 @@ function renderLoop() {
     rect(0, 0, canvas.width, canvas.height);
 
 
-    drawMap();
+    drawMap(delta);
     player.draw();
 
 
@@ -889,53 +1022,81 @@ function renderLoop() {
 
 let lastUpdateStamp = performance.now();
 function updateLoop() {
-        // Update /////////////////////////////////////////////////////////////
-        for(let i = 0; i < 8; i++) {
-            let delta = (performance.now() - lastUpdateStamp);
-            lastUpdateStamp = performance.now();
-    
-            if(delta > 10) {
-                delta = 10;
-            }
-    
-            if(keys['r']) {
-                player.hardRestart();
-            }
+    // Update /////////////////////////////////////////////////////////////
+    for(let i = 0; i < 6; i++) {
+        let delta = (performance.now() - lastUpdateStamp);
+        lastUpdateStamp = performance.now();
 
-            if(DEVELOPER_MODE) {
-                if(keys['ArrowDown']) {
-                    if(player.gravity > 0) player.y -= 200 * delta/1000;
-                    else player.y += 200 * delta/1000;
-                    player.yVel = 0;
-                }
-                if(keys[' ']) {
-                    player.spawnX = player.x;
-                    player.spawnY = player.y;
-                }
-                if(keys['d']) {
-                    player.restart();
-                }
-                if(keys['u']) {
-                    player.y -= BLOCK_SIZE * 3;
-                    player.yVel = 0;
-                    keys['u'] = false;
+        if(delta > 10) {
+            delta = 10;
+        }
+
+        if(keys['r']) {
+            player.hardRestart();
+        }
+
+        if(DEVELOPER_MODE) {
+            if(keys['ArrowDown']) {
+                if(player.gravity > 0) player.y -= 200 * delta/1000;
+                else player.y += 200 * delta/1000;
+                player.yVel = 0;
+            }
+            if(keys[' ']) {
+                player.spawnX = player.x;
+                player.spawnY = player.y;
+            }
+            if(keys['d']) {
+                player.restart();
+            }
+            if(keys['u']) {
+                player.y -= BLOCK_SIZE * 3;
+                player.yVel = 0;
+                keys['u'] = false;
+            }
+            let playerX = Math.floor(player.x / BLOCK_SIZE);
+            let playerY = Math.floor(player.y / BLOCK_SIZE);
+            if(keys['m']) {
+                keys['m'] = false;
+                for(let y = playerY+1; y < map.length; y++) {
+                    for(let x = playerX; x < map[y].length; x++) {
+                        if(map[y][x] === MAP_BLOCK_TYPES.checkpoint) {
+                            player.x = x * BLOCK_SIZE;
+                            player.y = y * BLOCK_SIZE;
+                            y = map.length;
+                            break;
+                        }
+                    }
                 }
             }
-            
-            player.update(delta);
-            handlePlayerCollisions(player);
-    
-            updateMap();
-    
-            ++framesUpdated;
-            if(performance.now() - lastUpdateTime > 1000) {
-                updateFPS = framesUpdated;
-                framesUpdated = 0;
-                lastUpdateTime = performance.now();
+            if(keys['n']) {
+                keys['n'] = false;
+                for(let y = playerY-2; y >= 0; y--) {
+                    for(let x = playerX; x >= 0; x--) {
+                        if(map[y][x] === MAP_BLOCK_TYPES.checkpoint) {
+                            player.x = x * BLOCK_SIZE;
+                            player.y = y * BLOCK_SIZE;
+                            y = -1;
+                            break;
+                        }
+                    }
+                }
             }
         }
-    
-        updateView(player);
+        
+        player.update(delta);
+        handlePlayerCollisions(player);
+
+        updateMap(player, delta);
+
+        ++framesUpdated;
+        if(performance.now() - lastUpdateTime > 1000) {
+            updateFPS = framesUpdated;
+            framesUpdated = 0;
+            lastUpdateTime = performance.now();
+        }
+    }
+
+    updateView(player);
 }
 
 
