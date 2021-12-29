@@ -38,7 +38,12 @@ function renderTetris(context, position, tileSize, gameState, mino, nextList, AI
         for (let j = 0; j < HEIGHT; ++j) {
             if (gameState.matrix[i + j*WIDTH] > -1) {
                 context.fillStyle = getColor(gameState.matrix[i + j*WIDTH]);
-                context.fillRect(tileSize * i + position.x, tileSize * (j - YMARGIN) + position.y, tileSize, tileSize);
+                // context.fillRect(tileSize * i + position.x, tileSize * (j - YMARGIN) + position.y, tileSize, tileSize);
+                // draw a circle
+                context.beginPath();
+                context.arc(tileSize * i + position.x + tileSize/2, tileSize * (j - YMARGIN) + position.y + tileSize/2, tileSize/2, 0, 2 * Math.PI);
+                context.fill();
+
             }
         }
     }
@@ -74,13 +79,19 @@ function renderTetris(context, position, tileSize, gameState, mino, nextList, AI
     gameState.sonicDrop(ghost);
     for (let i = 0; i < 4; ++i) {
         context.fillStyle = 'rgba(125, 125, 125, 0.5)';
-        context.fillRect(tileSize * (ghost.x + ghost.data[i].x) + position.x, tileSize * (ghost.y + ghost.data[i].y - YMARGIN) + position.y, tileSize, tileSize);
+        //context.fillRect(tileSize * (ghost.x + ghost.data[i].x) + position.x, tileSize * (ghost.y + ghost.data[i].y - YMARGIN) + position.y, tileSize, tileSize);
+        context.beginPath();
+        context.arc(tileSize * (ghost.x + ghost.data[i].x) + position.x + tileSize/2, tileSize * (ghost.y + ghost.data[i].y - YMARGIN) + position.y + tileSize/2, tileSize/2, 0, 2 * Math.PI);
+        context.fill();
     }
 
     // Draw current tetromino
     for (let i = 0; i < 4; ++i) {
         context.fillStyle = getColor(mino.player);
-        context.fillRect(tileSize * (mino.x + mino.data[i].x) + position.x, tileSize * (mino.y + mino.data[i].y - YMARGIN) + position.y, tileSize, tileSize);
+        //context.fillRect(tileSize * (mino.x + mino.data[i].x) + position.x, tileSize * (mino.y + mino.data[i].y - YMARGIN) + position.y, tileSize, tileSize);
+        context.beginPath();
+        context.arc(tileSize * (mino.x + mino.data[i].x) + position.x + tileSize/2, tileSize * (mino.y + mino.data[i].y - YMARGIN) + position.y + tileSize/2, tileSize/2, 0, 2 * Math.PI);
+        context.fill();
     }
 
     // Draw next list
@@ -98,7 +109,10 @@ function renderTetris(context, position, tileSize, gameState, mino, nextList, AI
         if (next.mino == MINO_I || next.mino == MINO_O) posModifier.x += 0.5;
         for (let i = 0; i < 4; ++i) {
             context.fillStyle = getColor(next.player);
-            context.fillRect(tileSize * (next.x + next.data[i].x) + position.x, tileSize * (next.y + next.data[i].y - YMARGIN) + position.y, tileSize, tileSize);
+            //context.fillRect(tileSize * (next.x + next.data[i].x) + position.x, tileSize * (next.y + next.data[i].y - YMARGIN) + position.y, tileSize, tileSize);
+            context.beginPath();
+            context.arc(tileSize * (next.x + next.data[i].x) + position.x + tileSize/2, tileSize * (next.y + next.data[i].y - YMARGIN) + position.y + tileSize/2, tileSize/2, 0, 2 * Math.PI);
+            context.fill();
         }
     }
 
@@ -110,6 +124,7 @@ function renderTetris(context, position, tileSize, gameState, mino, nextList, AI
         for (let i = 0; i < 4; ++i) {
             context.fillStyle = getColor(hold.player);
             context.fillRect(tileSize * (hold.x + hold.data[i].x) + position.x, tileSize * (hold.y + hold.data[i].y - YMARGIN) + position.y, tileSize, tileSize);
+            
         }
     }
 
