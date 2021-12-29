@@ -30,10 +30,11 @@ class Tetromino {
         this.mino = minoIndex;
         this.data = [];
 
+        let x = WIDTH/2;
         if (minoIndex == MINO_O || minoIndex == MINO_I) {
-            this.x = 5;
+            this.x = x
         } else {
-            this.x = 4;
+            this.x = x-1;
         }
 
         this.y = YMARGIN - TETROMINO_START_Y;

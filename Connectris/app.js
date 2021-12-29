@@ -242,19 +242,20 @@ document.addEventListener('keydown', e => {
 
 
 matrixWidth.onchange = () => {
-    WIDTH = matrixWidth.value;
+    WIDTH = parseInt(matrixWidth.value);
     playerTetrisGame.restart();
 }
 matrixHeight.onchange = () => {
-    HEIGHT = matrixHeight.value;
+    let old = HEIGHT;
+    HEIGHT = parseInt(matrixHeight.value);
     playerTetrisGame.restart();
 }
 ymargin.onchange = () => {
-    YMARGIN = ymargin.value;
+    YMARGIN = parseInt(ymargin.value);
     playerTetrisGame.restart();
 }
 tilesToWin.onchange = () => {
-    TILES_IN_A_ROW_TO_WIN = tilesToWin.value;
+    TILES_IN_A_ROW_TO_WIN = parseInt(tilesToWin.value);
 }
 matrixWidth.value = WIDTH;
 matrixHeight.value = HEIGHT;
