@@ -1,7 +1,7 @@
 
 
 
-const DEVELOPER_MODE = false; 
+const DEVELOPER_MODE = false;
 
 const VERSON = "0.5.0";
 if(localStorage.getItem("verson") != VERSON) {
