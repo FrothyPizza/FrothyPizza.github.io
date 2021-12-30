@@ -88,12 +88,16 @@ class PlayerTetrisGame {
         
         this.SDFClock = new Clock();
 
+        this.gravityClock = new Clock();
+        this.GRAVITY = 500;
+
 
         this.Lclock.start();
         this.LARRClock.start();
         this.Rclock.start();
         this.RARRClock.start();
         this.SDFClock.start();
+        this.gravityClock.start();
 
         this.das = 133;
         this.sdf = 5;
@@ -120,10 +124,20 @@ class PlayerTetrisGame {
         this.Rclock.restart();
         this.RARRClock.restart();
         this.SDFClock.restart();
+        this.gravityClock.restart();
 
         this.player1Score = 0;
         this.player2Score = 0;
 
+    }
+
+    update() {
+        if(this.gravityClock.getElapsedTime() > this.GRAVITY) {
+            this.gravityClock.restart();
+            if(!this.gameState.softDrop(this.curMino)) {
+                this.placeTetromino();
+            }
+        }
     }
 
 
@@ -216,68 +230,7 @@ class PlayerTetrisGame {
     // this is used for instantaneous inputs
     inputGeneral(keyCode) {
         if (keyCode == CONTROLS.HARD_DROP) {
-
-            this.gameState.hardDrop(this.curMino);
-            
-            let oldPlayer = this.currentPlayer;
-            if(this.currentPlayer == 1) {
-                this.currentPlayer = 2;
-            } else {
-                this.currentPlayer = 1;
-            }
-
-            this.curMino.setTetromino(this.nextList[0], this.currentPlayer);
-            this.nextList.splice(0, 1);
-            if (this.nextList.length < 14) pushOntoNextlist(this.nextList);
-            this.piecesPlaced++;
-            
-            let clear = this.gameState.lastClear;
-            if (clear <= 0) {
-                this.gameState.placeGarbage();
-            } else {
-                if(oldPlayer == 1) {
-                    this.player1Score += clear;
-                }
-                else {
-                    this.player2Score += clear;
-                }
-            }
-
-
-
-            let attack = this.gameState.lastAttack;
-
-            let winners = this.gameState.getWinner();
-            for(let i = 0; i < winners.length; i++) {
-                if(winners[i][0] == 1) {
-                    this.player1Score += 5 + winners[i][1];
-                }
-                else if (winners[i][0] == 2) {
-                    this.player2Score += 5 + winners[i][1];
-                }
-            }
-
-            // if(this.gameState.getWinner() == 1) {
-            //     // setTimeout(() => {
-            //     //     alert("Player 1 wins!");
-            //     //     this.restart();
-            //     // }, 10);
-            //     this.player1Score += 5;
-
-            // } else if(this.gameState.getWinner() == 2) {
-            //     // setTimeout(() => {
-            //     //     alert("Player 2 wins!");
-            //     //     this.restart();
-            //     // }, 10);
-            //     this.player2Score += 5;
-            // }
-
-            
-
-
-
-
-            return attack;
+            this.placeTetromino();
         }
 
         
@@ -305,6 +258,51 @@ class PlayerTetrisGame {
         }
 
         return 0;
+    }
+
+    placeTetromino() {
+        this.gameState.hardDrop(this.curMino);
+            
+        let oldPlayer = this.currentPlayer;
+        if(this.currentPlayer == 1) {
+            this.currentPlayer = 2;
+        } else {
+            this.currentPlayer = 1;
+        }
+
+        this.curMino.setTetromino(this.nextList[0], this.currentPlayer);
+        this.nextList.splice(0, 1);
+        if (this.nextList.length < 14) pushOntoNextlist(this.nextList);
+        this.piecesPlaced++;
+        
+        let clear = this.gameState.lastClear;
+        if (clear <= 0) {
+            this.gameState.placeGarbage();
+        } else {
+            if(oldPlayer == 1) {
+                this.player1Score += clear;
+            }
+            else {
+                this.player2Score += clear;
+            }
+        }
+
+
+
+        let attack = this.gameState.lastAttack;
+
+        let winners = this.gameState.getWinner();
+        for(let i = 0; i < winners.length; i++) {
+            if(winners[i][0] == 1) {
+                this.player1Score += 5 + winners[i][1];
+            }
+            else if (winners[i][0] == 2) {
+                this.player2Score += 5 + winners[i][1];
+            }
+        }
+
+
+        return attack;
     }
 
 

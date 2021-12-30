@@ -290,8 +290,7 @@ window.setInterval(() => {
         playerTetrisGame.inputLeft(keys[CONTROLS.LEFT], keys[CONTROLS.RIGHT]);
         playerTetrisGame.inputRight(keys[CONTROLS.LEFT], keys[CONTROLS.RIGHT]);
 
-        
-        
+        playerTetrisGame.update();
     }
 
     // Draw the game centered on screen

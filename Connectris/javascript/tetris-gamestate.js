@@ -187,6 +187,7 @@ class TetrisGameState {
     }
 
 
+
     pasteToMatrix(mino) {
         for (let i = 0; i < 4; ++i) {
             let x = mino.data[i].x + mino.x;
