@@ -99,9 +99,9 @@ class PlayerTetrisGame {
         this.SDFClock.start();
         this.gravityClock.start();
 
-        this.das = 133;
-        this.sdf = 5;
-        this.arr = 10;
+        this.das = 150;
+        this.sdf = 30;
+        this.arr = 30;
 
         this.piecesPlaced = 0;
 

@@ -1,5 +1,5 @@
 
-let WIDTH = 10;
+let WIDTH = 20;
 let HEIGHT = 25;
 let YMARGIN = 5; // This is the top margin of the game matrix that is part of the game board but invisible
 let TETROMINO_START_Y = 1;
