@@ -240,7 +240,6 @@ document.addEventListener('keydown', e => {
 });
 
 
-
 matrixWidth.onchange = () => {
     WIDTH = parseInt(matrixWidth.value);
     playerTetrisGame.restart();
@@ -302,4 +301,4 @@ window.setInterval(() => {
     playerTetrisGame.render(context, {x: xOffset, y: yOffset}, blockSize, blockSize);
 
 
-}, 1000/60);
+}, 0);

@@ -94,6 +94,7 @@ class TetrisGameState {
         for(let i = 0; i < WIDTH*HEIGHT; ++i) {
             this.matrix[i] = -1;
         }
+
     }
 
     clone() {
@@ -122,6 +123,10 @@ class TetrisGameState {
 
     get(x, y) {
         return this.matrix[x + y*WIDTH];
+    }
+
+    set(x, y, val) {
+        this.matrix[x + y*WIDTH] = val;
     }
 
 
@@ -548,21 +553,32 @@ class TetrisGameState {
         return NO_TSPIN;
     }
 
-    // translate the above code to javascript
-    // returns 1, 2, or -1
+    
+    // returns [[player, extraLines], ...]
+    // i.e. [[1, 2], [1, 3]]
     getWinner() {
+        let winners = [];
         // look for horizontal winner
         for (let y = 0; y < HEIGHT; ++y) {
             for (let x = 0; x < WIDTH - (TILES_IN_A_ROW_TO_WIN - 1); ++x) {
                 let target = this.get(x, y);
                 if (target != -1) {
                     let count = 0;
-                    for (let i = 0; i < TILES_IN_A_ROW_TO_WIN; ++i) {
-                        if (this.get(x + i, y) == target)
+
+                    for (let i = 0; i < WIDTH - x; ++i) {
+                        if (this.get(x + i, y) == target) {
                             count += 1;
+                        } else {
+                            break;
+                        }
                     }
-                    if (count == TILES_IN_A_ROW_TO_WIN)
-                        return target;
+                    if (count >= TILES_IN_A_ROW_TO_WIN) {
+                        for(let i = 0; i < count; ++i) {
+                            this.set(x + i, y, 3);
+                        }
+                        // return target;
+                        winners.push([target, count - TILES_IN_A_ROW_TO_WIN]);
+                    }
                 }
             }
         }
@@ -572,12 +588,19 @@ class TetrisGameState {
                 let target = this.get(x, y);
                 if (target != -1) {
                     let count = 0;
-                    for (let i = 0; i < TILES_IN_A_ROW_TO_WIN; ++i) {
+                    for (let i = 0; i < HEIGHT - y; ++i) {
                         if (this.get(x, y + i) == target)
                             count += 1;
+                        else
+                            break;
                     }
-                    if (count == TILES_IN_A_ROW_TO_WIN)
-                        return target;
+                    if (count >= TILES_IN_A_ROW_TO_WIN) {
+                        for (let i = 0; i < count; ++i) {
+                            this.set(x, y + i, 3);
+                        }
+                        // return target;
+                        winners.push([target, count - TILES_IN_A_ROW_TO_WIN]);
+                    }
                 }
             }
         }
@@ -588,12 +611,19 @@ class TetrisGameState {
                 let target = this.get(x, y);
                 if (target != -1) {
                     let count = 0;
-                    for (let i = 0; i < TILES_IN_A_ROW_TO_WIN; ++i) {
+                    for (let i = 0; i < WIDTH; ++i) {
                         if (this.get(x + i, y + i) == target)
                             count += 1;
+                        else
+                            break;
                     }
-                    if (count == TILES_IN_A_ROW_TO_WIN)
-                        return target;
+                    if (count >= TILES_IN_A_ROW_TO_WIN) {
+                        for (let i = 0; i < count; ++i) {
+                            this.set(x + i, y + i, 3);
+                        }
+                        // return target;
+                        winners.push([target, count - TILES_IN_A_ROW_TO_WIN]);
+                    }
                 }
             }
         }
@@ -603,16 +633,23 @@ class TetrisGameState {
                 let target = this.get(x, y);
                 if (target != -1) {
                     let count = 0;
-                    for (let i = 0; i < TILES_IN_A_ROW_TO_WIN; ++i) {
+                    for (let i = 0; i < WIDTH; ++i) {
                         if (this.get(x - i, y + i) == target)
                             count += 1;
+                        else
+                            break;
                     }
-                    if (count == TILES_IN_A_ROW_TO_WIN)
-                        return target;
+                    if (count >= TILES_IN_A_ROW_TO_WIN) {
+                        for(let i = 0; i < count; ++i) {
+                            this.set(x - i, y + i, 3);
+                        }
+                        // return target;
+                        winners.push([target, count - TILES_IN_A_ROW_TO_WIN]);
+                    }
                 }
             }
         }
-        return -1;
+        return winners;
     }
 
 

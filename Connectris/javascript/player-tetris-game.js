@@ -30,7 +30,7 @@ class Clock {
     }
 
     start() {
-        this.startTime = Date.now();
+        this.startTime = performance.now();
         this.isStarted = true;
         this.isPaused = false;
     }
@@ -38,26 +38,26 @@ class Clock {
     pause() {
         if (this.isStarted && !this.isPaused) {
             this.isPaused = true;
-            this.pausedTime = Date.now();
+            this.pausedTime = performance.now();
         }
     }
 
     resume() {
         if (this.isStarted && this.isPaused) {
             this.isPaused = false;
-            this.startTime += (Date.now() - this.pausedTime);
+            this.startTime += (performance.now() - this.pausedTime);
         }
     }
 
     getElapsedTime() {
         if (this.isStarted && !this.isPaused) {
-            this.elapsedTime = Date.now() - this.startTime;
+            this.elapsedTime = performance.now() - this.startTime;
         }
         return this.elapsedTime;
     }
 
     restart() {
-        this.startTime = Date.now();
+        this.startTime = performance.now();
         this.elapsedTime = 0;
         this.isStarted = true;
         this.isPaused = false;
@@ -101,6 +101,9 @@ class PlayerTetrisGame {
 
         this.piecesPlaced = 0;
 
+        this.player1Score = 0;
+        this.player2Score = 0;
+
     }
 
     restart() {
@@ -117,6 +120,9 @@ class PlayerTetrisGame {
         this.Rclock.restart();
         this.RARRClock.restart();
         this.SDFClock.restart();
+
+        this.player1Score = 0;
+        this.player2Score = 0;
 
     }
 
@@ -213,6 +219,7 @@ class PlayerTetrisGame {
 
             this.gameState.hardDrop(this.curMino);
             
+            let oldPlayer = this.currentPlayer;
             if(this.currentPlayer == 1) {
                 this.currentPlayer = 2;
             } else {
@@ -228,28 +235,42 @@ class PlayerTetrisGame {
             if (clear <= 0) {
                 this.gameState.placeGarbage();
             } else {
-                // let pitch = 1.0 + (this.gameState.combo / 16.0);
-                // let sound = new Audio("sounds/line_clear.wav");
-                // sound.playbackRate = pitch;
-                // sound.play();
-
-                // this.lineClearSound.play();
+                if(oldPlayer == 1) {
+                    this.player1Score += clear;
+                }
+                else {
+                    this.player2Score += clear;
+                }
             }
+
+
 
             let attack = this.gameState.lastAttack;
 
-            if(this.gameState.getWinner() == 1) {
-                setTimeout(() => {
-                    alert("Player 1 wins!");
-                    this.restart();
-                }, 10);
-
-            } else if(this.gameState.getWinner() == 2) {
-                setTimeout(() => {
-                    alert("Player 2 wins!");
-                    this.restart();
-                }, 10);
+            let winners = this.gameState.getWinner();
+            for(let i = 0; i < winners.length; i++) {
+                if(winners[i][0] == 1) {
+                    this.player1Score += 5 + winners[i][1];
+                }
+                else if (winners[i][0] == 2) {
+                    this.player2Score += 5 + winners[i][1];
+                }
             }
+
+            // if(this.gameState.getWinner() == 1) {
+            //     // setTimeout(() => {
+            //     //     alert("Player 1 wins!");
+            //     //     this.restart();
+            //     // }, 10);
+            //     this.player1Score += 5;
+
+            // } else if(this.gameState.getWinner() == 2) {
+            //     // setTimeout(() => {
+            //     //     alert("Player 2 wins!");
+            //     //     this.restart();
+            //     // }, 10);
+            //     this.player2Score += 5;
+            // }
 
             
 
@@ -288,7 +309,7 @@ class PlayerTetrisGame {
 
 
     render(context, position, tileSize) {
-        renderTetris(context, position, tileSize, this.gameState, this.curMino, this.nextList, this.sortedAIMoves);
+        renderTetris(context, position, tileSize, this.gameState, this.curMino, this.nextList, this.player1Score, this.player2Score);
     }
 }
 
