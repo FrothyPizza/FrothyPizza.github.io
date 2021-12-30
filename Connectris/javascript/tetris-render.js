@@ -22,15 +22,17 @@ function getColor(player) {
     // }
 
     if(player == 1) {
-        return 'rgb(227, 91, 2)'
-    } else {
-        return 'rgb(33, 65, 198)'
+        return 'rgb(227, 91, 2)';
+    } else if(player == 2) {
+        return 'rgb(33, 65, 198)';
+    } else if(player == 3) {
+        return 'rgb(100, 100, 100)';
     }
 }
 
 
 
-function renderTetris(context, position, tileSize, gameState, mino, nextList, AIMoves, AIMoveIndex) {
+function renderTetris(context, position, tileSize, gameState, mino, nextList, player1Score, player2Score) {
 
     // Draw matrix
     // don't render the top two tiles
@@ -78,7 +80,7 @@ function renderTetris(context, position, tileSize, gameState, mino, nextList, AI
     let ghost = new Tetromino(mino);
     gameState.sonicDrop(ghost);
     for (let i = 0; i < 4; ++i) {
-        context.fillStyle = 'rgba(125, 125, 125, 0.5)';
+        context.fillStyle = 'rgba(125, 125, 125, 0.3)';
         //context.fillRect(tileSize * (ghost.x + ghost.data[i].x) + position.x, tileSize * (ghost.y + ghost.data[i].y - YMARGIN) + position.y, tileSize, tileSize);
         context.beginPath();
         context.arc(tileSize * (ghost.x + ghost.data[i].x) + position.x + tileSize/2, tileSize * (ghost.y + ghost.data[i].y - YMARGIN) + position.y + tileSize/2, tileSize/2, 0, 2 * Math.PI);
@@ -127,6 +129,13 @@ function renderTetris(context, position, tileSize, gameState, mino, nextList, AI
             
         }
     }
+
+    // Draw score
+    context.font = '40px Sans-Serif';
+    context.fillStyle = getColor(1);
+    context.fillText(player1Score, tileSize * (WIDTH + 3) + position.x, tileSize * (HEIGHT - YMARGIN)/2 + position.y);
+    context.fillStyle = getColor(2);
+    context.fillText(player2Score, 0 - tileSize * 4 + position.x, tileSize * (HEIGHT - YMARGIN)/2 + position.y);
 
     // // draw lines going through consecutive tiles of the same color (not working currently)
     // context.fillStyle = 'rgba(255, 255, 255, 0.5)';
