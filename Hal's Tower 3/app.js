@@ -455,7 +455,7 @@ class Projectile {
         this.x = x;
         this.y = y;
         this.angle = angle;
-        this.speed = 1200;
+        this.speed = 1000;
         this.width = 5;
         this.height = 5;
         this.gravity = Math.abs(player.gravity);
@@ -1057,8 +1057,8 @@ function updateLoop() {
             let playerY = Math.floor(player.y / BLOCK_SIZE);
             if(keys['m']) {
                 keys['m'] = false;
-                for(let y = playerY+1; y < map.length; y++) {
-                    for(let x = playerX; x < map[y].length; x++) {
+                for(let y = playerY+2; y < map.length; y++) {
+                    for(let x = 0; x < map[y].length; x++) {
                         if(map[y][x] === MAP_BLOCK_TYPES.checkpoint) {
                             player.x = x * BLOCK_SIZE;
                             player.y = y * BLOCK_SIZE;
@@ -1071,7 +1071,7 @@ function updateLoop() {
             if(keys['n']) {
                 keys['n'] = false;
                 for(let y = playerY-2; y >= 0; y--) {
-                    for(let x = playerX; x >= 0; x--) {
+                    for(let x = 0; x < map[y].length; x++) {
                         if(map[y][x] === MAP_BLOCK_TYPES.checkpoint) {
                             player.x = x * BLOCK_SIZE;
                             player.y = y * BLOCK_SIZE;
