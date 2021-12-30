@@ -280,10 +280,10 @@ class PlayerTetrisGame {
             this.gameState.placeGarbage();
         } else {
             if(oldPlayer == 1) {
-                this.player1Score += clear;
+                this.player1Score += clear * 10;
             }
             else {
-                this.player2Score += clear;
+                this.player2Score += clear * 10;
             }
         }
 
