@@ -43,6 +43,14 @@ startButton.onclick = () => {
 
 }
 
+let pauseButton = document.getElementById("pause-button");
+pauseButton.onclick = () => {
+    if(confirm("Are you sure you would like to restart the game?")) {
+        localStorage.clear();
+        location.reload();
+    }   
+}
+
 function showNowPlaying(text, popupTime) {
     nowPlayingText.innerHTML = text;
     unfade(nowPlaying);

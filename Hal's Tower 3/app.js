@@ -3,7 +3,7 @@
 
 const DEVELOPER_MODE = false;
 
-const VERSON = "0.5.0";
+const VERSON = "1.0.0";
 if(localStorage.getItem("verson") != VERSON) {
     localStorage.clear();
     localStorage.setItem("verson", VERSON);
@@ -128,6 +128,10 @@ function ellipse(x, y, w, h, view={x: 0, y: 0}) {
     context.beginPath();
     context.ellipse(Math.round(Math.round(x) - view.x), Math.round(Math.round(y) - view.y), w, h, 0, 0, 2 * Math.PI);
     context.fill();
+}
+function text(text, x, y, size, view={x: 0, y: 0}) {
+    context.font = `${size}px Arial`;
+    context.fillText(text, Math.round(x - view.x), Math.round(y - view.y));
 }
 
 function drawImage(img, x, y, width, height, view={x: 0, y: 0}) {
@@ -864,6 +868,10 @@ function drawMap(delta) {
                     rect(-BLOCK_SIZE/4, -BLOCK_SIZE/4, shootBarLength/2, BLOCK_SIZE/2);
 
                     context.restore();
+                    break;
+                case MAP_BLOCK_TYPES.winText:
+                    fill(255, 255, 0);
+                    text("You Win!", blockPos.x, blockPos.y, 290, view);
                     break;
                 default:
                     break;

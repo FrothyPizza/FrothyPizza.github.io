@@ -88,8 +88,13 @@ button {
     border: 1px solid magenta;
     font-family: 'Courier New', Courier, monospace;
 
+
     background-color: rgba(83, 15, 80, 0.8);
     color: white;
+}
+
+button:hover {
+    background-color: rgba(83, 15, 80, 0.95);
 }
 
 
