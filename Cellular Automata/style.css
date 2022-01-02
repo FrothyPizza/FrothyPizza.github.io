@@ -1,0 +1,75 @@
+body {
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+#controlsContainer {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgb(97, 35, 211);
+    border-radius: 0 0 5px 5px;
+    z-index: 1;
+
+    padding-right: 10px;
+    padding-left: 10px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    
+    color: white;
+
+    font-family: 'Roboto', sans-serif;
+}
+
+#controlsContainer div {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    white-space: nowrap;
+}
+
+#controlsContainer label {
+    margin-right: 10px;
+}
+
+#darkMode {
+    width: 20px;
+}
+
+button {
+    background-color: #fff;
+    border: 1px solid #000;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 5px;
+    cursor: pointer;
+
+}
+
+button:hover {
+    background-color: #000;
+    color: #fff;
+}
+
+#ruleset {
+    width: 8em;
+    
+}
+
+input {
+    margin-right: 5px;
+}
+
+#speedContainer {
+    margin-right: 5px;
+}
+
+#darkContainer label {
+    margin-right: 0;
+}

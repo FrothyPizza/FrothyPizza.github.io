@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Cellular Automata</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <canvas id="canvas" width="800" height="800"></canvas>
+        <div id="controlsContainer">
+            <div id="darkContainer">
+                <label for="darkMode">Dark Mode</label>
+                <input type="checkbox" id="darkMode" name="darkMode" checked>
+            </div>
+            <button id="pause">Pause</button>
+            <button id="reset">Clear</button>
+            <button id="step">Step</button>
+            <button id="randomize">Randomize</button>
+            <div id="brushContainer">
+                <label for="brushSize">Brush Size:</label>
+                <span id="brushSizeValue">1</span>
+                <input type="range" id="brushSize" min="1" max="10" value="1">
+            </div>
+            <div id="rulesetContainer">
+                <label for="rule">Rule:</label>
+                <input id="ruleset" type="text" value="23/3" maxlength="18"></input>
+                <select id="ruleSelect">
+                    <option value="23/3">Conway's Game of Life</option>
+                    <option value="12345/3">Maze</option>
+                    <option value="1234/3">Mazectric</option>
+                    <option value="123/234">Flash</option>
+                </select>
+            </div>
+            <div id="speedContainer">
+                <label for="speed">FPS: </label>
+                <span id="speedValue">20</span>
+                <input id="speed" type="range" min="1" max="250" value="20"></input>
+            </div>
+        </div>
+        <script src="app.js"></script>
+    </body>
+</html>

@@ -6,3 +6,4 @@ fetch('nav.html')
     newelem.innerHTML = text;
     oldelem.parentNode.replaceChild(newelem,oldelem);
 });
+// <script id="replace_with_navbar" src="nav.js"></script>
