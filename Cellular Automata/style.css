@@ -38,6 +38,10 @@ body {
     margin-right: 10px;
 }
 
+#brushSize {
+    width: 4em;
+}
+
 #darkMode {
     width: 20px;
 }

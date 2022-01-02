@@ -156,6 +156,9 @@ let speedValue = document.getElementById('speedValue');
 let brushSizeSlider = document.getElementById('brushSize');
 let darkModeCheck = document.getElementById('darkMode');
 let ruleSelect = document.getElementById('ruleSelect');
+let cellSizeSlider = document.getElementById('size');
+let cellSizeValue = document.getElementById('cellSize');
+
 
 let mouseInMenu = false;
 controlsContainer.onmouseenter = () => {
@@ -209,6 +212,12 @@ window.setInterval(() => {
     }
 }, 1);
 
+
+cellSizeSlider.oninput = () => {
+    cellSize = cellSizeSlider.value;
+    cellSizeValue.innerHTML = cellSizeSlider.value;
+    resetGrid();
+}
 
 
 pauseButton.onclick = () => {
