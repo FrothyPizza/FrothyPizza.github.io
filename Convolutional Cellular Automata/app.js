@@ -90,7 +90,7 @@ function randomizeGrid() {
     resetGrid();
     for (let i = 0; i < gridWidth; i++) {
         for (let j = 0; j < gridHeight; j++) {
-            grid[i][j] = Math.random();
+            grid[i][j] = Math.floor(Math.random() * 2);
         }
     }
 }
