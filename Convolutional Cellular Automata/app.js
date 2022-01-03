@@ -285,10 +285,24 @@ window.setInterval(() => {
         // } else {
         //     drawGrid();
         // }
+        ++steps;
+
+        if(evenFrames.checked && steps % 2 == 0) {
+            drawGrid();
+        } else {
+            drawGrid();
+        }
 
     }
     if (mouse.rightDown && !mouseInMenu) {
         paintGrid(x, y, brushSizeSlider.value, false, brushType.value == 'checkered');
+        ++steps;
+
+        if(evenFrames.checked && steps % 2 == 0) {
+            drawGrid();
+        } else {
+            drawGrid();
+        }
     }
 }, 1);
 
@@ -388,9 +402,6 @@ brushSizeSlider.oninput = () => {
 
 
 
-function gaussian(x) {
-    
-}
 
 
 
