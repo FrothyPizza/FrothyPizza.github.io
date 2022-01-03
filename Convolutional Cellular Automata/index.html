@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>CCA</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <canvas id="canvas" width="800" height="800"></canvas>
+        
+        <div id="controlsContainer">
+            <button id="optionsButton">Options</button>
+            <div id="controls">
+                <div id="sliders">
+                    <div id="sizeContainer" class="sliderContainer">
+                        <label for="size">Cell Size</label>
+                        <span id="cellSize">10</span>
+                        <input type="range" id="size" name="size" min="1" max="100" value="10">
+                    </div>
+                    <div id="brushContainer" class="sliderContainer">
+                        <label for="brushSize">Brush Size:</label>
+                        <span id="brushSizeValue">3</span>
+                        <input type="range" id="brushSize" min="1" max="10" value="3">
+                        <select id="brushType">
+                            <option value="solid">Solid</option>
+                            <option value="checkered">Checker</option>
+                        </select>
+                    </div>
+                    <div id="speedContainer" class="sliderContainer">
+                        <label for="speed">FPS: </label>
+                        <span id="speedValue">250</span>
+                        <input id="speed" type="range" min="1" max="250" value="250"></input>
+                    </div>
+                    <div>
+                        <label for="evenFrames">Draw every other frame</label>
+                        <input type="checkbox" id="evenFrames" name="evenFrames" checked>
+                    </div>
+                    <p>Activation Function</p>
+                    <select id="activationFunctionPresets">
+                        <option value="Inverse Gaussian">Inverse Gaussian</option>
+                        <option value="Linear">Linear</option>
+                        <option value="Sigmoid">Sigmoid</option>
+                        <option value="Tanh">Tanh</option>       
+                        <option value="Absolute Value">Absolute Value</option>
+                          
+                    </select>
+                    <textarea id="activationFunction" rows="5" cols="30">
+function(x) {
+    return x;
+}
+
+    </textarea>
+                </div>
+                <div id="presetsContainer">
+                    <p>Presets</p>
+                    <select id="presets">
+                        <option value="Worms">Worms</option>
+                        <option value="Conway">Conway's Game of Life</option>
+                        <option value="Rule30">Rule 30</option>
+                    </select>
+                </div>
+                <div id="rulesetContainer">
+                    <!-- the rule is a 3x3 grid of inputs -->
+                    <input id="tl" type="text" value="0" maxlength="4"></input>
+                    <input id="tm" type="text" value="0" maxlength="4"></input>
+                    <input id="tr" type="text" value="0" maxlength="4"></input>
+                    <input id="ml" type="text" value="0" maxlength="4"></input>
+                    <input id="mm" type="text" value="0" maxlength="4"></input>
+                    <input id="mr" type="text" value="0" maxlength="4"></input>
+                    <input id="bl" type="text" value="0" maxlength="4"></input>
+                    <input id="bm" type="text" value="0" maxlength="4"></input>
+                    <input id="br" type="text" value="0" maxlength="4"></input>
+                    
+                </div>
+                <div id="buttons">
+                    <button id="pause">Pause</button>
+                    <button id="reset">Clear</button>
+                    <button id="step">Step</button>
+                    <button id="randomize">Randomize</button>
+                </div>
+            </div>
+        </div>
+        <script src="app.js"></script>
+    </body>
+</html>

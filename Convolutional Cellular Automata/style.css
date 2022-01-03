@@ -1,0 +1,146 @@
+body {
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+#controlsContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    /* background-color: rgb(97, 35, 211); */
+    border-radius: 0 0 5px 5px;
+    z-index: 1;
+
+    
+
+}
+#controls {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: flex-start;
+    
+    color: white;
+
+    font-family: 'Roboto', sans-serif;
+}
+
+
+
+#sliders {
+    background-color: rgb(97, 35, 211);
+    padding: 10px;
+
+    border-radius: 0 0 5px 0px;
+}
+
+textarea {
+    display: block;
+}
+
+#controlsContainer .sliderContainer {
+    display: flex;
+    flex-direction: row;
+    white-space: nowrap;
+}
+
+#controlsContainer p {
+    margin: 5px 3px 3px 0px;
+}
+
+
+#controlsContainer label {
+    margin-right: 10px;
+}
+
+
+#darkMode {
+    width: 20px;
+}
+
+button {
+    background-color: #fff;
+    border: 1px solid #000;
+    border-radius: 5px;
+    cursor: pointer;
+
+    width: 6em;
+
+}
+
+button:hover {
+    background-color: #000;
+    color: #fff;
+}
+
+
+#buttons {
+    background-color: rgb(97, 35, 211);
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    border-radius: 0 0 5px 5px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: flex-start;
+
+
+
+}
+
+
+#rulesetContainer {
+    border-radius: 0 0 5px 0px;
+    z-index: 1;
+
+    background-color: rgb(97, 35, 211);
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+
+    
+    color: white;
+
+}
+
+#rulesetContainer input {
+    width: 3em;
+
+}
+
+
+#activationFunction {
+    font-family: 'Anonymous Pro', monospace;
+}
+
+
+#optionsButton {
+    width: 100%;
+    border-radius: 0;
+    background-color: rgb(97, 35, 211);
+    color: white;
+
+}
+
+#presetsContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    background-color: rgb(97, 35, 211);
+    border-radius: 0 0 5px 0px;
+    z-index: 1;
+
+    padding-right: 10px;
+    padding-left: 10px; 
+    padding-bottom: 10px;
+
+
+}
