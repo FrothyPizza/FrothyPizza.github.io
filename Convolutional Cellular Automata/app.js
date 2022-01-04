@@ -170,6 +170,7 @@ let activationSelect = document.getElementById('activationFunctionPresets');
 let optionsButton = document.getElementById('optionsButton');
 let brushType = document.getElementById('brushType');
 let evenFrames = document.getElementById('evenFrames');
+// let symmetryCheck = document.getElementById('symmetry');
 
 optionsButton.onclick = () => {
     if(controls.style.display == 'none') {
@@ -405,10 +406,13 @@ brushSizeSlider.oninput = () => {
 
 
 
+
+
+
 activationSelect.onchange = () => {
     if(activationSelect.value == 'Inverse Gaussian') {
 activation = function activation(x) {
-    return -1/Math.pow(2, (0.6*Math.pow(x, 2)))+1;
+    return -1/Math.pow(2, (Math.pow(x, 2)))+1;
 }
     } else if(activationSelect.value == 'Tanh') {
 activation = function activation(x) {
