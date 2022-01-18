@@ -1,4 +1,4 @@
-let CHRISTMAS_UPDATE = true;
+let CHRISTMAS_UPDATE = false;
 
 var keys = [];
 
