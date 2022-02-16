@@ -40,12 +40,17 @@
                 let dvdImageHeight = dvdImage.clientHeight;
 
                 function getDiffBetweenAngles(angle1, angle2) {
-                    let diff = angle1 - angle2;
-                    if (diff < 0) {
-                        diff += 2 * Math.PI;
-                    }
-                    return diff;
+                    return Math.atan2(Math.sin(angle1 - angle2), Math.cos(angle1 - angle2));
                 }
+
+                // document.addEventListener("mousemove", (e) => {
+                //     let mouseX = e.clientX;
+                //     let mouseY = e.clientY;
+
+                //     let imageDirection = Math.atan2(yVel, xVel);
+                //     let dirctionBetweenMouseAndDvd = getDiffBetweenAngles(imageDirection, Math.atan2(mouseY - y, mouseX - x));
+                //     console.log(dirctionBetweenMouseAndDvd);
+                // })
 
                 function pointTowardFurthestCorner() {
                     let position = {x: dvdImage.offsetLeft + dvdImageWidth/2, y: dvdImage.offsetTop + dvdImageHeight/2};
@@ -75,6 +80,15 @@
                     {x: window.innerWidth - dvdImageWidth/2, y: window.innerHeight - dvdImageHeight/2},
                     {x: dvdImageWidth/2, y: window.innerHeight - dvdImageHeight/2}
                 ];
+
+                document.addEventListener("resize", () => {
+                    corners = [
+                        {x: dvdImageWidth/2, y: dvdImageHeight/2},
+                        {x: window.innerWidth - dvdImageWidth/2, y: dvdImageHeight/2},
+                        {x: window.innerWidth - dvdImageWidth/2, y: window.innerHeight - dvdImageHeight/2},
+                        {x: dvdImageWidth/2, y: window.innerHeight - dvdImageHeight/2}
+                    ];
+                });
 
                 function getFurthestCorner(x, y) {
                     let furthestCorner = {x: 0, y: 0};
@@ -109,27 +123,21 @@
                 }
 
                 function adjustVelocityOnBounce() {
-                    if(Math.random() < 0.7) {
-                        xVel += Math.random() * 2 - 1;
-                        yVel += Math.random() * 2 - 1;
-
-                        normalizeVelocity();
-                        return;
-                    }
+                    //if(Math.random() > 0.5) return;
 
                     let angle = getAngleToCorner(getFurthestCorner(dvdImage.offsetLeft + dvdImageWidth/2, dvdImage.offsetTop + dvdImageHeight/2));
 
                     let currentAngle = Math.atan2(yVel, xVel);
                     let diff = angle - currentAngle;
-                    console.log(diff);
-                    if(diff < Math.PI/4) {         
-                        xVel = Math.cos(angle) * 7;
-                        yVel = Math.sin(angle) * 7;
+                    if(Math.abs(diff) < Math.PI/4) {         
+                        xVel = Math.cos(angle) * speed;
+                        yVel = Math.sin(angle) * speed;
                     }
 
                     normalizeVelocity();
                 }
 
+                normalizeVelocity();
                 let lastTime = performance.now();
                 function update() {
                     let now = performance.now();
@@ -140,26 +148,41 @@
                         dt = 0.1;
                     }
 
+                    let bounces = 0;
                     if (x < 0) {
                         xVel = -xVel;
-                        x = 0 + xVel * dt;
+                        x = 0;
                         adjustVelocityOnBounce();
+                        ++bounces;
                     }
                     if (x > window.innerWidth - dvdImageWidth) {
                         xVel = -xVel;
-                        x = window.innerWidth - dvdImageWidth - xVel * dt;
+                        x = window.innerWidth - dvdImageWidth;
                         adjustVelocityOnBounce();
+                        ++bounces;
                     }
                     if (y < 0) {
                         yVel = -yVel;
-                        y = 0 + yVel * dt;
+                        y = 0;
                         adjustVelocityOnBounce();
+                        ++bounces;
                     }
                     if (y > window.innerHeight - dvdImageHeight) {
                         yVel = -yVel;
-                        y = window.innerHeight - dvdImageHeight - yVel * dt;
+                        y = window.innerHeight - dvdImageHeight;
                         adjustVelocityOnBounce();
+                        ++bounces;
                     }
+
+                    if(bounces > 0) {
+                        if(Math.random() < 0.7) {
+                            xVel += Math.random() * 2 - 1;
+                            yVel += Math.random() * 2 - 1;
+
+                            normalizeVelocity();
+                        }
+                    }
+                    
 
                     x += xVel * dt * 70;
                     y += yVel * dt * 70;
