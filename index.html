@@ -15,8 +15,15 @@
             }
         </script> -->
         <img id="dvdImage" src="images/dvd-video.png" alt="dvd">
+        <style>
+            * {
+                overflow: hidden;
+            }
+        </style>
         <script>
+            
             window.onload = () => {
+
                 // make the image bounce around the screen
                 let dvdImage = document.getElementById("dvdImage");
                 dvdImage.style.position = "absolute";
@@ -29,8 +36,19 @@
                 let xVel = Math.cos(dir) * 5;
                 let yVel = Math.sin(dir) * 5;
 
+                let speed = 7;
+
                 let dvdImageWidth = dvdImage.clientWidth;
                 let dvdImageHeight = dvdImage.clientHeight;
+
+                function getDiffBetweenAngles(angle1, angle2) {
+                    let diff = angle1 - angle2;
+                    if (diff < 0) {
+                        diff += 2 * Math.PI;
+                    }
+                    return diff;
+                }
+
 
                 // wip
                 function pointTowardFurthestCorner() {
@@ -51,8 +69,84 @@
                     let dist = Math.sqrt(xDiff*xDiff + yDiff*yDiff);
                     xDiff /= dist;
                     yDiff /= dist;
-                    xVel = xDiff * 50;
-                    yVel = yDiff * 50;
+                    xVel = xDiff * 7;
+                    yVel = yDiff * 7;
+                }
+
+                let corners = [
+                    {x: dvdImageWidth/2, y: dvdImageHeight/2},
+                    {x: window.innerWidth - dvdImageWidth/2, y: dvdImageHeight/2},
+                    {x: window.innerWidth - dvdImageWidth/2, y: window.innerHeight - dvdImageHeight/2},
+                    {x: dvdImageWidth/2, y: window.innerHeight - dvdImageHeight/2}
+                ];
+
+                function getFurthestCorner(x, y) {
+                    let furthestCorner = {x: 0, y: 0};
+                    let furthestDist = 0;
+                    for(let i = 0; i < corners.length; i++) {
+                        let dist = Math.sqrt(Math.pow(x - corners[i].x, 2) + Math.pow(y - corners[i].y, 2));
+                        if(dist > furthestDist) {
+                            furthestCorner = corners[i];
+                            furthestDist = dist;
+                        }
+                    }
+                    return furthestCorner;
+                }
+
+                function getAngleToCorner(corner) {
+                    let position = {x: dvdImage.offsetLeft + dvdImageWidth/2, y: dvdImage.offsetTop + dvdImageHeight/2};
+                    let xDiff = corner.x - position.x;
+                    let yDiff = corner.y - position.y;
+                    let dist = Math.sqrt(xDiff*xDiff + yDiff*yDiff);
+                    xDiff /= dist;
+                    yDiff /= dist;
+                    return Math.atan2(yDiff, xDiff);
+                }
+
+
+                document.addEventListener("click", () => {
+                    //pointTowardsCorner(getFurthestCorner(dvdImage.offsetLeft + dvdImageWidth/2, dvdImage.offsetTop + dvdImageHeight/2));
+                    //console.log(getAngleToCorner(getFurthestCorner(dvdImage.offsetLeft + dvdImageWidth/2, dvdImage.offsetTop + dvdImageHeight/2)));
+                    let angle = getAngleToCorner(getFurthestCorner(dvdImage.offsetLeft + dvdImageWidth/2, dvdImage.offsetTop + dvdImageHeight/2));
+
+                    let currentAngle = Math.atan2(yVel, xVel);
+                    let diff = getDiffBetweenAngles(angle, currentAngle);
+                    console.log(diff);
+                    if(diff < Math.PI/4) {         
+                        xVel = Math.cos(angle) * 7;
+                        yVel = Math.sin(angle) * 7;
+                    }
+
+                });
+
+                function normalizeVelocity() {
+                    let dist = Math.sqrt(xVel*xVel + yVel*yVel);
+                    xVel /= dist;
+                    yVel /= dist;
+                    xVel *= speed;
+                    yVel *= speed;
+                }
+
+                function adjustVelocityOnBounce() {
+                    if(Math.random() < 0.5) {
+                        xVel += Math.random() * 2 - 1;
+                        yVel += Math.random() * 2 - 1;
+
+                        normalizeVelocity();
+                        return;
+                    }
+
+                    let angle = getAngleToCorner(getFurthestCorner(dvdImage.offsetLeft + dvdImageWidth/2, dvdImage.offsetTop + dvdImageHeight/2));
+
+                    let currentAngle = Math.atan2(yVel, xVel);
+                    let diff = angle - currentAngle;
+                    console.log(diff);
+                    if(diff < Math.PI/4) {         
+                        xVel = Math.cos(angle) * 7;
+                        yVel = Math.sin(angle) * 7;
+                    }
+
+                    normalizeVelocity();
                 }
 
                 let lastTime = performance.now();
@@ -61,22 +155,29 @@
                     let dt = (now - lastTime) / 1000;
                     lastTime = now;
 
+                    if(dt > 0.1) {
+                        dt = 0.1;
+                    }
 
                     if (x < 0) {
                         xVel = -xVel;
-                        x += xVel * dt;
+                        x = 0 + xVel * dt;
+                        adjustVelocityOnBounce();
                     }
                     if (x > window.innerWidth - dvdImageWidth) {
                         xVel = -xVel;
-                        x += xVel * dt;
+                        x = window.innerWidth - dvdImageWidth - xVel * dt;
+                        adjustVelocityOnBounce();
                     }
                     if (y < 0) {
                         yVel = -yVel;
-                        y += yVel * dt;
+                        y = 0 + yVel * dt;
+                        adjustVelocityOnBounce();
                     }
                     if (y > window.innerHeight - dvdImageHeight) {
                         yVel = -yVel;
-                        y += yVel * dt;
+                        y = window.innerHeight - dvdImageHeight - yVel * dt;
+                        adjustVelocityOnBounce();
                     }
 
                     x += xVel * dt * 70;
