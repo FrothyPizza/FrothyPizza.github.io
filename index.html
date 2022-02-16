@@ -23,8 +23,6 @@
         <script>
             
             window.onload = () => {
-
-                // make the image bounce around the screen
                 let dvdImage = document.getElementById("dvdImage");
                 dvdImage.style.position = "absolute";
                 dvdImage.style.top = "0px";
@@ -49,8 +47,6 @@
                     return diff;
                 }
 
-
-                // wip
                 function pointTowardFurthestCorner() {
                     let position = {x: dvdImage.offsetLeft + dvdImageWidth/2, y: dvdImage.offsetTop + dvdImageHeight/2};
                     let target = {x: 0, y: 0};
@@ -103,21 +99,6 @@
                     return Math.atan2(yDiff, xDiff);
                 }
 
-
-                document.addEventListener("click", () => {
-                    //pointTowardsCorner(getFurthestCorner(dvdImage.offsetLeft + dvdImageWidth/2, dvdImage.offsetTop + dvdImageHeight/2));
-                    //console.log(getAngleToCorner(getFurthestCorner(dvdImage.offsetLeft + dvdImageWidth/2, dvdImage.offsetTop + dvdImageHeight/2)));
-                    let angle = getAngleToCorner(getFurthestCorner(dvdImage.offsetLeft + dvdImageWidth/2, dvdImage.offsetTop + dvdImageHeight/2));
-
-                    let currentAngle = Math.atan2(yVel, xVel);
-                    let diff = getDiffBetweenAngles(angle, currentAngle);
-                    console.log(diff);
-                    if(diff < Math.PI/4) {         
-                        xVel = Math.cos(angle) * 7;
-                        yVel = Math.sin(angle) * 7;
-                    }
-
-                });
 
                 function normalizeVelocity() {
                     let dist = Math.sqrt(xVel*xVel + yVel*yVel);
