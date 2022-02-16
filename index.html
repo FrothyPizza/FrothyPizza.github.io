@@ -9,10 +9,88 @@
     </head>
     <body>
         <script id="replace_with_navbar" src="nav.js"></script>
-        <script>
+        <!-- <script>
             window.onload = () => {
                 window.location.href = "games.html";
             }
+        </script> -->
+        <img id="dvdImage" src="images/dvd-video.png" alt="dvd">
+        <script>
+            window.onload = () => {
+                // make the image bounce around the screen
+                let dvdImage = document.getElementById("dvdImage");
+                dvdImage.style.position = "absolute";
+                dvdImage.style.top = "0px";
+                dvdImage.style.left = "0px";
+
+                let x = Math.random() * (window.innerWidth - dvdImage.width * 2) + dvdImage.width;
+                let y = Math.random() * (window.innerHeight - dvdImage.height * 2) + dvdImage.height;
+                let dir = Math.random() * 2 * Math.PI;
+                let xVel = Math.cos(dir) * 5;
+                let yVel = Math.sin(dir) * 5;
+
+                let dvdImageWidth = dvdImage.clientWidth;
+                let dvdImageHeight = dvdImage.clientHeight;
+
+                // wip
+                function pointTowardFurthestCorner() {
+                    let position = {x: dvdImage.offsetLeft + dvdImageWidth/2, y: dvdImage.offsetTop + dvdImageHeight/2};
+                    let target = {x: 0, y: 0};
+                    if(dvdImage.offsetLeft > window.innerWidth/2 && dvdImage.offsetTop > window.innerHeight/2) {
+                        target = {x: 0 + dvdImageWidth/2, y: 0 + dvdImageHeight/2};
+                    } else if(dvdImage.offsetLeft < window.innerWidth/2 && dvdImage.offsetTop < window.innerHeight/2) {
+                        target = {x: window.innerWidth - dvdImageWidth/2, y: 0 + dvdImageHeight/2};
+                    } else if(dvdImage.offsetLeft > window.innerWidth/2 && dvdImage.offsetTop < window.innerHeight/2) {
+                        target = {x: 0 + dvdImageWidth/2, y: window.innerHeight - dvdImageHeight/2};
+                    } else {
+                        target = {x: window.innerWidth - dvdImageWidth/2, y: window.innerHeight - dvdImageHeight/2};
+                    }
+
+                    let xDiff = target.x - position.x;
+                    let yDiff = target.y - position.y;
+                    let dist = Math.sqrt(xDiff*xDiff + yDiff*yDiff);
+                    xDiff /= dist;
+                    yDiff /= dist;
+                    xVel = xDiff * 50;
+                    yVel = yDiff * 50;
+                }
+
+                let lastTime = performance.now();
+                function update() {
+                    let now = performance.now();
+                    let dt = (now - lastTime) / 1000;
+                    lastTime = now;
+
+
+                    if (x < 0) {
+                        xVel = -xVel;
+                        x += xVel * dt;
+                    }
+                    if (x > window.innerWidth - dvdImageWidth) {
+                        xVel = -xVel;
+                        x += xVel * dt;
+                    }
+                    if (y < 0) {
+                        yVel = -yVel;
+                        y += yVel * dt;
+                    }
+                    if (y > window.innerHeight - dvdImageHeight) {
+                        yVel = -yVel;
+                        y += yVel * dt;
+                    }
+
+                    x += xVel * dt * 70;
+                    y += yVel * dt * 70;
+
+                    dvdImage.style.left = x + "px";
+                    dvdImage.style.top = y + "px";
+
+                    requestAnimationFrame(update);
+                } update();
+            }
+
+
+
         </script>
     </body>
 
