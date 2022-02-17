@@ -129,7 +129,7 @@
 
                     let currentAngle = Math.atan2(yVel, xVel);
                     let diff = angle - currentAngle;
-                    if(Math.abs(diff) < Math.PI/4) {         
+                    if(Math.abs(diff) < Math.PI/4 && Math.abs(diff) > -Math.PI/4) {         
                         xVel = Math.cos(angle) * speed;
                         yVel = Math.sin(angle) * speed;
                     }
@@ -174,14 +174,14 @@
                         ++bounces;
                     }
 
-                    if(bounces > 0) {
-                        if(Math.random() < 0.7) {
-                            xVel += Math.random() * 2 - 1;
-                            yVel += Math.random() * 2 - 1;
+                    // if(bounces > 0) {
+                    //     if(Math.random() < 0.7) {
+                    //         xVel += Math.random() * 2 - 1;
+                    //         yVel += Math.random() * 2 - 1;
 
-                            normalizeVelocity();
-                        }
-                    }
+                    //         normalizeVelocity();
+                    //     }
+                    // }
                     
 
                     x += xVel * dt * 70;
