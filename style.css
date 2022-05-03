@@ -55,3 +55,18 @@ li {
 #ayman {
     font-size: large;
 }
+
+
+* {
+    cursor: url('cursors/xp_arrow.cur'), auto;
+}
+
+a:hover, img:hover {
+    cursor: url('cursors/xp_link.cur'), auto;
+}
+
+p:hover, li:hover, h1:hover, h2:hover, h3:hover, h4:hover, h5:hover, h6:hover {
+    cursor: url('cursors/xp_beam.cur'), auto;
+}
+
+

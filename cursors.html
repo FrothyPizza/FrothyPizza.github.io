@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title> </title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <button>click</button>
+        <style>
+            button {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+
+            * {
+                overflow: hidden;
+            }
+        </style>
+        <script>
+
+
+            var elem = document.documentElement;
+
+            /* View in fullscreen */
+            function openFullscreen() {
+                if (elem.requestFullscreen) {
+                    elem.requestFullscreen();
+                } else if (elem.webkitRequestFullscreen) {
+                    elem.webkitRequestFullscreen();
+                } else if (elem.msRequestFullscreen) {
+                    elem.msRequestFullscreen();
+                }
+            }
+            function main() {
+                document.querySelector("button").style.display = "none";
+                openFullscreen();
+
+
+
+                let completeOffset = {x: 0, y: 0};
+
+                let mouse = {x: 0, y: 0};
+                document.addEventListener("mousemove", (e) => {
+                    mouse.x = e.pageX;
+                    mouse.y = e.pageY;
+                });
+
+                function createCursor(offsetX, offsetY) {
+                    let cursor = new Image();
+                    cursor.src = 'cursors/xp_arrow.cur';
+                    cursor.style.position = 'absolute';
+                    document.body.appendChild(cursor);
+
+                    window.setInterval(() => {
+                        let x = mouse.x - offsetX + completeOffset.x;
+                        let y = mouse.y - offsetY + completeOffset.y;
+                        cursor.style.top = y + 'px';
+                        cursor.style.left = x + 'px';
+
+                        if(x < 0) {
+                            offsetX -= window.innerWidth;
+                        }
+                        if(y < 0) {
+                            offsetY -= window.innerHeight;
+                        }
+                        if(x > window.innerWidth) {
+                            offsetX += window.innerWidth;
+                        }
+                        if(y > window.innerHeight) {
+                            offsetY += window.innerHeight;
+                        }
+                    }, 10);
+
+                }
+
+                for(let i = 0; i < 200; i++) {
+                    let w = window.innerWidth + 200;
+                    let h = window.innerHeight + 200;
+                    createCursor(Math.random() * w * 2 - w, Math.random() * h * 2 - h);
+                }
+
+                document.querySelectorAll("*").forEach(e => {
+                    e.style.cursor = "none";
+                    e.style.hover = "none";
+                });
+
+                let radians = 0;
+                setInterval(() => {
+                    radians += 0.002
+                    // completeOffset.x += 5;
+                    // completeOffset.y -= 5;
+                    completeOffset.x = Math.sin(radians) * 3000;
+                    completeOffset.y = Math.cos(radians) * 3000;
+                }, 10);
+            }
+
+            document.querySelector('button').addEventListener('click', main);
+        </script>
+    </body>
+</html>
