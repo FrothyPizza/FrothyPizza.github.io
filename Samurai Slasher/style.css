@@ -1,0 +1,34 @@
+html {
+	background: #b2b2b2;
+}
+
+#canvas {
+	width: 880px;
+	height: 640px;
+
+	position: absolute;
+	top: 50vh;
+	left: 50vw;
+	transform: translate(-50%, -50%);
+
+	image-rendering: -moz-crisp-edges;
+  	image-rendering: pixelated;
+
+}
+@media screen and (max-width: 880px),
+	   screen and (max-height: 640px) {
+				
+	#canvas {
+		width: 704px;
+		height: 512px;
+	}
+}
+
+@media screen and (max-width: 704px),
+	   screen and (max-height: 512px) {
+				
+	#canvas {
+		width: 528px;
+		height: 384px;
+	}
+}
