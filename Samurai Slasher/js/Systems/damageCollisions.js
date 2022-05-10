@@ -33,7 +33,7 @@ ECS.Systems.damageCollisions = entities => {
 			if(!reciever.has("health", "position", "bounds")) continue;
 
 
-			// if a weapon is damaging an enemy
+			// if a weapon is damaging an enemy 
 			if(damager.has("enemyDamager") && damager.enemyDamager.enabled && reciever.has("playerDamager")) {
 				if(colliding(damager, reciever) && !damager.enemyDamager.damagedEntities.find(x => x == reciever.id)) {
 					// freeze(100);

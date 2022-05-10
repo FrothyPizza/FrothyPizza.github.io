@@ -163,7 +163,7 @@ function restart() {
 	score.addComponent(new ECS.Components.Text("23", 320, gameScene));
 	score.text.textObj.text = 0;
 	ECS.register(score);
-
+ 
 	let highscore = new ECS.Entity();
 	highscore.addComponent(new ECS.Components.Highscore());
 	highscore.addComponent(new ECS.Components.Position(92, 76));

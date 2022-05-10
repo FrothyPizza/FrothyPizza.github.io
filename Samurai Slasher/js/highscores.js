@@ -10,7 +10,7 @@ function post(url, body) {
     });
 }
 
-const highScoreOl = document.getElementById("high-scores");
+const highScoreOl = document.getElementById("high-scores"); 
 
 
 

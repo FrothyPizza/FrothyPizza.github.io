@@ -32,7 +32,7 @@ ECS.Systems.crateCollisions = entities => {
 				// 	newWeaponEnt.bounds.x = -Math.abs(newWeaponEnt.bounds.x);
 				// }
 				// ECS.register(newWeaponEnt);
-				// player.boundEntity.id = newWeaponEnt.id;
+				// player.boundEntity.id = newWeaponEnt.id; 
 				ECS.Helpers.setPlayerWeapon(entities, player);
 				if(player.playerController.score > localStorage.getItem("samhighscore")) {
 					localStorage.setItem("samhighscore", player.playerController.score);	

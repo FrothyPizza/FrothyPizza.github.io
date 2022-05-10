@@ -32,7 +32,7 @@ function loadSprites(onload) {
 		onload();
 	});
 }
-
+ 
 let sounds = {};
 function loadSounds() {
 	sounds.music = new Audio('assets/sounds/music/battle_music_2_long.mp3');
