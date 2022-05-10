@@ -62,8 +62,8 @@ window.onload = () => {
 
 let started = false;
 function main() {
-	if(!localStorage.getItem("samhighscore"))
-		localStorage.setItem("samhighscore", 0);
+	if(!localStorage.getItem("highscore"))
+		localStorage.setItem("highscore", 0);
 	
     console.log("Game Started");
 
@@ -168,7 +168,7 @@ function restart() {
 	highscore.addComponent(new ECS.Components.Highscore());
 	highscore.addComponent(new ECS.Components.Position(92, 76));
 	highscore.addComponent(new ECS.Components.Text("23", 200, gameScene));
-	highscore.text.textObj.text = "hi:" + localStorage.getItem("samhighscore");
+	highscore.text.textObj.text = "hi:" + localStorage.getItem("highscore");
 	ECS.register(highscore);
 
 	let crate = ECS.Blueprints.crate();

@@ -22,6 +22,9 @@ function loadSprites(onload) {
 	let loadText = document.createElement("p");
 	loadText.innerText = "loading...";
 	document.body.appendChild(loadText);
+
+	
+	
 	app.loader.load(() => {
 		loadText.remove();
 		onload();

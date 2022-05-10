@@ -78,6 +78,7 @@ ECS.Systems.damageCollisions = entities => {
 			// if an enemy is damaging the player
 			if(damager.has("playerDamager") && reciever.has("playerController")) {
 				if(colliding(damager, reciever)) {
+					postScore(reciever.playerController.score);
 					reciever.removeComponent("mapCollider");
 					reciever.removeComponent("playerController");
 					reciever.animatedSprite.setAnimation("Fall");

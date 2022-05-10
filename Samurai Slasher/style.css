@@ -17,7 +17,6 @@ html {
 }
 @media screen and (max-width: 880px),
 	   screen and (max-height: 640px) {
-				
 	#canvas {
 		width: 704px;
 		height: 512px;
@@ -25,10 +24,17 @@ html {
 }
 
 @media screen and (max-width: 704px),
-	   screen and (max-height: 512px) {
-				
+	   screen and (max-height: 512px) {			
 	#canvas {
 		width: 528px;
 		height: 384px;
 	}
+}
+
+
+
+#high-score-container {
+	display: flex;
+	flex-direction: column;
+	width: 250px;
 }

@@ -34,14 +34,15 @@ ECS.Systems.crateCollisions = entities => {
 				// ECS.register(newWeaponEnt);
 				// player.boundEntity.id = newWeaponEnt.id;
 				ECS.Helpers.setPlayerWeapon(entities, player);
-				if(player.playerController.score > localStorage.getItem("samhighscore"))
-					localStorage.setItem("samhighscore", player.playerController.score);
+				if(player.playerController.score > localStorage.getItem("highscore")) {
+					localStorage.setItem("highscore", player.playerController.score);	
+				}
 
 				for(let id in entities)
 					if(entities[id].has("text") && entities[id].has("score")) {
 						entities[id].text.textObj.text = player.playerController.score;
 					} else if(entities[id].has("text") && entities[id].has("highscore")) {
-						entities[id].text.textObj.text = "hi:" + localStorage.getItem("samhighscore");
+						entities[id].text.textObj.text = "hi:" + localStorage.getItem("highscore");
 					}
 
 				sounds.powerup.play();

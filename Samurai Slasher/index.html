@@ -10,10 +10,22 @@
 	</head>
 	<body>
 		<canvas id="canvas"></canvas>
+		<div id="high-score-container">
+			<div id="name-entry-container">
+				<label for="name-entry">Name:</label>
+				<input id="name-entry"></input>
+			</div>
+			<p>(you must enter a name for your score to be submitted)</p>
+			<h3>Global Leaderboard</h3>
+			<ol id="high-scores">
+
+			</ol>
+		</div>
 
 		<script src="js/globals.js"></script>
 		<script src="script.js"></script>
 		<script src="js/load.js"></script>
+		<script src="js/highscores.js"></script>
 		<script src="js/Entity.js"></script>
 		<script src="js/Components.js"></script>
 		<script src="js/Blueprints.js"></script>
