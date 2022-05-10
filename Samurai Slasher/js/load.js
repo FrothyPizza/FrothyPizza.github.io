@@ -1,5 +1,7 @@
 
 
+
+
 function loadSprites(onload) {
 	const I = "assets/images"
 	app.loader.add('player', I + "/player.png")

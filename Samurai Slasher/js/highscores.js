@@ -1,4 +1,4 @@
-const SERVER_URL = "https://Samurai-Slasher-High-Scores.frothypizza.repl.co";
+const SERVER_URL = "https://Samurai-Slasher-High-Scores-1.frothypizza.repl.co";
 
 function post(url, body) {
     return fetch(url, {
@@ -10,12 +10,10 @@ function post(url, body) {
     });
 }
 
-const nameInput = document.getElementById("name-entry");
 const highScoreOl = document.getElementById("high-scores");
-let playerName = "";
-nameInput.oninput = (val) => {
-	playerName = nameInput.value;
-}
+
+
+
 
 function postScore(score) {
 	if(!playerName) {
@@ -44,6 +42,14 @@ function fetchScores() {
 		});
 }
 
+let playerName = "";
+if(!localStorage.getItem("samname")) {
+	let name = prompt("Enter your name. It will PERMANENTLY be locked in.");
+	localStorage.setItem("samname", name);
+	playerName = name;
+} else {
+	playerName = localStorage.getItem("samname");
+}
 fetchScores();
 setInterval(() => {
 	fetchScores();
