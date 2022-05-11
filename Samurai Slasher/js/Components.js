@@ -257,7 +257,7 @@ ECS.Components.Throwable = class throwable {
 	constructor(attackDelay) {
 		this.attackDelay = attackDelay || 20;
 		this.framesSinceLastAttack = this.attackDelay;
-		this.pierce = 1;
+		this.pierce = 2;
 	}
 }
 
