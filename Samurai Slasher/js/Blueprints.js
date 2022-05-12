@@ -141,7 +141,7 @@ ECS.Blueprints.weapon = (type) => {
 		e.addComponent(new ECS.Components.AnimatedSprite
 			(app.loader.resources.cannonSpritesheet.spritesheet, gameScene, false));
 		e.animatedSprite.offset.y = e.animatedSprite.sprite.height/2 + 4;
-		e.addComponent(new ECS.Components.Throwable(25));
+		e.addComponent(new ECS.Components.Throwable(20));
 	}
 
 
