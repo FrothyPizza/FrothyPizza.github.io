@@ -21,13 +21,13 @@ ECS.Blueprints.enemy = (type) => {
 		e.addComponent(new ECS.Components.AnimatedSprite
 			(app.loader.resources.bigEnemySpritesheet.spritesheet, gameScene, true));
 		e.animatedSprite.sprite.animationSpeed = 0.0666;
-		e.health.value = 3;
+		e.health.value = 4;
 		e.bounds.vec = new Vec2(12, 12);
 		e.enemyBehavior.speed = 0.25;
 	} else if(type == 2) {
 		e.addComponent(new ECS.Components.AnimatedSprite
 			(app.loader.resources.batSpritesheet.spritesheet, gameScene, true));
-		e.health.value = 2;
+		e.health.value = 1;
 		e.bounds.vec = new Vec2(6, 8);
 		e.animatedSprite.offset.x = -2;
 		e.addComponent(new ECS.Components.FlyingEnemy());
