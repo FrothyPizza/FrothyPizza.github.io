@@ -14,9 +14,9 @@ ECS.Systems.enemySpawner = entities => {
 			entity.enemySpawner.spawnTimer.restart();
 
 			
-			if(entity.enemySpawner.spawnDelay > 700) {
-				entity.enemySpawner.spawnDelay -= 6;
-				entity.enemySpawner.tempSpawnDelay -= 6;
+			if(entity.enemySpawner.spawnDelay > 750) {
+				entity.enemySpawner.spawnDelay -= 5;
+				entity.enemySpawner.tempSpawnDelay -= 5;
 				console.log(entity.enemySpawner.spawnDelay);
 			}
 
