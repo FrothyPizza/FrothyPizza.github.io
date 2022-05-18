@@ -92,7 +92,7 @@ ECS.Blueprints.weapon = (type) => {
 	} else if(type == "hammer") {
 		e.addComponent(new ECS.Components.Bounds(16, 18))
 		e.enemyDamager.damage = 4;
-		e.enemyDamager.damageDelay = 50;
+		//e.enemyDamager.damageDelay = 50;
 		e.bounds.offset.x = 4;
 		e.bounds.offset.y = -e.bounds.y/2;
 
@@ -116,7 +116,7 @@ ECS.Blueprints.weapon = (type) => {
 		e.addComponent(new ECS.Components.Bounds(4, 4));
 		e.addComponent(new ECS.Components.AnimatedSprite
 			(app.loader.resources.shurikenSpritesheet.spritesheet, gameScene, false));
-		e.addComponent(new ECS.Components.Throwable(25));
+		e.addComponent(new ECS.Components.Throwable(18));
 		e.animatedSprite.offset.x = -4;
 		e.animatedSprite.offset.y = 2;
 		
