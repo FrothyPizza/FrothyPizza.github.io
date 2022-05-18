@@ -11,6 +11,10 @@ ECS.Entity = class Entity {
 		this[component.constructor.name] = component;
     }
 
+	add(component) {
+		this.addComponent(component);
+	}
+
     removeComponent(name) {
 		if(this[name].destroy)
 			this[name].destroy();
