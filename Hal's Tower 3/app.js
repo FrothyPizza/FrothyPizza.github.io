@@ -5,7 +5,7 @@ const DEVELOPER_MODE = false;
 
 const VERSON = "1.0.0";
 if(localStorage.getItem("verson") != VERSON) {
-    localStorage.clear();
+    //localStorage.clear();
     localStorage.setItem("verson", VERSON);
 }
 document.title = "Hal's Tower 3 - v" + VERSON;

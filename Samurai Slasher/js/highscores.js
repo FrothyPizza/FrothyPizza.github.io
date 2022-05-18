@@ -43,8 +43,11 @@ function fetchScores() {
 }
 
 let playerName = "";
-if(!localStorage.getItem("samname")) {
-	let name = prompt("Enter your name. It will PERMANENTLY be locked in.");
+if(!localStorage.getItem("samname") 
+	|| localStorage.getItem("samname") == ""
+    || localStorage.getItem("samname") == "undefined"
+	|| localStorage.getItem("samname") == "null") {
+	let name = prompt("Enter your name. It will PERMANENTLY be locked in.\nYou can have the same name on multiple devices.");
 	localStorage.setItem("samname", name);
 	playerName = name;
 } else {
