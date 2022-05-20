@@ -63,7 +63,7 @@ addWeapon("hammer", 4);
 addWeapon("spear", 5);
 addWeapon("shuriken", 4);
 addWeapon("cannon", 1);
-addWeapon("drill", 3);
+addWeapon("drill", 3000);
 
 
 
@@ -145,14 +145,14 @@ ECS.Blueprints.weapon = (type) => {
 		e.animatedSprite.offset.y = e.animatedSprite.sprite.height/2 + 4;
 		e.addComponent(new ECS.Components.Throwable(20));
 	} else if(type =="drill") {
-		e.addComponent(new ECS.Components.Bounds(8, 5));
+		e.addComponent(new ECS.Components.Bounds(8, 6));
 		e.addComponent(new ECS.Components.AnimatedSprite
 			(app.loader.resources.drillSpritesheet.spritesheet, gameScene, false));
 		e.addComponent(new ECS.Components.Drill());
 		e.animatedSprite.offset.y = -1;
 		e.animatedSprite.offset.x = -3;
 		e.bounds.offset.x = -4;
-		e.bounds.offset.y = 4;
+		e.bounds.offset.y = 5;
 		e.enemyDamager.framesEnabled = 100000000;
 		e.enemyDamager.enabled = true;
 
