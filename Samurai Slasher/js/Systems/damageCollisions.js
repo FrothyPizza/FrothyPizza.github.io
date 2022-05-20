@@ -77,10 +77,9 @@ ECS.Systems.damageCollisions = entities => {
 						if(player) {
 							player.velocity.y = -2;
 							player.mapCollider.grounded = true;
-							// do {
-							// 	player.position.y -= 2;
-							// 	damager.position.y -= 2;
-							// } while(colliding(damager, reciever));
+							do {
+								player.position.y -= 2;
+							} while(colliding(player, reciever));
 						}
 						setTimeout(() => {
 							damager.enemyDamager.damagedEntities = [];
@@ -93,7 +92,10 @@ ECS.Systems.damageCollisions = entities => {
 
 			// if an enemy is damaging the player
 			if(damager.has("playerDamager") && reciever.has("playerController")) {
-				if(colliding(damager, reciever)) {
+				let bound = entities[reciever.boundEntity.id];
+				if(bound && bound.has("drill") && colliding(damager, bound)) {
+					//
+				} else if(colliding(damager, reciever)) {
 					postScore(reciever.playerController.score);
 					reciever.removeComponent("mapCollider");
 					reciever.removeComponent("playerController");

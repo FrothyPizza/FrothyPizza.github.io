@@ -87,6 +87,8 @@ class Vec2 {
     }
 }
 
+
+
 class ScreenShaker {
 	constructor(canv) {
 		this.canvas = canv;

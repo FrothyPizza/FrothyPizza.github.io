@@ -14,7 +14,7 @@ ECS.Systems.crateCollisions = entities => {
 				let lastPosition = crate.position.vec.copy();
 				do {
 					crate.position.vec = crate.collectable.getRandomLocation();
-					console.log(Vec2.dist(crate.position.vec, lastPosition));
+					// console.log(Vec2.dist(crate.position.vec, lastPosition));
 				} while(Vec2.dist(crate.position.vec, lastPosition) < 64);
 				// let oldWeaponEntity = entities[player.boundEntity.id];
 				// let newWeapon;

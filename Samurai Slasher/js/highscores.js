@@ -20,11 +20,12 @@ function postScore(score) {
 		console.log("no name");
 		return;
 	}
-	console.log("Posting score");
+	// console.log("Posting score");
 	post(SERVER_URL + "/score", {
 	    name: playerName,
 	    score: score
-	}).then(x => x.text()).then(console.log);
+	});
+	// }).then(x => x.text()).then(console.log);
 	fetchScores();
 }
 
@@ -32,7 +33,7 @@ function fetchScores() {
 	fetch(SERVER_URL + "/scores")
 		.then(x => x.json())
 		.then(x => {
-			console.log(x);
+			// console.log(x);
 			highScoreOl.innerHTML = "";
 			x.forEach(s => {
 				let li = document.createElement("li");
