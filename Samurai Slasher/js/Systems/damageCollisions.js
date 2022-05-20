@@ -68,7 +68,7 @@ ECS.Systems.damageCollisions = entities => {
 							player.mapCollider.grounded = true;
 							do {
 								player.position.y -= 2;
-								console.log(player.position.y);
+								// console.log(player.position.y);
 							} while(colliding(player, reciever));
 						}
 						setTimeout(() => {
