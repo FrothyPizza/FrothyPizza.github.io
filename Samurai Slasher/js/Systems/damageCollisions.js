@@ -73,7 +73,7 @@ ECS.Systems.damageCollisions = entities => {
 						}
 						setTimeout(() => {
 							damager.enemyDamager.damagedEntities = [];
-						}, 100);
+						}, 50);
 						
 					}
 
@@ -83,14 +83,12 @@ ECS.Systems.damageCollisions = entities => {
 			// if an enemy is damaging the player
 			if(damager.has("playerDamager") && reciever.has("playerController")) {
 				let bound = entities[reciever.boundEntity.id];
-				// if(bound && bound.has("drill") && colliding(damager, bound)) {
-				// 	console.log("enemy hit drill and player");
-				// 	do {
-				// 		reciever.position.y -= 2;
-				// 		console.log("moving");
-				// 	} while(colliding(damager, reciever));
-				if(reciever.velocity.y > 1 && bound.has("drill")) {
-
+				if(bound && bound.has("drill") && colliding(damager, bound)) {
+					console.log("enemy hit drill and player");
+					do {
+						reciever.position.y -= 2;
+						console.log("moving");
+					} while(colliding(damager, reciever));
 				} else if(colliding(damager, reciever)) {
 					postScore(reciever.playerController.score);
 					reciever.removeComponent("mapCollider");
@@ -135,7 +133,6 @@ ECS.Systems.damageCollisions = entities => {
 			check(damager);
 		} 
 	}
-
 
 }
 
