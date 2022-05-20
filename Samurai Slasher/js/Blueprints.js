@@ -146,14 +146,14 @@ ECS.Blueprints.weapon = (type) => {
 		e.addComponent(new ECS.Components.Throwable(20));
 	} else if(type =="drill") {
 		e.enemyDamager.damage = 2;
-		e.addComponent(new ECS.Components.Bounds(12, 12));
+		e.addComponent(new ECS.Components.Bounds(10, 8));
 		e.addComponent(new ECS.Components.AnimatedSprite
 			(app.loader.resources.drillSpritesheet.spritesheet, gameScene, false));
 		e.addComponent(new ECS.Components.Drill());
 		e.animatedSprite.offset.y = -1;
 		e.animatedSprite.offset.x = -3;
 		e.bounds.offset.x = -5;
-		e.bounds.offset.y = 2;
+		e.bounds.offset.y = 4;
 		e.enemyDamager.framesEnabled = 100000000;
 		e.enemyDamager.enabled = true;
 
