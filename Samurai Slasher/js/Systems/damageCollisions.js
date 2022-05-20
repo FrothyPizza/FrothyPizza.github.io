@@ -61,13 +61,14 @@ ECS.Systems.damageCollisions = entities => {
 						}			
 					}
 
+					let player = Object.values(entities).find(x => x.has("playerController"));
 					if(damager.has("drill")) {
-						let player = Object.values(entities).find(x => x.has("playerController"));
 						if(player) {
 							player.velocity.y = -2;
 							player.mapCollider.grounded = true;
 							do {
 								player.position.y -= 2;
+								console.log(player.position.y);
 							} while(colliding(player, reciever));
 						}
 						setTimeout(() => {
@@ -82,8 +83,14 @@ ECS.Systems.damageCollisions = entities => {
 			// if an enemy is damaging the player
 			if(damager.has("playerDamager") && reciever.has("playerController")) {
 				let bound = entities[reciever.boundEntity.id];
-				if(bound && bound.has("drill") && colliding(damager, bound)) {
-					
+				// if(bound && bound.has("drill") && colliding(damager, bound)) {
+				// 	console.log("enemy hit drill and player");
+				// 	do {
+				// 		reciever.position.y -= 2;
+				// 		console.log("moving");
+				// 	} while(colliding(damager, reciever));
+				if(reciever.velocity.y > 1 && bound.has("drill")) {
+
 				} else if(colliding(damager, reciever)) {
 					postScore(reciever.playerController.score);
 					reciever.removeComponent("mapCollider");
@@ -109,14 +116,6 @@ ECS.Systems.damageCollisions = entities => {
 		const damager = entities[id];
 		if(!damager.has("position", "bounds")) continue;
 
-		if(damager.has("playerDamager")) {
-			check(damager);
-		} 
-	}
-	for(let id in entities) {
-		const damager = entities[id];
-		if(!damager.has("position", "bounds")) continue;
-
 		if(damager.has("enemyDamager") && damager.enemyDamager.enabled) {
 			++damager.enemyDamager.frames;
 			if(damager.enemyDamager.frames > damager.enemyDamager.framesEnabled) {
@@ -128,6 +127,15 @@ ECS.Systems.damageCollisions = entities => {
 			check(damager);
 		} 
 	}
+	for(let id in entities) {
+		const damager = entities[id];
+		if(!damager.has("position", "bounds")) continue;
+
+		if(damager.has("playerDamager")) {
+			check(damager);
+		} 
+	}
+
 
 }
 
