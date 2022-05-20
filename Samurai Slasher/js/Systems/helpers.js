@@ -12,13 +12,13 @@ ECS.Helpers.setPlayerWeapon = (entities, player, weaponName) => {
 	ECS.removeEntity(oldWeaponEntity.id);
 	let newWeaponEnt = ECS.Blueprints.weapon(newWeapon);
 
-// 	if(player.animatedSprite.sprite.scale.x == -1) {
-// 		newWeaponEnt.animatedSprite.sprite.scale.x = -1;
-// 		player.boundEntity.offset.x = -Math.abs(player.boundEntity.offset.x);
-// 		newWeaponEnt.bounds.offset.x = -Math.abs(newWeaponEnt.bounds.offset.x);
-// 		newWeaponEnt.bounds.x = -Math.abs(newWeaponEnt.bounds.x);
-// 	}
-	ECS.Helpers.setPlayerDirection(entities, player, player.animatedSprite.sprite.scale.x);
+	if(player.animatedSprite.sprite.scale.x == -1 && newWeapon !== "drill") {
+		newWeaponEnt.animatedSprite.sprite.scale.x = -1;
+		player.boundEntity.offset.x = -Math.abs(player.boundEntity.offset.x);
+		newWeaponEnt.bounds.offset.x = -Math.abs(newWeaponEnt.bounds.offset.x);
+		newWeaponEnt.bounds.x = -Math.abs(newWeaponEnt.bounds.x);
+	}
+// 	ECS.Helpers.setPlayerDirection(entities, player, player.animatedSprite.sprite.scale.x);
 	ECS.register(newWeaponEnt);
 	player.boundEntity.id = newWeaponEnt.id;
 }
