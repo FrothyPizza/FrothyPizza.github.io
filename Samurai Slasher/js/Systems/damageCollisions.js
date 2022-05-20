@@ -70,6 +70,7 @@ ECS.Systems.damageCollisions = entities => {
 								player.position.y -= 2;
 								// console.log(player.position.y);
 							} while(colliding(player, reciever));
+							sounds.damage.play();
 						}
 						setTimeout(() => {
 							damager.enemyDamager.damagedEntities = [];
