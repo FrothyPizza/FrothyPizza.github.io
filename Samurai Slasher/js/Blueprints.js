@@ -59,11 +59,11 @@ let addWeapon = (name, weight) => {
 		WEAPONS.push(name);
 } 
 addWeapon("sword", 5);
-addWeapon("hammer", 5);
-addWeapon("spear", 5);
-addWeapon("shuriken", 5);
+addWeapon("hammer", 4);
+addWeapon("spear", 6);
+addWeapon("shuriken", 4);
 addWeapon("cannon", 1);
-addWeapon("drill", 100);
+addWeapon("drill", 6);
 
 
 
