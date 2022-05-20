@@ -63,7 +63,7 @@ addWeapon("hammer", 4);
 addWeapon("spear", 5);
 addWeapon("shuriken", 4);
 addWeapon("cannon", 1);
-// addWeapon("drill", 3);
+addWeapon("drill", 3);
 
 
 
@@ -145,8 +145,8 @@ ECS.Blueprints.weapon = (type) => {
 		e.animatedSprite.offset.y = e.animatedSprite.sprite.height/2 + 4;
 		e.addComponent(new ECS.Components.Throwable(20));
 	} else if(type =="drill") {
-		e.enemyDamager.damage = 2;
-		e.addComponent(new ECS.Components.Bounds(10, 8));
+		e.enemyDamager.damage = 4;
+		e.addComponent(new ECS.Components.Bounds(10, 7));
 		e.addComponent(new ECS.Components.AnimatedSprite
 			(app.loader.resources.drillSpritesheet.spritesheet, gameScene, false));
 		e.addComponent(new ECS.Components.Drill());
@@ -157,15 +157,15 @@ ECS.Blueprints.weapon = (type) => {
 		e.enemyDamager.framesEnabled = 100000000;
 		e.enemyDamager.enabled = true;
 
-		const rectangle = PIXI.Sprite.from(PIXI.Texture.WHITE);
-		rectangle.width = e.bounds.x;
-		rectangle.height = e.bounds.y;
-		rectangle.tint = 0xFF0000;
-		gameScene.addChild(rectangle);
-		setInterval(() => {
-			rectangle.x = e.position.x + e.bounds.offset.x;
-			rectangle.y = e.position.y + e.bounds.offset.y;
-		}, 0);
+// 		const rectangle = PIXI.Sprite.from(PIXI.Texture.WHITE);
+// 		rectangle.width = e.bounds.x;
+// 		rectangle.height = e.bounds.y;
+// 		rectangle.tint = 0xFF0000;
+// 		gameScene.addChild(rectangle);
+// 		setInterval(() => {
+// 			rectangle.x = e.position.x + e.bounds.offset.x;
+// 			rectangle.y = e.position.y + e.bounds.offset.y;
+// 		}, 0);
 	}
 
 
