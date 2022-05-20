@@ -16,6 +16,7 @@ function loadSprites(onload) {
 		.add('swordSpritesheet', I + '/weapons/sword.json')
 		.add('spearSpritesheet', I + '/weapons/spear.json')
 		.add('hammerSpritesheet', I + '/weapons/hammer.json')
+		.add('drillSpritesheet', I + '/weapons/drill.json')
 		.add('cannonSpritesheet', I + '/weapons/cannon.json')
 		.add('shurikenSpritesheet', I + '/weapons/shuriken.json');
 	

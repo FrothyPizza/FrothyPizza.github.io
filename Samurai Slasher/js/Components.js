@@ -261,6 +261,12 @@ ECS.Components.Throwable = class throwable {
 	}
 }
 
+ECS.Components.Drill = class drill {
+	constructor() {
+
+	}
+}
+
 
 ECS.Components.PlayerDamager = class playerDamager {
 	constructor(damage) {

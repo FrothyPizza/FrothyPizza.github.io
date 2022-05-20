@@ -72,6 +72,22 @@ ECS.Systems.damageCollisions = entities => {
 						}			
 					}
 
+					if(damager.has("drill")) {
+						let player = Object.values(entities).find(x => x.has("playerController"));
+						if(player) {
+							player.velocity.y = -2;
+							player.mapCollider.grounded = true;
+							// do {
+							// 	player.position.y -= 2;
+							// 	damager.position.y -= 2;
+							// } while(colliding(damager, reciever));
+						}
+						setTimeout(() => {
+							damager.enemyDamager.damagedEntities = [];
+						}, 100);
+						
+					}
+
 				}
 			}
 

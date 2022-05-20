@@ -21,3 +21,32 @@ ECS.Helpers.setPlayerWeapon = (entities, player, weaponName) => {
 	ECS.register(newWeaponEnt);
 	player.boundEntity.id = newWeaponEnt.id;
 }
+
+ECS.Helpers.setPlayerDirection = (entities, player, dir) => {
+	let boundEntity = entities[player.boundEntity.id];
+	if(boundEntity.has("drill")) {
+		boundEntity.animatedSprite.offset.x = dir * Math.abs(boundEntity.animatedSprite.offset.x);
+		boundEntity.animatedSprite.sprite.scale.x = dir;
+		return;
+	}
+	if(dir == 1) {
+		player.animatedSprite.sprite.scale.x = 1;
+		if(boundEntity.animatedSprite.sprite && boundEntity.animatedSprite.sprite.scale.x !== 1) {
+			boundEntity.animatedSprite.sprite.scale.x = 1;
+			boundEntity.animatedSprite.offset.x = -Math.abs(boundEntity.animatedSprite.offset.x);
+			player.boundEntity.offset.x = Math.abs(player.boundEntity.offset.x);
+			boundEntity.bounds.offset.x = Math.abs(boundEntity.bounds.offset.x);
+			boundEntity.bounds.x = Math.abs(boundEntity.bounds.x);
+		}
+	}
+	else if(dir == -1) {
+		player.animatedSprite.sprite.scale.x = -1;
+		if(boundEntity.animatedSprite.sprite && boundEntity.animatedSprite.sprite.scale.x !== -1) {
+			boundEntity.animatedSprite.sprite.scale.x = -1;
+			boundEntity.animatedSprite.offset.x = Math.abs(boundEntity.animatedSprite.offset.x);
+			player.boundEntity.offset.x = -Math.abs(player.boundEntity.offset.x);
+			boundEntity.bounds.offset.x = -Math.abs(boundEntity.bounds.offset.x);
+			boundEntity.bounds.x = -Math.abs(boundEntity.bounds.x);
+		}
+	}
+}

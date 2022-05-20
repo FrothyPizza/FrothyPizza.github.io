@@ -45,7 +45,7 @@ const ECS = {
 		if(!this.entities[id]) return;
 		this.entities[id].destroy();
 		delete this.entities[id];
-		console.log("Entities: " + Object.entries(this.entities).length);
+		//console.log("Entities: " + Object.entries(this.entities).length);
 	}
 };
 
@@ -175,7 +175,7 @@ function restart() {
 	ECS.register(crate);
 
 
-	let sword = ECS.Blueprints.weapon("sword");
+	let sword = ECS.Blueprints.weapon("drill");
 	player.addComponent(new ECS.Components.BoundEntity(sword.id));
 	ECS.register(sword);
 

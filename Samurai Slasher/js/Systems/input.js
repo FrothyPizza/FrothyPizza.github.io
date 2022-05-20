@@ -46,25 +46,13 @@ ECS.Systems.input = entities => {
 			if(keys['ArrowRight'] || keys['k']) {
 				entity.position.x += speed;
 				sprite.sprite.scale.x = 1;
-				if(boundEntity.animatedSprite.sprite && boundEntity.animatedSprite.sprite.scale.x !== 1) {
-					boundEntity.animatedSprite.sprite.scale.x = 1;
-					boundEntity.animatedSprite.offset.x = -Math.abs(boundEntity.animatedSprite.offset.x);
-					entity.boundEntity.offset.x = Math.abs(entity.boundEntity.offset.x);
-					boundEntity.bounds.offset.x = Math.abs(boundEntity.bounds.offset.x);
-					boundEntity.bounds.x = Math.abs(boundEntity.bounds.x);
-				}
 			}
 			if(keys['ArrowLeft'] || keys['j']) {
 				entity.position.x -= speed;
 				sprite.sprite.scale.x = -1;
-				if(boundEntity.animatedSprite.sprite && boundEntity.animatedSprite.sprite.scale.x !== -1) {
-					boundEntity.animatedSprite.sprite.scale.x = -1;
-					boundEntity.animatedSprite.offset.x = Math.abs(boundEntity.animatedSprite.offset.x);
-					entity.boundEntity.offset.x = -Math.abs(entity.boundEntity.offset.x);
-					boundEntity.bounds.offset.x = -Math.abs(boundEntity.bounds.offset.x);
-					boundEntity.bounds.x = -Math.abs(boundEntity.bounds.x);
-				}
 			}
+			ECS.Helpers.setPlayerDirection(entities, entity, sprite.sprite.scale.x);
+
 			if(lastScale !== boundEntity.animatedSprite.sprite.scale.x)
 				hideshow();
 
