@@ -63,7 +63,7 @@ addWeapon("hammer", 4);
 addWeapon("spear", 5);
 addWeapon("shuriken", 4);
 addWeapon("cannon", 1);
-addWeapon("drill", 3);
+// addWeapon("drill", 3);
 
 
 
