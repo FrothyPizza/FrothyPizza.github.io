@@ -60,10 +60,10 @@ let addWeapon = (name, weight) => {
 } 
 addWeapon("sword", 5);
 addWeapon("hammer", 4);
-addWeapon("spear", 6);
+addWeapon("spear", 5);
 addWeapon("shuriken", 4);
 addWeapon("cannon", 1);
-addWeapon("drill", 6);
+addWeapon("drill", 3);
 
 
 

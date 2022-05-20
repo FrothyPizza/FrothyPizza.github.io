@@ -175,7 +175,7 @@ function restart() {
 	ECS.register(crate);
 
 
-	let sword = ECS.Blueprints.weapon("drill");
+	let sword = ECS.Blueprints.weapon("sword");
 	player.addComponent(new ECS.Components.BoundEntity(sword.id));
 	ECS.register(sword);
 
