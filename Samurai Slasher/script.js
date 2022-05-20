@@ -85,21 +85,38 @@ function main() {
 	startScreen.addComponent(new ECS.Components.Position(0, 0));
 	ECS.register(startScreen);
 
-	let controlsText = new ECS.Entity();
-	controlsText.addComponent(new ECS.Components.AnimatedSprite
-		(app.loader.resources.controlsText.spritesheet, gameScene, false));
-	controlsText.addComponent(new ECS.Components.Position(73, 57));
-	controlsText.animatedSprite.sprite.animationSpeed = 0.15;
-	ECS.register(controlsText);
+	let remove = false;
+	document.addEventListener("keydown", () => {
+		remove = true;
+	});
+	setTimeout(() => {
+		let controlsText = new ECS.Entity();
+		controlsText.addComponent(new ECS.Components.AnimatedSprite
+			(app.loader.resources.controlsText.spritesheet, gameScene, false));
+		controlsText.addComponent(new ECS.Components.Position(73, 57));
+		controlsText.animatedSprite.sprite.animationSpeed = 0.15;
+		ECS.register(controlsText);
+
+		if(remove)
+			ECS.removeEntity(controlsText.id);
+		console.log(remove);
+	}, 1000);
 
 	let player = ECS.Blueprints.player();
 	player.removeComponent("gravity");
+	player.animatedSprite.sprite.animationSpeed = 0;
 	// player.position.vec = new Vec2(86, 66);
 	ECS.register(player);
 
 	let sword = ECS.Blueprints.weapon("sword");
+	sword.animatedSprite.sprite.animationSpeed = 0;
 	player.addComponent(new ECS.Components.BoundEntity(sword.id));
 	ECS.register(sword);
+
+	setTimeout(() => {
+		player.animatedSprite.sprite.animationSpeed = 0.1;
+		sword.animatedSprite.sprite.animationSpeed = 0.1;
+	}, 2000);
 
 	let start = () => {
 		ECS.removeEntity(startScreen);
