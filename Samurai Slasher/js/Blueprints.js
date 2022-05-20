@@ -154,7 +154,7 @@ ECS.Blueprints.weapon = (type) => {
 		e.animatedSprite.offset.x = -3;
 		e.bounds.offset.x = -5;
 		e.bounds.offset.y = 4;
-		e.enemyDamager.framesEnabled = 100000000;
+		e.enemyDamager.framesEnabled = 1000000000;
 		e.enemyDamager.enabled = true;
 
 // 		const rectangle = PIXI.Sprite.from(PIXI.Texture.WHITE);
