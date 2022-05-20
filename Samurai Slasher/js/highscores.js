@@ -54,6 +54,9 @@ if(!localStorage.getItem("samname")
 } else {
 	playerName = localStorage.getItem("samname");
 }
+if(localStorage.getItem("samhighscore")) {
+	postScore(localStorage.getItem("samhighscore"));
+}
 fetchScores();
 setInterval(() => {
 	fetchScores();
