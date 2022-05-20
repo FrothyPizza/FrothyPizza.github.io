@@ -61,6 +61,7 @@ ECS.Systems.damageCollisions = entities => {
 						}			
 					}
 
+					// console.log("collided");
 					let player = Object.values(entities).find(x => x.has("playerController"));
 					if(damager.has("drill")) {
 						if(player) {
