@@ -32,6 +32,14 @@ ECS.Blueprints.enemy = (type) => {
 		e.animatedSprite.offset.x = -2;
 		e.addComponent(new ECS.Components.FlyingEnemy());
 		e.gravity.y = 0.075;
+	} else if(type == 3) {
+		e.addComponent(new ECS.Components.AnimatedSprite
+			(app.loader.resources.tallEnemySpritesheet.spritesheet, gameScene, true));
+		e.animatedSprite.sprite.animationSpeed = 0.1;
+		e.health.value = 2;
+		e.bounds.vec = new Vec2(8, 16);
+		e.bounds.offset.x = 1;
+		e.enemyBehavior.speed = 0.3333;
 	}
 	
 	return e;

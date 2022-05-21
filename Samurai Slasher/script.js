@@ -199,7 +199,7 @@ function restart() {
 
 	let spawner = new ECS.Entity();
 	spawner.addComponent(new ECS.Components.Position(88, -4));
-	spawner.addComponent(new ECS.Components.EnemySpawner(1800));
+	spawner.addComponent(new ECS.Components.EnemySpawner(2000));
 	ECS.register(spawner);
 
 

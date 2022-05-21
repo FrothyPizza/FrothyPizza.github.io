@@ -12,6 +12,7 @@ function loadSprites(onload) {
 		.add('smallEnemySpritesheet', I + '/enemies/small-enemy.json')
 		.add('bigEnemySpritesheet', I + '/enemies/big-enemy.json')
 		.add('batSpritesheet', I + '/enemies/bat.json')
+		.add('tallEnemySpritesheet', I + '/enemies/tall-enemy.json')
 		.add('playerSpritesheet', I + '/player-sheet.json')
 		.add('swordSpritesheet', I + '/weapons/sword.json')
 		.add('spearSpritesheet', I + '/weapons/spear.json')

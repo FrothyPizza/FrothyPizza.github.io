@@ -21,14 +21,21 @@ ECS.Systems.enemySpawner = entities => {
 			}
 
 			let type = 0;
-			if(entity.enemySpawner.tempSpawnDelay == entity.enemySpawner.spawnDelay && Math.random() > 0.7) {
-				type = Math.random() > 0.5 ? 1 : 2;
+			if(entity.enemySpawner.tempSpawnDelay == entity.enemySpawner.spawnDelay && Math.random() > 0.6) {
+				if(Math.random() > 0.666)
+					type = 1;
+				else if(Math.random() > 0.5)
+					type = 2;
+				else
+					type = 3;
+				// type = Math.random() > 0.5 ? 1 : 2;
 			}
 
 			if(Math.random() > 0.9) {
 				entity.enemySpawner.tempSpawnDelay = 400;
 				setTimeout(() => entity.enemySpawner.tempSpawnDelay = entity.enemySpawner.spawnDelay, 1000);
 			}
+
 			
 			let enemy = ECS.Blueprints.enemy(type);
 			enemy.position.vec = entity.position.vec.copy();
