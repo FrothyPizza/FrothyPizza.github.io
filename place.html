@@ -92,6 +92,7 @@
 
             function drawPlaces() {
                 context.clearRect(0, 0, canvas.width, canvas.height);
+                context.fillStyle = "white";
                 context.fillRect(0, 0, canvas.width, canvas.height);
                 for(let x = 0; x < WIDTH; x++) {
                     for(let y = 0; y < HEIGHT; y++) {
@@ -105,7 +106,17 @@
             canvas.onclick = function(event) {
                 let x = Math.floor(event.offsetX / (canvas.width / WIDTH));
                 let y = Math.floor(event.offsetY / (canvas.height / HEIGHT));
-                places[x + y * WIDTH] = userColor;
+
+                let int = setInterval(function() {
+                    places[x + y * WIDTH] = userColor;
+                    context.fillStyle = intToColor(userColor);
+                    context.fillRect(x * canvas.width / WIDTH, y * canvas.height / HEIGHT, canvas.width / WIDTH, canvas.height / HEIGHT);
+                }, 10);
+                setTimeout(function() {
+                    clearInterval(int);
+                }, 3000);
+                
+
                 drawPlaces();
                 console.log(x, y, userColor);
                 post(SERVER_URL + "/place", {x, y, color: userColor});
