@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Place</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <script id="replace_with_navbar" src="nav.js"></script>
+        <script>
+            function post(url, body) {
+                return fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(body)
+                });
+            }
+
+            function intToColor(i) {
+                // e.g. i = 0, returns "#000000"
+                // e.g. i = 16777215, returns "#FFFFFF"
+
+                var hex = i.toString(16);
+                while (hex.length < 6) {
+                    hex = "0" + hex;
+                }
+                return "#" + hex;
+            }
+
+            const SERVER_URL = "https://Place.frothypizza.repl.co";
+
+            const canvas = document.createElement("canvas");
+            const context = canvas.getContext("2d");
+            canvas.width = canvas.height = window.innerHeight;
+            document.body.appendChild(canvas);
+            canvas.style.position = "absolute";
+            canvas.style.top = "0px";
+            canvas.style.left = "50%";
+            canvas.style.transform = "translateX(-50%)";
+            canvas.style.zIndex = "-1";
+
+            context.fillRect(0, 0, canvas.width, canvas.height);
+
+            let places = [];
+            let WIDTH = 200;
+            let HEIGHT = 200;
+            let colors = ["#ff0000", "#00ff00", "#0000ff", "#ffff00", "#00ffff", "#ff00ff", "#ffffff"];
+            let userColor = 0xff0000;
+
+            function initColors() {
+                // to the left of the canvas, create buttons for each color
+                let colorContainer = document.createElement("div");
+                colorContainer.style.position = "absolute";
+                colorContainer.style.top = "0px";
+                colorContainer.style.left = "0px";
+                colorContainer.style.width = "100px";
+                colorContainer.style.height = "100%";
+                colorContainer.style.display = "flex";
+                colorContainer.style.flexDirection = "column";
+                document.body.appendChild(colorContainer);
+
+                for(let i = 0; i < colors.length; i++) {
+                    let colorButton = document.createElement("button");
+                    colorButton.style.backgroundColor = colors[i];
+                    colorButton.style.width = "100px";
+                    colorButton.style.height = "100px";
+                    colorButton.style.border = "none";
+                    colorButton.style.margin = "0px";
+                    colorButton.style.padding = "0px";
+                    colorButton.style.cursor = "pointer";
+                    colorButton.style.border = "1px solid black";
+
+                    colorButton.addEventListener("click", function() {
+                        userColor = parseInt(colors[i].substring(1), 16);
+
+                        colorContainer.childNodes.forEach(function(child) {
+                            child.style.border = "1px solid black";
+                        });
+                        colorButton.style.border = "4px solid black";
+                    });
+
+                    colorContainer.appendChild(colorButton);
+                }
+
+                userColor = parseInt(colors[0].substring(1), 16);
+                colorContainer.childNodes.forEach(function(child) {
+                    child.style.border = "1px solid black";
+                });
+                colorContainer.childNodes[0].style.border = "4px solid black";
+            } initColors();
+
+            function drawPlaces() {
+                context.clearRect(0, 0, canvas.width, canvas.height);
+                context.fillRect(0, 0, canvas.width, canvas.height);
+                for(let x = 0; x < WIDTH; x++) {
+                    for(let y = 0; y < HEIGHT; y++) {
+                        let place = places[x + y * WIDTH];
+                        context.fillStyle = intToColor(place);
+                        context.fillRect(x * canvas.width / WIDTH, y * canvas.height / HEIGHT, canvas.width / WIDTH, canvas.height / HEIGHT);
+                    }
+                }
+            }
+
+            canvas.onclick = function(event) {
+                let x = Math.floor(event.offsetX / (canvas.width / WIDTH));
+                let y = Math.floor(event.offsetY / (canvas.height / HEIGHT));
+                places[x + y * WIDTH] = userColor;
+                drawPlaces();
+                console.log(x, y, userColor);
+                post(SERVER_URL + "/place", {x, y, color: userColor});
+            }
+
+            setInterval(() => {
+                fetch(SERVER_URL + "/place")
+                    .then(response => response.json())
+                    .then(data => {
+                        places = data.data;
+                        WIDTH = data.width;
+                        HEIGHT = data.height;
+                        console.log("Got places");
+                        // console.log(places);
+                        drawPlaces();
+                    });
+            }, 1000);
+        </script>
+    </body>
+</html>

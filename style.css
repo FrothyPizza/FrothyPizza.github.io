@@ -68,4 +68,6 @@ p:hover, li:hover, h1:hover, h2:hover, h3:hover, h4:hover, h5:hover, h6:hover {
     cursor: url('cursors/xp_beam.cur'), auto;
 }
 
-
+.nav-button.active {
+    font-weight: bold;
+}
