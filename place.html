@@ -107,9 +107,10 @@
                 let x = Math.floor(event.offsetX / (canvas.width / WIDTH));
                 let y = Math.floor(event.offsetY / (canvas.height / HEIGHT));
 
+                let fill = intToColor(userColor);
                 let int = setInterval(function() {
-                    places[x + y * WIDTH] = userColor;
-                    context.fillStyle = intToColor(userColor);
+                    // places[x + y * WIDTH] = userColor;
+                    context.fillStyle = fill;
                     context.fillRect(x * canvas.width / WIDTH, y * canvas.height / HEIGHT, canvas.width / WIDTH, canvas.height / HEIGHT);
                 }, 10);
                 setTimeout(function() {
