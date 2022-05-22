@@ -107,17 +107,17 @@
                 let x = Math.floor(event.offsetX / (canvas.width / WIDTH));
                 let y = Math.floor(event.offsetY / (canvas.height / HEIGHT));
 
-                let int = setInterval(function() {
-                    places[x + y * WIDTH] = userColor;
-                    context.fillStyle = intToColor(userColor);
-                    context.fillRect(x * canvas.width / WIDTH, y * canvas.height / HEIGHT, canvas.width / WIDTH, canvas.height / HEIGHT);
-                }, 10);
-                setTimeout(function() {
-                    clearInterval(int);
-                }, 3000);
+                // let int = setInterval(function() {
+                //     places[x + y * WIDTH] = userColor;
+                //     context.fillStyle = intToColor(userColor);
+                //     context.fillRect(x * canvas.width / WIDTH, y * canvas.height / HEIGHT, canvas.width / WIDTH, canvas.height / HEIGHT);
+                // }, 10);
+                // setTimeout(function() {
+                //     clearInterval(int);
+                // }, 3000);
                 
 
-                drawPlaces();
+                //drawPlaces();
                 console.log(x, y, userColor);
                 post(SERVER_URL + "/place", {x, y, color: userColor});
             }
@@ -133,7 +133,7 @@
                         // console.log(places);
                         drawPlaces();
                     });
-            }, 1000);
+            }, 3000);
         </script>
     </body>
 </html>
