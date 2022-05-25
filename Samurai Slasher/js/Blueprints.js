@@ -199,8 +199,8 @@ ECS.Blueprints.cannonball = (dir, pos, random) => {
 	let e = ECS.Blueprints.weapon("shuriken");
 	e.addComponent(new ECS.Components.Velocity(3 * dir, -2.5));
 	if(random) {
-		e.velocity.x += Math.random() * 2 - 1;
-		e.velocity.y += Math.random() * 2 - 1;
+		e.velocity.x += Math.random() * 1.5 - 0.75;
+		e.velocity.y += Math.random() * 1.5 - 0.75;
 	}
 	e.addComponent(new ECS.Components.Gravity());
 	e.animatedSprite.setAnimation("Attack");
