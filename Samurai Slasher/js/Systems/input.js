@@ -73,7 +73,7 @@ ECS.Systems.input = entities => {
 							boundEntity.animatedSprite.sprite.onComplete = () => {};
 						}
 
-						for(let i = 0; i < 6; ++i) {
+						for(let i = 0; i < 5; ++i) {
 							let shurik = ECS.Blueprints.cannonball(sprite.sprite.scale.x, entity.position.vec, true);
 							shurik.position.y += 2;
 							ECS.register(shurik);	
