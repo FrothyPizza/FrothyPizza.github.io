@@ -202,6 +202,7 @@ class Player {
 
         this.hardRestart();
         if(localStorage.getItem('deaths3') === null) localStorage.setItem('deaths3', 0);
+        if(localStorage.getItem('checkpoints3') === null) localStorage.setItem('checkpoints3', []);
 
         if(localStorage.getItem('spawnX3') !== null) {
             this.spawnX = parseFloat(localStorage.getItem('spawnX3'));
