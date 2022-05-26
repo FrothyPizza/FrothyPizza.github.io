@@ -238,9 +238,9 @@ ECS.Blueprints.button = (type, x, y) => {
 	let e = new ECS.Entity();
 	e.addComponent(new ECS.Components.Position(x, y));
 	e.addComponent(new ECS.Components.Button(type));
-	e.addComponent(new ECS.Components.Bounds(32, 32));
+	e.addComponent(new ECS.Components.Bounds(40, 40));
 	e.bounds.offset.x = -12;
-	e.bounds.offset.y = -8;
+	e.bounds.offset.y = -12;
 
 	if(type == "jump" || type == "attack") {
 		e.addComponent(new ECS.Components.AnimatedSprite
@@ -266,10 +266,10 @@ ECS.Blueprints.button = (type, x, y) => {
 
 ECS.Helpers.createButtons = () => {
 	if(!isMobile) return;
-	let jumpButton = ECS.Blueprints.button("jump", 125, 122);
-	let attackButton = ECS.Blueprints.button("attack", 157, 105);
-	let rightButton = ECS.Blueprints.button("right", 40, 122);
-	let leftButton = ECS.Blueprints.button("left", 10, 122);
+	let jumpButton = ECS.Blueprints.button("jump", 120, 117);
+	let attackButton = ECS.Blueprints.button("attack", 152, 100);
+	let rightButton = ECS.Blueprints.button("right", 44, 117);
+	let leftButton = ECS.Blueprints.button("left", 10, 117);
 
 	ECS.register(jumpButton);
 	ECS.register(attackButton);
