@@ -1,7 +1,7 @@
 
 const app = new PIXI.Application({
 	width: 176, 
-	height: 128, 
+	height: 144, 
 	view: document.getElementById("canvas"),
 });
 PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST
@@ -89,6 +89,9 @@ function main() {
 	document.addEventListener("keydown", () => {
 		remove = true;
 	});
+	document.addEventListener("touchmove", () => {
+		remove = true;
+	});
 	setTimeout(() => {
 		let controlsText = new ECS.Entity();
 		controlsText.addComponent(new ECS.Components.AnimatedSprite
@@ -99,6 +102,8 @@ function main() {
 
 		if(remove)
 			ECS.removeEntity(controlsText.id);
+		else
+			ECS.Helpers.createButtons();
 		console.log(remove);
 	}, 1000);
 
@@ -116,6 +121,8 @@ function main() {
 	setTimeout(() => {
 		player.animatedSprite.sprite.animationSpeed = 0.1;
 		sword.animatedSprite.sprite.animationSpeed = 0.1;
+		
+		
 	}, 2000);
 
 	let start = () => {
@@ -125,8 +132,10 @@ function main() {
 		console.log("A");
 		restart();
 		document.removeEventListener("keydown", start);
+		document.removeEventListener("touchstart", start);
 	}
 	document.addEventListener("keydown", start);
+	document.addEventListener("touchstart", start);
 	
 	
 	app.ticker.maxFPS = 63;
@@ -137,6 +146,19 @@ function main() {
 				// passing in all of the entities to every system 
 				// is kinda a naive approach, but who cares about optimization
 				systems[i](ECS.entities);
+			}
+
+
+			if(canvas.width < 432 || canvas.height < 528) {
+				canvas.style.height = "100vh";
+				let height = canvas.getBoundingClientRect().height;
+				console.log(height);
+				canvas.style.width = height * (528 / 432) + "px";
+			}
+			if(!isMobile) {
+				canvas.style.top = "50vh";
+				canvas.style.left = "50vw";
+				canvas.style.transform = "translate(-50%, -50%)";
 			}
 		});
 	}
@@ -199,8 +221,11 @@ function restart() {
 
 	let spawner = new ECS.Entity();
 	spawner.addComponent(new ECS.Components.Position(88, -4));
-	spawner.addComponent(new ECS.Components.EnemySpawner(2000));
+	spawner.addComponent(new ECS.Components.EnemySpawner(isMobile ? 2500 : 2000));
 	ECS.register(spawner);
+
+
+	ECS.Helpers.createButtons();
 
 
 }

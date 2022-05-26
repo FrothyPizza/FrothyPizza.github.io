@@ -283,3 +283,10 @@ ECS.Components.Collectable = class collectable {
 		return this.spawnLocations[Math.floor(Math.random() * this.spawnLocations.length)].copy();
 	}
 }
+
+
+ECS.Components.Button = class button {
+	constructor(type) {
+		this.type = type;
+	}
+}

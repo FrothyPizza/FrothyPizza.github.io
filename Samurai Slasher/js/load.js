@@ -19,7 +19,10 @@ function loadSprites(onload) {
 		.add('hammerSpritesheet', I + '/weapons/hammer.json')
 		.add('drillSpritesheet', I + '/weapons/drill.json')
 		.add('cannonSpritesheet', I + '/weapons/cannon.json')
-		.add('shurikenSpritesheet', I + '/weapons/shuriken.json');
+		.add('shurikenSpritesheet', I + '/weapons/shuriken.json')
+		.add('buttonSpritesheet', I + '/buttons/button.json')
+		.add('rightButtonSpritesheet', I + '/buttons/right-button.json')
+		.add('leftButtonSpritesheet', I + '/buttons/left-button.json')
 	
 	loadSounds();
 

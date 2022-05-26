@@ -227,3 +227,52 @@ ECS.Blueprints.crate = () => {
 	e.position.vec = e.collectable.getRandomLocation()
 	return e;
 } 
+
+
+const BUTTONS = ["right", "left", "jump", "attack"];
+ECS.Blueprints.button = (type, x, y) => {
+	if(!BUTTONS.includes(type)) {
+		console.error("Invalid button type: " + type);
+		return null;
+	}
+	let e = new ECS.Entity();
+	e.addComponent(new ECS.Components.Position(x, y));
+	e.addComponent(new ECS.Components.Button(type));
+	e.addComponent(new ECS.Components.Bounds(32, 32));
+	e.bounds.offset.x = -12;
+	e.bounds.offset.y = -8;
+
+	if(type == "jump" || type == "attack") {
+		e.addComponent(new ECS.Components.AnimatedSprite
+			(app.loader.resources.buttonSpritesheet.spritesheet, gameScene, false));
+	}
+	if(type == "left") {
+		e.addComponent(new ECS.Components.AnimatedSprite
+			(app.loader.resources.leftButtonSpritesheet.spritesheet, gameScene, false));
+		e.bounds.offset.x = -12;
+	}
+	if(type == "right") {
+		e.addComponent(new ECS.Components.AnimatedSprite
+			(app.loader.resources.rightButtonSpritesheet.spritesheet, gameScene, false));
+		e.bounds.offset.x = -6;
+	}
+
+	e.animatedSprite.sprite.zIndex = 10000;
+
+
+	return e;
+}
+
+
+ECS.Helpers.createButtons = () => {
+	if(!isMobile) return;
+	let jumpButton = ECS.Blueprints.button("jump", 125, 122);
+	let attackButton = ECS.Blueprints.button("attack", 157, 105);
+	let rightButton = ECS.Blueprints.button("right", 40, 122);
+	let leftButton = ECS.Blueprints.button("left", 10, 122);
+
+	ECS.register(jumpButton);
+	ECS.register(attackButton);
+	ECS.register(rightButton);
+	ECS.register(leftButton);
+}
