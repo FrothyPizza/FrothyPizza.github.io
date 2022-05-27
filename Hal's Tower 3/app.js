@@ -209,8 +209,8 @@ class Player {
             this.spawnY = parseFloat(localStorage.getItem('spawnY3'));
             this.spawnGravity = parseFloat(localStorage.getItem('gravity3'));
             this.deaths = parseInt(localStorage.getItem('deaths3'));
-            console.log(localStorage.getItem('checkpoints3'));
-            this.acquiredCheckpoints = JSON.parse(localStorage.getItem('checkpoints3'));
+            let cpts = localStorage.getItem('checkpoints3');
+            this.acquiredCheckpoints = (cpts) ? JSON.parse(cpts) : [];
             this.restart();
             this.deathAnimationTimer = this.deathAnimationTimeMS + 1;
         } else {
