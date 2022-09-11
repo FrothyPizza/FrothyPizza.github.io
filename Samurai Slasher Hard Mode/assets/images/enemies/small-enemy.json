@@ -1,0 +1,65 @@
+{ "frames": [
+   {
+    "filename": "small-enemy 0.aseprite",
+    "frame": { "x": 0, "y": 0, "w": 6, "h": 6 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 6, "h": 6 },
+    "sourceSize": { "w": 6, "h": 6 },
+    "duration": 200
+   },
+   {
+    "filename": "small-enemy 1.aseprite",
+    "frame": { "x": 6, "y": 0, "w": 6, "h": 6 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 6, "h": 6 },
+    "sourceSize": { "w": 6, "h": 6 },
+    "duration": 200
+   },
+   {
+    "filename": "small-enemy 2.aseprite",
+    "frame": { "x": 12, "y": 0, "w": 6, "h": 6 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 6, "h": 6 },
+    "sourceSize": { "w": 6, "h": 6 },
+    "duration": 200
+   },
+   {
+    "filename": "small-enemy 3.aseprite",
+    "frame": { "x": 18, "y": 0, "w": 6, "h": 6 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 6, "h": 6 },
+    "sourceSize": { "w": 6, "h": 6 },
+    "duration": 200
+   },
+   {
+    "filename": "small-enemy 4.aseprite",
+    "frame": { "x": 24, "y": 0, "w": 6, "h": 6 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 6, "h": 6 },
+    "sourceSize": { "w": 6, "h": 6 },
+    "duration": 200
+   }
+ ],
+ "animations": {
+	 "Run": ["1", "2", "3", "4"]
+ },
+ "meta": {
+  "app": "http://www.aseprite.org/",
+  "version": "1.3-dev",
+  "image": "small-enemy.png",
+  "format": "RGBA8888",
+  "size": { "w": 30, "h": 6 },
+  "scale": "1",
+  "frameTags": [
+   { "name": "Default", "from": 0, "to": 0, "direction": "forward" },
+   { "name": "Run", "from": 1, "to": 4, "direction": "forward" }
+  ],
+  "slices": [
+  ]
+ }
+}

@@ -1,0 +1,54 @@
+html {
+	background: #e2b2b2;
+}
+
+#canvas {
+	width: 880px;
+	height: 720px;
+
+	position: absolute;
+	/* top: 50vh;
+	left: 50vw;
+	transform: translate(-50%, -50%); */
+	top: 0;
+	left: 50vw;
+	transform: translate(-50%, 0);
+
+	image-rendering: -moz-crisp-edges;
+  	image-rendering: pixelated;
+
+}
+
+/* TODO: Use JS to resize the screen */
+
+@media screen and (max-width: 880px),
+	   screen and (max-height: 720px) {
+	#canvas {
+		width: 704px;
+		height: 576px;
+	}
+}
+
+@media screen and (max-width: 704px),
+	   screen and (max-height: 576px) {			
+	#canvas {
+		width: 528px;
+		height: 432px;
+	}
+}
+
+@media screen and (max-width: 528px),
+	   screen and (max-height: 402px) {
+	#canvas {
+		/* width: 352px;
+		height: 268px; */
+	}
+}
+
+
+
+#high-score-container {
+	display: flex;
+	flex-direction: column;
+	width: 250px;
+}
