@@ -66,12 +66,12 @@ let addWeapon = (name, weight) => {
 	for(let i = 0; i < weight; ++i)
 		WEAPONS.push(name);
 } 
-addWeapon("sword", 5);
+addWeapon("sword", 4);
 addWeapon("hammer", 4);
-addWeapon("spear", 5);
+addWeapon("spear", 4);
 addWeapon("shuriken", 4);
 addWeapon("cannon", 1);
-addWeapon("drill", 3);
+addWeapon("drill", 2);
 
 
 
