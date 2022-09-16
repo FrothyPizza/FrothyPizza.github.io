@@ -1,0 +1,384 @@
+* {
+    margin: 0;
+    padding: 0;
+    /* overflow: hidden; */
+    overflow-x: hidden;
+
+    font-family: 'Courier New', Courier, monospace;
+
+}
+
+canvas {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    overflow: hidden;
+}
+
+html {
+    background-color: black;
+    overflow: hidden;
+}
+
+html.scroll {
+    overflow-y: scroll;
+}
+
+#start-menu {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    z-index: 1;
+}
+
+#menu-buttons {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+}
+#menu-buttons button {
+    cursor: pointer;
+}
+
+#hals-tower-3-image {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+
+    width: 60%;
+}
+
+
+#now-playing-container {
+    /* position it in the bottom right over the canvas */
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    z-index: 1;
+    color: white;
+
+    /* make it slightly transparent maroon */
+    background-color: rgba(83, 15, 80, 0.8);
+
+    margin: 2vw;
+
+    font-size: 1em;
+    padding: 0.6em;
+
+    border: 1px solid magenta;
+    border-radius: 0.3em;
+
+    display: flex;
+    flex-direction: column;
+    
+}
+
+
+
+
+
+#now-playing-title {
+    border-bottom: 1px solid magenta;
+    margin-bottom: 0.1em;
+}
+
+button {
+    cursor: pointer;
+    margin: 0;
+
+    font-size: 1.5em;
+    padding: 0.3em;
+
+    border: 1px solid magenta;
+
+    background-color: rgba(83, 15, 80, 0.8);
+    color: white;
+}
+
+button:hover {
+    background-color: rgba(83, 15, 80, 0.95);
+}
+
+button:active {
+    background-color: rgba(83, 15, 80, 0.7);
+}
+
+
+
+#side-buttons {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+
+    
+}
+
+#side-buttons .paused {
+    background-color: rgba(83, 15, 80, 0.4);
+}
+
+#pause-text {
+    /* centered in mid of page */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+
+    font-size: 2em;
+    color: white;
+}
+#pause-display {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(83, 15, 80, 0.1);
+    z-index: 0.9;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+}
+
+
+#side-buttons button {
+    width: 5em;
+}
+
+#help-page-container {
+    color: white;
+    /* display: none; */
+
+    border: 1px solid magenta;
+    background-color: rgba(83, 15, 80, 0.8);
+    color: white;
+
+    padding: 0.3em;
+
+    display: none;
+
+    transition: 2s all;
+}
+
+#help-page-container.open {
+    display: block;
+}
+
+#controls-grid {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+}
+
+
+img {
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+}
+
+#skin-select-menu {
+    position: absolute;
+    background-color: #000;
+    z-index: 1;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+
+    border: 1px solid magenta;
+    background-color: rgba(83, 15, 80, 0.8);
+    color: white;
+
+    padding: 0.6em;
+    transition: all 0.3s ease-in-out;
+}
+
+#skin-select-menu h1 {
+    font-size: 1.5em;
+    margin-bottom: 0.3em;
+    text-align: center;
+}
+
+
+.skin {
+    width: 5em;
+    cursor: pointer;
+}
+
+
+
+.slide-in-from-top {
+    top: -50% !important;
+}
+
+
+
+#block-selection-bar {
+    /* have it horizontally centered at the bottom */
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+
+    display: flex;
+    flex-direction: row;
+
+    text-align: center;
+    font-size: 1.2em;
+
+
+    color: white;
+
+    background-color: rgba(83, 15, 80, 0.95);
+    padding: 0.3em 0.3em 0em 0.3em;
+    border: solid magenta;
+    border-bottom: none;
+}
+
+.block-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    padding-left: 0.3em;
+    padding-right: 0.3em;
+
+    box-sizing: border-box;
+
+}
+
+
+
+.block-container img {
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+}
+
+
+#block-selection-bar .selected {
+    border: 2px solid magenta;
+    border-bottom: none;
+
+    background-color: rgba(83, 15, 80, 0.8);
+}
+
+
+#loaded-map-menu {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    z-index: 1;
+    
+    color: white;
+    text-align: center;
+    
+    background-color: #000;
+
+    display: none;
+}
+
+#loaded-map-menu h1 {
+    text-align: center;
+
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+
+}
+
+#loaded-map-menu button {
+    display: inline-block;
+}
+
+#loaded-maps-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+
+.upvote-container {
+    width: 50%;
+    float: left;
+
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: row;    
+    align-items: center;
+
+    padding: 0 0.7em;
+}
+
+.upvote-button, .downvote-button {
+    cursor: pointer;
+    padding: 0;
+
+    font-size: 1.3em;
+    width: 1.5em;
+
+}
+
+.vote-buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    padding: 0 0.3em;
+}
+
+.map-container .map-info {
+    width: 100px;
+    float: right;
+    position: relative;
+    left: -50%;
+    transform: translateX(50%);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+
+
+
+
+.map-container {
+    background-color: rgba(83, 15, 80, 0.8);
+    border: 1px solid magenta;
+    max-width: fit-content;
+    max-height: fit-content;
+    text-align: center;
+
+    margin: 0.5em;
+
+    
+}
+
+.map-container canvas {
+    margin: 0.5em;
+}
+
+.map-container canvas:hover {
+    background-color: rgba(83, 15, 80, 1);
+    cursor: pointer;
+}

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">       
+        <title>Hal's Tower 3</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <canvas id="canvas" width="800" height="600"></canvas>
+        <div id="start-menu">
+            <img src="images/start-image.png" alt="start image" id="hals-tower-3-image" style="opacity: 0;">
+            <div id="menu-buttons">
+                <button id="start-editor-button" style="opacity: 0;">Create</button>
+                <button id="open-map-finder-button">Find</button>
+            </div>
+        </div>
+        <div id="now-playing-container">
+            <p id="now-playing-title">Now Playing:</p>
+            <p id="now-playing"><i>Upward</i> - Ethan Hill</p>
+        </div>
+        <div id="loaded-map-menu">
+            <button id="back-to-start-button">Back</button>
+            <h1>Select a map</h1>
+            <div id="loaded-maps-container">
+                <!-- e.g. -->
+                <!-- <div class="map-container">
+                    <div class="upvote-container">
+                        <div class="vote-buttons">
+                            <button class="upvote-button">&uarr;</button>
+                            <button class="downvote-button">&darr;</button>
+                        </div>
+                        <p class="upvote-count">0</p>
+                    </div>
+                    <div class="map-info">
+                        <h2 class="map-name">Map Title</h2>
+                        <p class="map-creator">Map crtr</p>
+                    </div>
+                    <canvas class="loaded-map-canvas" width="800" height="600"></canvas>
+                </div> -->
+            </div>
+        </div>
+        <nav id="side-buttons">
+            <button id="goto-menu-button">Menu</button>
+            <button id="pause-button">Pause</button>
+            <button id="skin-menu-button">Skins</button>
+            <button id="clear-button">Clear</button>
+            <button id="save-button">Save</button>
+            <button id="publish-button">Publish</button>
+            <button id="help-button">Help</button>
+            <div id="help-page-container">
+                <div id="controls-grid">
+                    <p><b>Movement:</b> </p>
+                    <p>WASD/Arrows</p>
+                    <p><b>Place Blocks</b></p>
+                    <p>Left Click</p>
+                    <p><b>Delete Blocks</b></p>
+                    <p>Right Click</p>
+                    <p><b>Undo</b></p>
+                    <p>Ctrl+Z</p>
+                    <p><b>Redo</b></p>
+                    <p>Ctrl+Y</p>
+                    <p><b>Fly Cheat:</b> </p>
+                    <p>S/Down Arrow</p>
+                    <p><b>Set Temp. Spawn: </b></p>
+                    <p>Space</p>
+                    <p><b>Select Block:</b></p>
+                    <p>Shift+Labeled Key</p>
+                    <p><b>Toggle Fly Mode:</b></p>
+                    <p>q</p>
+                </div>
+            </div>
+        </nav>
+        <div id="pause-display">
+            <div id="pause-text">
+                <p>Paused</p>
+            </div>
+        </div>
+        <nav id="block-selection-bar">
+            <!-- e.g. -->
+            <!-- <div class="block-container">
+                <p class="block-selection-text">U</p>
+                <img src="images/blocks/gravityUp.png" alt="block selection bar" id="block-selection-bar-image">
+            </div> -->
+        </nav>
+        <section id="skin-select-menu" class="slide-in-from-top">
+            <h1>Select a Skin</h1>
+            <div id="skin-grid">
+                <img src="images/skins/default-skin.png" alt="default-skin" id="default-skin" class="skin">
+                <img src="images/skins/light-blue-skin.png" alt="light-blue-skin" id="light-blue-skin" class="locked skin">
+                <img src="images/skins/green-spotted.png" alt="green-spotted" id="green-spotted" class="locked skin">
+                <img src="images/skins/stupid-red.png" alt="stupid-red" id="stupid-red" class="locked skin">
+                <img src="images/skins/peter-griffin.png" alt="peter-skin" id="peter-skin" class="locked skin">
+            </div>
+        </section>
+        <script src="lib/util.js"></script>
+        <script src="map.js"></script>
+        <script src="communication.js"></script>
+        <script src="menu.js"></script>
+        <script src="app.js"></script>
+    </body>
+</html>
