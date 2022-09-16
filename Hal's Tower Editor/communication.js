@@ -38,6 +38,7 @@ function publishMap() {
     
     player.hardRestart();
     LEVEL_EDITOR_MODE = false;
+    flyMode = false;
     hideMenu();
     helpButton.style.display = "none";
     publishButton.style.display = "none";   
