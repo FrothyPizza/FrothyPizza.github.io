@@ -221,7 +221,7 @@ function restart() {
 
 	let spawner = new ECS.Entity();
 	spawner.addComponent(new ECS.Components.Position(88, -4));
-	spawner.addComponent(new ECS.Components.EnemySpawner(isMobile ? 2000 : 1250));
+	spawner.addComponent(new ECS.Components.EnemySpawner(isMobile ? 1250 : 1250));
 	ECS.register(spawner);
 
 
