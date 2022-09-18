@@ -92,6 +92,11 @@ ECS.Systems.mapCollisions = entities => {
 			obj.mapCollider.rightColliding = rightHit;
 			obj.mapCollider.leftColliding = leftHit;
 			obj.mapCollider.topColliding = topHit;
+
+			if(obj.has("enemyBehavior")) {
+				if(hitGround)
+					obj.enemyBehavior.hasTouchedGround = true;
+			}
 			
 		}
 	}

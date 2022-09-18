@@ -14,10 +14,13 @@ ECS.Systems.enemyBehavior = entities => {
 			entity.enemyBehavior.speed = entity.enemyBehavior.enragedSpeed;
 			entity.animatedSprite.sprite.tint = 0x992222;
 			entity.removeComponent("pipeTraveller");
+			entity.enemyBehavior.hasTouchedGround = false;
 		}
 
-		entity.position.x += entity.enemyBehavior.direction * entity.enemyBehavior.speed
-			* (entity.enemyBehavior.enraged ? entity.enemyBehavior.enragedSpeed : 1);
+		if(entity.enemyBehavior.hasTouchedGround)
+			entity.position.x += entity.enemyBehavior.direction * entity.enemyBehavior.speed
+				* (entity.enemyBehavior.enraged ? entity.enemyBehavior.enragedSpeed : 1);
+		
 
 		if(entity.mapCollider.leftColliding)
 			entity.enemyBehavior.direction = 1;

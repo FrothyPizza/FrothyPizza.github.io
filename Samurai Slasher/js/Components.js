@@ -226,6 +226,8 @@ ECS.Components.EnemyBehavior = class enemyBehavior {
 		this.speed = 0.5;
 		this.enragedSpeed = this.speed * 2;
 		this.enraged = false;
+
+		this.hasTouchedGround = true;
 	}
 }
 
