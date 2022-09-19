@@ -19,8 +19,10 @@ const Globals = {
 			"#  S S S      S S S  #",
 			"##########__##########",
 		],
-	crateLocations: []
+	crateLocations: [],
+	spawnSpeed: 2000,
 };
+
 
 for(let y = 0; y < Globals.map.length; ++y) {
 	for(let x = 0; x < Globals.map[y].length; ++x) {

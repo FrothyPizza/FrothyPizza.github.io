@@ -7,6 +7,13 @@ const app = new PIXI.Application({
 PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST
 app.renderer.backgroundColor = 0xb2b2b2;
 
+harder.onclick = () => {
+	Globals.spawnSpeed = 750;
+	document.querySelector("html").style.background = "#eeb2b2";
+	app.renderer.backgroundColor = 0xeeb2b2;
+};
+
+
 function freeze(ms) {
 	app.ticker.stop();
 	setTimeout(() => {app.ticker.start();}, ms);
@@ -221,7 +228,7 @@ function restart() {
 
 	let spawner = new ECS.Entity();
 	spawner.addComponent(new ECS.Components.Position(88, -4));
-	spawner.addComponent(new ECS.Components.EnemySpawner(isMobile ? 2500 : 2000));
+	spawner.addComponent(new ECS.Components.EnemySpawner(isMobile ? 2500 : Globals.spawnSpeed));
 	ECS.register(spawner);
 
 
