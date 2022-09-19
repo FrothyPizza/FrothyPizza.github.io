@@ -9,8 +9,9 @@ app.renderer.backgroundColor = 0xb2b2b2;
 
 harder.onclick = () => {
 	Globals.spawnSpeed = 750;
-	document.querySelector("html").style.background = "#eeb2b2";
-	app.renderer.backgroundColor = 0xeeb2b2;
+	harder.style.display = "none";
+	// document.querySelector("html").style.background = "#eeb2b2";
+	// app.renderer.backgroundColor = 0xeeb2b2;
 };
 
 
