@@ -54,17 +54,25 @@ function publishMap() {
     let interval = setInterval(() => {
         if(player.hasWon) {
             clearInterval(interval);
+
+            let name = prompt("Congragulations for winning!\nWhat is the name of the map?");
+            let creator = prompt("What is your name?");
+
+            console.log("Posting");
     
             post(SERVER_URL + "/maps", {
-                name: prompt("Congragulations for winning!\nWhat is the name of the map?"),
-                creator: prompt("What is your name?"),
+                name: name,
+                creator: creator,
                 password: "abc",
                 map: map
-            }).then(x => x.text()).then(console.log);
+            }).then(x => x.text()).then((res) => {
+                console.log(res);
+                location.reload();
+            });
 
-            setTimeout(() => {location.reload(), 500});
+            
         }
-    }, 100);
+    }, 0);
 }
 
 // post(SERVER_URL + "/maps", {
@@ -97,6 +105,11 @@ fetch(SERVER_URL + "/maps")
     .then(x => x.json())
     .then(x => {
         loadedMaps = x;
+        // sort by upvotes
+        loadedMaps.sort((a, b) => {
+            return b.upvotes - a.upvotes;
+        });
+
         document.getElementById("loaded-maps-container").innerHTML = "";
         //console.log(loadedMaps); 
         for(let i = 0; i < loadedMaps.length; i++) {
@@ -143,6 +156,8 @@ fetch(SERVER_URL + "/maps")
             //console.log(document.getElementById(`map-${i}`));
             drawMapOnSmallCanvas(document.getElementById(`map-${i}`), map.map);
         }
+
+        
     });
 
 function voteMap(map, vote) {
