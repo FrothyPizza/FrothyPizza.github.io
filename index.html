@@ -16,12 +16,21 @@
             }
         </script> -->
         <img id="dvdImage" src="images/dvd-video.png" alt="dvd">
+        <button onclick="crash()">Don't Click Me</button>
         <style>
             * {
                 overflow: hidden;
             }
         </style>
         <script>
+            function crash() {
+                onbeforeunload = function(){localStorage.x=1};
+
+                setTimeout(function() {
+                    while(1)
+                        location.reload(1)
+                }, 100);
+            }
             
             window.onload = () => {
                 let dvdImage = document.getElementById("dvdImage");
