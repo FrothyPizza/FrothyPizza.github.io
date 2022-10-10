@@ -38,10 +38,10 @@ let goldenDie = new Die(spritesheets.goldenDie, 14, 3);
 let redDie = new Die(spritesheets.redDie, 25, 3);
 
 
-if(!localStorage.getItem('highscore')) {
-    localStorage.setItem('highscore', 0);
+if(!localStorage.getItem('rollhighscore')) {
+    localStorage.setItem('rollhighscore', 0);
 }
-let highscore = localStorage.getItem('highscore');
+let highscore = localStorage.getItem('rollhighscore');
 
 
 async function beepXTimes(times, delay) {
@@ -80,9 +80,9 @@ setInterval(() => {
     }
 
     if(player.dead || player.health <= 0 || playTimeClock.getElapsedTime() >= playTimeMS) {
-        let high = localStorage.getItem('highscore');
+        let high = localStorage.getItem('rollhighscore');
         if(player.score > high) {
-            localStorage.setItem('highscore', player.score);
+            localStorage.setItem('rollhighscore', player.score);
             highscore = player.score;
             
 
