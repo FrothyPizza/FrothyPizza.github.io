@@ -107,6 +107,7 @@ fetch(SERVER_URL + "/maps")
         loadedMaps = x;
         // sort by upvotes
         loadedMaps.sort((a, b) => {
+            if(!a || !b) return 0;
             return b.upvotes - a.upvotes;
         });
 
