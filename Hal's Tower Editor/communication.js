@@ -108,7 +108,7 @@ fetch(SERVER_URL + "/maps")
         // sort by upvotes
         loadedMaps.sort((a, b) => {
             if(!a || !b) return 0;
-            return b.upvotes - a.upvotes;
+            return b.upvotes - a.upvotes + (localStorage.getItem("votedMaps").includes(a.name) ? 10 : 0);
         });
 
         document.getElementById("loaded-maps-container").innerHTML = "";
