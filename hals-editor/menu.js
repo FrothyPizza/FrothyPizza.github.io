@@ -74,6 +74,8 @@ window.onbeforeunload = function () {
     }
 };
 
+
+
 let gameStartedOnce = false;
 startEditorButton.onclick = () => {
     // if(!gameStartedOnce) {
@@ -123,10 +125,25 @@ function loadMap(loadMap) {
     LEVEL_EDITOR_MODE = false;   
 }
 
+
+let urlParams = new URLSearchParams(window.location.search);
+
 findButton.onclick = () => {
     mapFinderContainer.style.display = "block";
     document.querySelector("html").classList.add("scroll");
 }
+
+setTimeout(() => {
+    if(urlParams.get("map") || urlParams.get("user")) {
+        // click find button
+        findButton.click();
+        backButton.addEventListener("click", () => {
+            // reload page without url params
+            window.location.href = window.location.href.split("?")[0];
+        });
+    }
+}, 100);
+
 
 backButton.onclick = () => {
     mapFinderContainer.style.display = "none";

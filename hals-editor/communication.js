@@ -11,6 +11,8 @@ function post(url, body) {
 }
 
 
+
+
 // post(SERVER_URL + "/maps", {
 //     name: "Cool",
 //     creator: "Hal",
@@ -104,6 +106,12 @@ let loadedMaps = [];
 fetch(SERVER_URL + "/maps")
     .then(x => x.json())
     .then(x => {
+        // use query string to get user name
+        let specificUser = urlParams.get('user');
+        console.log("User name: " + specificUser);
+        let specificMap = urlParams.get('map');
+        console.log("Map name: " + specificMap);
+
         loadedMaps = x;
         // sort by upvotes
         loadedMaps.sort((a, b) => {
@@ -116,6 +124,8 @@ fetch(SERVER_URL + "/maps")
         for(let i = 0; i < loadedMaps.length; i++) {
             let map = loadedMaps[i];
             //let map = testMap;
+            if(specificUser && map.creator != specificUser) continue;
+            if(specificMap && map.name != specificMap) continue;
 
             let mapElement = document.createElement("div");
             mapElement.classList.add("map-container");
