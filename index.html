@@ -16,7 +16,7 @@
             }
         </script> -->
         <img id="dvdImage" src="images/dvd-video.png" alt="dvd">
-        <button onclick="crash()">Don't Click Me</button>
+        <button onclick="crash()" id="butt">Don't Click Me</button>
         <style>
             * {
                 overflow: hidden;
@@ -31,6 +31,15 @@
                         location.reload(1)
                 }, 100);
             }
+            
+            onmousemove = function(e) {
+                var x = event.clientX * 0.7 + 200;
+                var y = event.clientY * 0.6 + 200;
+
+                butt.style.position = "absolute";
+                butt.style.left = `${x}px`;
+                butt.style.top = `${y}px`;
+            };
             
             window.onload = () => {
                 let dvdImage = document.getElementById("dvdImage");
