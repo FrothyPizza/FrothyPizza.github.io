@@ -1,0 +1,152 @@
+* {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+
+}
+
+canvas {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+}
+
+#start-menu {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    z-index: 1;
+}
+
+#start-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -50px;
+    margin-left: -50px;
+    cursor: pointer;
+    z-index: 1;
+}
+
+#hals-tower-3-image {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+
+    width: 60%;
+}
+
+
+#now-playing-container {
+    /* position it in the bottom right over the canvas */
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    z-index: 1;
+    color: white;
+
+    /* make it slightly transparent maroon */
+    background-color: rgba(83, 15, 80, 0.8);
+
+    margin: 2vw;
+
+    font-size: 1em;
+    padding: 0.6em;
+
+    border: 1px solid magenta;
+    border-radius: 0.3em;
+
+    font-family: 'Courier New', Courier, monospace;
+
+    display: flex;
+    flex-direction: column;
+    
+}
+
+
+
+#now-playing-title {
+    border-bottom: 1px solid magenta;
+    margin-bottom: 0.1em;
+}
+
+button {
+    cursor: pointer;
+    margin: 0;
+
+    font-size: 1.5em;
+    padding: 0.3em;
+
+    border: 1px solid magenta;
+    font-family: 'Courier New', Courier, monospace;
+
+
+    background-color: rgba(83, 15, 80, 0.8);
+    color: white;
+}
+
+button:hover {
+    background-color: rgba(83, 15, 80, 0.95);
+}
+
+
+#side-buttons {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    
+}
+
+img {
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+}
+
+#skin-select-menu {
+    position: absolute;
+    background-color: #000;
+    z-index: 1;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+
+    border: 1px solid magenta;
+    font-family: 'Courier New', Courier, monospace;
+
+    background-color: rgba(83, 15, 80, 0.8);
+    color: white;
+
+    padding: 0.6em;
+    transition: all 0.3s ease-in-out;
+}
+
+#skin-select-menu h1 {
+    font-size: 1.5em;
+    margin-bottom: 0.3em;
+    text-align: center;
+}
+
+.skin {
+    width: 5em;
+    cursor: pointer;
+}
+
+
+
+.slide-in-from-top {
+    top: -50% !important;
+}
