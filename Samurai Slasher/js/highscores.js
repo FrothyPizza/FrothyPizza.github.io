@@ -36,6 +36,7 @@ function fetchScores() {
 			// console.log(x);
 			highScoreOl.innerHTML = "";
 			x.forEach(s => {
+				if(s.name.length > 40) s.name = s.name.substring(0, 40);
 				let li = document.createElement("li");
 				li.innerHTML = `${s.name}: ${s.score}`
 				highScoreOl.appendChild(li);
