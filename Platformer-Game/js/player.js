@@ -105,7 +105,7 @@ class Player extends Entity {
         // Dash variables
         this.dashSpeed = 3.5;         // Horizontal speed during dash
         this.dashDuration = 9;     // How long dash lasts (in frames)
-        this.dashCooldown = 15;     // Frames before next dash allowed
+        this.dashCooldown = 30;     // Frames before next dash allowed
         this.isDashing = false;
         this.dashTimer = new Clock();
         this.dashClock = new Clock();
