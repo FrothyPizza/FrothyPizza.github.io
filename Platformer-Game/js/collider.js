@@ -9,6 +9,9 @@ class Collider extends GameObject {
         this.entitesInteractedWith = [];
 
         this.lifeClock = new Clock();
+
+        this.damagesPlayer = false;
+        this.damagesEnemy = true;
     }
 
     update(map, entities) {
@@ -19,7 +22,7 @@ class Collider extends GameObject {
 
     interactWith(other) {
         if(this.entitesInteractedWith.includes(other)) return;
-        if(other.isEnemy && this.colliding(other)) {
+        if(other.isEnemy && other.colliding(this)) {
             other.hurtWithDamage(this.damage);
             this.entitesInteractedWith.push(other);
             // console.log("enemy hit");
@@ -27,8 +30,10 @@ class Collider extends GameObject {
     }   
 
     draw(context) {
-        // context.fillStyle = "rgba(200, 0, 0, 0.5)";
-        // context.fillRect(this.x, this.y, this.width, this.height);
+        if(CONSTANTS.DEBUG) {
+            context.fillStyle = "rgba(200, 0, 0, 0.5)";
+            context.fillRect(this.x, this.y, this.width, this.height);
+        }
     }
 }
 

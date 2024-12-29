@@ -218,6 +218,29 @@ const Loader = {
             console.warn(`Sound "${name}" not found.`);
         }
     },
+    playSoundRepeat: function(name, volume, repeatTimes) {
+        if (this.audio[name]) {
+            const sound = this.audio[name];
+            sound.volume = volume;
+            if (!sound.paused) {
+                sound.currentTime = 0;
+            }
+            sound.play().catch(error => {
+                console.warn(`Failed to play sound ${name}:`, error);
+            });
+            sound.onended = () => {
+                repeatTimes--;
+                if(repeatTimes > 0) {
+                    sound.currentTime = 0;
+                    sound.play().catch(error => {
+                        console.warn(`Failed to play sound ${name}:`, error);
+                    });
+                }
+            }
+        } else {
+            console.warn(`Sound "${name}" not found.`);
+        }
+    },
     
 
     playMusic: function(name, volume = 1, restart = true) {
@@ -305,7 +328,9 @@ document.body.onload = () => {
             'assets/images/enemies/turtle.json',
             'assets/images/enemies/tadpole.json',
             'assets/images/enemies/corgi.json',
-            'assets/images/enemies/bee.json',
+            'assets/images/enemies/bee/bee.json',
+            'assets/images/enemies/bee/bee_honeycomb.json',
+            'assets/images/enemies/bee/bee_hatchling.json',
             'assets/images/enemies/sheep.json',
             'assets/images/enemies/hoopoe.json',
             'assets/images/enemies/hoopoe_hatchling.json',
@@ -338,6 +363,8 @@ document.body.onload = () => {
             'assets/sfx/sam/playerDamage.wav',
             'assets/sfx/sam/powerup.wav',
             'assets/sfx/sam/dash01.wav',
+            'assets/sfx/turtle_laser.wav',
+
             
 
             'assets/music/unicyclist_theme.mp3',
@@ -396,4 +423,9 @@ function completeLevelLocalStorage(levelName) {
         CONSTANTS.completedLevels.push(levelName);
         localStorage.setItem('completedLevels', JSON.stringify(CONSTANTS.completedLevels));
     }
+}
+
+function unlockAllLevels() {
+    CONSTANTS.unlockedLevels = ['level_hoopoe', 'level_7', 'level_1', 'level_5', 'level_corgi', 'level_run_1', 'level_run_2'];
+    localStorage.setItem('unlockedLevels', JSON.stringify(CONSTANTS.unlockedLevels));
 }

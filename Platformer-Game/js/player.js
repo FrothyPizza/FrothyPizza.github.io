@@ -9,7 +9,7 @@ const WEAPON_OPTIONS = {
         spriteOffsetY: -7,
         collider: {offsetX: -2, offsetY: -9, width: 30, height: 24},
         animationSpeed: 5,
-        damage: 100,
+        damage: CONSTANTS.DEBUG ? 1000 : 100,
         // sound: {name: "sword_slash.mp3", volume: 0.05},
         sound: {name: "hit.wav", volume: 0.2},
     },
@@ -105,7 +105,7 @@ class Player extends Entity {
         // Dash variables
         this.dashSpeed = 3.5;         // Horizontal speed during dash
         this.dashDuration = 9;     // How long dash lasts (in frames)
-        this.dashCooldown = 30;     // Frames before next dash allowed
+        this.dashCooldown = 20;     // Frames before next dash allowed
         this.isDashing = false;
         this.dashTimer = new Clock();
         this.dashClock = new Clock();
@@ -311,7 +311,7 @@ class Player extends Entity {
                 currentScene.hitFlagToWin();
             }
         }
-        if(other.isEnemy) {
+        if(other.isEnemy || (other instanceof Collider && other.damagesPlayer)) {
             if(this.colliding(other) && !this.isInvincible && !this.dead) {
                 this.framesCollindingWithEnemy++;
                 if(this.framesCollindingWithEnemy < this.allowedFramesCollidingWithEnemy)

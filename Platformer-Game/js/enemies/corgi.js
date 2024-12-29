@@ -1,10 +1,13 @@
+///////////////////////////////
 // CorgiEnemy.js
+///////////////////////////////
 
 class CorgiEnemy extends Boss {
     constructor(x, y, entities, options = {}) {
-        super(x, y, 48, 32, 6000); // Adjust health as needed
+        super(x, y, 48, 32, 8000); // Adjust health as needed
         this.speed = 0.5; // Speed for walking back to spawn position
 
+        this.hurtboxes = [{ x: 2, y: 2, w: this.width - 4, h: this.height - 4 }];
 
         // Animation setup
         this.animationSpeed = 10;
@@ -21,49 +24,62 @@ class CorgiEnemy extends Boss {
         this.isPouncing = false;
         this.pounceTimer = new Clock();
         this.pounceCooldown = 400; // Time between pounces
+        this.pounceTimer.add(300);
         this.isWalkingBack = false;
         this.canJumpWhileWalkingBack = false;
 
         // Stage thresholds
         this.stageThresholds = [
-            { health: this.maxHealth * 2 / 3, stage: 2 },
-            { health: this.maxHealth / 3, stage: 3 }
+            { health: this.maxHealth * 4 / 5, stage: 2 },
+            { health: this.maxHealth * 2 / 5, stage: 3 }
         ];
 
         // Initialize behaviors based on initial stage
         this.setupStage(false); // Stage 1 starts without strength modification
 
-        // The Corgi does not collide with the map and does not have gravity
+        // By default, the Corgi collides with the map and has some gravity
         this.collidesWithMap = true;
         this.gravity = this.defaultGravity / 2; // Enable gravity for jumping
 
         // Save the initial spawn position for returning
         this.spawnPosition = { x: x, y: y };
+
+        // For Stage 3 circle-around
+        this.orbitAngle = 0;     // We'll increment this each frame
+        this.orbitRadius = 60;   // Distance from center of the map
+        this.orbitSpeedFactor = 0.05; // How quickly we move to the orbit position
     }
 
     setupStage(isStronger) {
         switch (this.currentStage) {
             case 1:
-                this.sheepSummonInterval = isStronger ? 30000 : 40000; // Adjust as needed
+                this.sheepSummonInterval = isStronger ? 30000 : 40000;
                 this.sheepSummonTimer.add(1000);
-
                 this.pounceCooldown = isStronger ? 200 : 250;
-
                 this.jumpHeight = 50;
                 break;
             case 2:
                 this.sheepSummonInterval = isStronger ? 200 : 300;
                 this.pounceCooldown = isStronger ? 200 : 250;
                 this.canJumpWhileWalkingBack = isStronger;
-
                 this.jumpHeight = 40;
                 break;
             case 3:
+                // In stage 3, the Corgi circles the center of the map and herds the sheep
                 this.sheepSummonInterval = isStronger ? 100 : 200;
                 this.pounceCooldown = isStronger ? 60 : 150;
                 this.canJumpWhileWalkingBack = true;
-
                 this.jumpHeight = 35;   
+                // Stop colliding with the map so it can move freely in the air
+                this.collidesWithMap = false;
+                this.randomSheepFlyInterval = 0.006;
+                // Switch to a “Fly” (or any suitable) animation if available
+                this.sprite.setAnimation("Fly");
+
+                this.sheepSummonInterval = 10;
+                setFrameTimeout(() => {
+                    this.sheepSummonInterval = 100;
+                }, 60);
                 break;
             default:
                 break;
@@ -73,30 +89,12 @@ class CorgiEnemy extends Boss {
     update(map, entities) {
         super.update(map, entities);
 
-        // if (this.isAskingRiddle || this.isSpeaking) {
-        //     // Skip updating behaviors if asking a riddle
-        //     return;
-        // }
+        // Shared behaviors (e.g. sheep summoning, etc.) 
+        // ... You can re-enable your riddle logic if you need it ...
 
-        // // Handle initial riddle
-        // if (!this.initialRiddleAsked && this.currentStage === 0) {
-        //     this.spawnInitialRiddle();
-        //     return;
-        // }
-
-        // // Check for stage transitions based on health
-        // for (let threshold of this.stageThresholds) {
-        //     if (this.health <= threshold.health && this.currentStage < threshold.stage && !this.riddleAskedForStage[threshold.stage]) {
-        //         this.spawnStageRiddle(threshold.stage);
-        //         this.riddleAskedForStage[threshold.stage] = true;
-        //         break;
-        //     }
-        // }
-
-        // // Proceed with shared behaviors
+        // If you haven't commented them out, call them:
         // this.sharedStageBehavior(map, entities);
 
-        // // Update based on the current stage
         // switch (this.currentStage) {
         //     case 1:
         //         this.stage1Behavior(map, entities);
@@ -108,7 +106,7 @@ class CorgiEnemy extends Boss {
         //         this.stage3Behavior(map, entities);
         //         break;
         //     default:
-        //         // No stage-specific behavior for stage 0 (initial)
+        //         // Stage 0 or something else, no special behavior
         //         break;
         // }
     }
@@ -128,9 +126,6 @@ class CorgiEnemy extends Boss {
     }
 
     stage1Behavior(map, entities) {
-        // Stage 1: Idle, only summons sheep
-        // this.sprite.setAnimation("Idle");
-        
         this.handlePouncingBehavior(map, entities);
     }
 
@@ -138,13 +133,69 @@ class CorgiEnemy extends Boss {
         this.handlePouncingBehavior(map, entities);
     }
 
+    //
+    // Stage 3 behavior: Circle around the center of the map, herd sheep
+    //
     stage3Behavior(map, entities) {
-        this.handlePouncingBehavior(map, entities);
+        this.updateCircleAroundMapCenter();
+        this.herdSheep(entities);
+    }
+
+    /**
+     * Replaces the wander/flying behavior with a circle-around-center approach.
+     * We treat the map center as (120, 88) for a 240x176 screen.
+     */
+    updateCircleAroundMapCenter() {
+        // Increase orbitAngle a bit each frame
+        this.orbitAngle += 0.02; 
+
+        // The center for a 240×176 map
+        const centerX = 240 / 2;
+        const centerY = 176 / 2 - 30;
+
+        // Desired orbit position
+        const desiredX = centerX + Math.cos(this.orbitAngle) * this.orbitRadius;
+        const desiredY = centerY + Math.sin(this.orbitAngle) * this.orbitRadius;
+
+        // Smoothly move (steer) toward that desired position
+        const steerX = (desiredX - this.x) * this.orbitSpeedFactor;
+        const steerY = (desiredY - this.y) * this.orbitSpeedFactor;
+        
+        // Update velocity
+        this.velocity.x = steerX;
+        this.velocity.y = steerY;
+
+        // Update position
+        this.x += this.velocity.x;
+        this.y += this.velocity.y;
+
+        // Adjust sprite direction for left/right facing
+        this.sprite.direction = (this.velocity.x > 0) ? 1 : -1;
+
+        // Optionally clamp position so we don't go out of bounds
+        this.x = Math.max(0, Math.min(this.x, 240 - this.width));
+        this.y = Math.max(0, Math.min(this.y, 176 - this.height));
+    }
+
+    /**
+     * Called each frame in Stage 3 to “herd” sheep with a simple flocking influence.
+     */
+    herdSheep(entities) {
+        // If you want the corgi to spawn extra sheep occasionally:
+        // only 20 sheep allowed at a time
+        if (Math.random() < this.randomSheepFlyInterval && entities.filter(e => e instanceof SheepEnemy).length < 20) {
+            this.spawnSheep(entities);
+        }
+        for (let sheep of this.sheepEntities) {
+            if (!sheep.dead) {
+                sheep.applyFlockingBehavior(this.sheepEntities, this);
+                sheep.multiplyInterval = 400;
+            }
+        }
     }
 
     handlePouncingBehavior(map, entities) {
         if (this.isPouncing) {
-
             // Check if Corgi has landed
             if (map.pointIsCollidingWithWall(this.x + this.width / 2, this.y + this.height + 1)) {
                 console.log("Landed!");
@@ -172,22 +223,18 @@ class CorgiEnemy extends Boss {
                 this.sprite.setAnimation("Idle");
             }
 
-            if(this.canJumpWhileWalkingBack) {
+            if (this.canJumpWhileWalkingBack) {
                 // Check if Corgi can jump while walking back
                 if (this.pounceTimer.getTime() > this.pounceCooldown && Math.random() < 0.01) {
                     this.spawnSheep(entities);
                     this.startPounce();
                 }
             }
-
         } else {
             // Ready to pounce
             if (this.pounceTimer.getTime() > this.pounceCooldown) {
                 this.startPounce();
-            } else {
-                // Idle animation while waiting to pounce
-                // this.sprite.setAnimation("Idle");
-            }
+            } 
         }
     }
 
@@ -200,26 +247,24 @@ class CorgiEnemy extends Boss {
         this.sprite.onAnimationComplete = () => {
             this.isPouncing = true;
 
-
             // Calculate velocities to reach the player
-            let targetX = currentScene.player.x;
+            let targetX = currentScene.player.x - 20;
             let targetY = currentScene.player.y;
 
             // Quadratic calculation
             const gravity = this.gravity;
-            const jumpHeight = 50; // Adjust as needed for arc height
+            const jumpHeight = 50; // Adjust as needed
 
-            // Calculate time to reach the peak
+            // Time to reach the peak
             const timeToPeak = Math.sqrt((2 * jumpHeight) / gravity);
-
             // Total time of flight (up and down)
             const totalTime = timeToPeak * 2;
 
-            // Calculate horizontal velocity
+            // Horizontal velocity
             const distanceX = targetX - this.x - this.width / 2;
             const velocityX = distanceX / totalTime;
 
-            // Calculate initial vertical velocity
+            // Vertical velocity
             const velocityY = -Math.sqrt(2 * gravity * jumpHeight);
 
             // Set velocities
@@ -228,9 +273,7 @@ class CorgiEnemy extends Boss {
 
             this.y -= 2; // Adjust y position slightly to avoid immediate collision
 
-
-
-            // Update sprite direction based on velocity
+            // Update sprite direction
             this.sprite.direction = this.velocity.x > 0 ? 1 : -1;
 
             // Play pounce animation
@@ -240,12 +283,9 @@ class CorgiEnemy extends Boss {
     }
 
     spawnSheep(entities) {
-        // Only spawn sheep if not pouncing or walking back
-        // if (this.isPouncing || this.isWalkingBack) return;
-
         // Create a new SheepEnemy
         // Position the sheep in front of the Corgi, adjust x and y accordingly
-        const x = this.x - 10; // Adjust as needed
+        const x = this.x + this.width/2; // Adjust as needed
         const y = this.y + this.height - 8; // Adjust as needed
 
         const sheep = new SheepEnemy(x, y);
@@ -269,15 +309,17 @@ class CorgiEnemy extends Boss {
 }
 
 
-
-
+///////////////////////////////
 // SheepEnemy.js
+///////////////////////////////
 
 class SheepEnemy extends Enemy {
     constructor(x, y) {
-        super(x, y, 8, 8, 150); // Adjust health as needed
+        super(x, y, 8, 8, 300); // Adjust health as needed
         this.speed = 0.5;
         this.direction = 1;
+
+        // this.collidesWithMap = true;
 
         // Animation setup
         this.animationSpeed = 10;
@@ -292,31 +334,41 @@ class SheepEnemy extends Enemy {
         this.canMove = true;
 
         // Charging properties
-        this.chargeSpeed = 4; // Adjust as needed
-        this.chargeDuration = 60; // Charge duration in milliseconds
-        this.chargeCooldown = 120; // Time between charges
-        this.chargeTimer = new Clock(); // Single timer for charge phases
-        this.chargePhase = 'cooldown'; // Possible phases: 'cooldown', 'tinting', 'charging'
+        this.chargeSpeed = 4; 
+        this.chargeDuration = 60;
+        this.chargeCooldown = 120;
+        this.chargeTimer = new Clock();
+        this.chargePhase = 'cooldown';
+        this.isCharging = false;
 
-        // Tinting properties for indicating charging
+        // Tinting properties
         this.isTinted = false;
-        this.tintDuration = this.chargeDuration; // Time the sheep stays tinted before charging
+        this.tintDuration = this.chargeDuration; 
 
         // Target (player)
-        this.player = null; // To be set in update
+        this.player = null; // Found later
+
+        // Flocking behavior
+        this.maxForce = 0.1;       
+        this.maxSpeed = 1.0;       
+        this.separationDist = 60;  
+        this.cohesionWeight = 0.005;
+        this.alignmentWeight = 0.01;
+        this.separationWeight = 0.3;
+        this.corgiFollowWeight = 0.02;
     }
 
     update(map, entities) {
         super.update(map, entities);
-
         if (this.dead) return;
 
-        // Find the player
+        // Find the player once
         if (!this.player) {
             this.player = findPlayer(entities);
-            if (!this.player) {
-                return; // No player found, cannot proceed
-            }
+        }
+
+        if(map.pointIsCollidingWithWall(this.x + this.width / 2, this.y + this.height / 2)) {
+            this.collidesWithMap = false;
         }
 
         // Handle multiplying
@@ -325,7 +377,11 @@ class SheepEnemy extends Enemy {
             this.multiplyTimer.restart();
         }
 
-        // Handle charging behavior using a single timer and state machine
+        if(this.y > 176) {
+            this.removeFromScene = true;
+        }
+
+        // Handle charging behavior
         switch (this.chargePhase) {
             case 'cooldown':
                 if (this.chargeTimer.getTime() > this.chargeCooldown) {
@@ -334,29 +390,15 @@ class SheepEnemy extends Enemy {
                     this.isTinted = true;
                 }
                 break;
-
             case 'tinting':
                 if (this.chargeTimer.getTime() > this.tintDuration) {
                     this.chargePhase = 'charging';
                     this.chargeTimer.restart();
                     this.isTinted = false;
                     this.isCharging = true;
-
-                    // Calculate direction towards player
-                    // const dx = (this.player.x + this.player.width / 2) - (this.x + this.width / 2);
-                    // const dy = (this.player.y + this.player.height / 2) - (this.y + this.height / 2);
-                    // const distance = Math.sqrt(dx * dx + dy * dy) || 1;
-                    // const dirX = dx / distance;
-                    // const dirY = dy / distance;
-
-                    // // Set velocity for charging
-                    // this.velocity.x = dirX * this.chargeSpeed;
-                    // this.velocity.y = dirY * this.chargeSpeed;
-
-                    this.velocity.x = this.chargeSpeed * (this.x < this.player.x ? 1 : -1);
+                    this.velocity.x = this.chargeSpeed * (this.x < (this.player?.x || 0) ? 1 : -1);
                 }
                 break;
-
             case 'charging':
                 if (this.chargeTimer.getTime() > this.chargeDuration) {
                     this.chargePhase = 'cooldown';
@@ -366,9 +408,7 @@ class SheepEnemy extends Enemy {
                     this.velocity.y = 0;
                 }
                 break;
-
             default:
-                // Reset to 'cooldown' if an unknown phase is encountered
                 this.chargePhase = 'cooldown';
                 this.chargeTimer.restart();
                 this.isTinted = false;
@@ -378,54 +418,146 @@ class SheepEnemy extends Enemy {
                 break;
         }
 
-        if(!this.canMove) {
+        if (!this.canMove) {
             this.velocity.x = 0;
             this.velocity.y = 0;
             this.chargeTimer.restart();
         }
 
-        // If not currently in 'charging' phase, handle movement
+        // If not charging, handle normal walking
         if (this.chargePhase !== 'charging' && this.canMove) {
             this.updateWalkingBehavior(map);
         }
 
-        // Update sprite direction based on velocity
+        // Update sprite direction
         if (this.velocity.x > 0) {
             this.sprite.direction = 1;
         } else if (this.velocity.x < 0) {
             this.sprite.direction = -1;
         }
 
-        // Update sprite animation
-        // this.sprite.setAnimation("Run");
-
+        // If tinted, show red particles
         if (this.isTinted) {
-            // Summon red particles to indicate charging
             this.spawnRedParticle(entities);
         }
     }
 
     updateWalkingBehavior(map) {
-        // Handle direction change upon hitting walls or edges
-        if (this.collidesWithMap &&
-            (this.rightHit || this.leftHit
-            || !map.pointIsCollidingWithWall(this.x + this.width - 2, this.y + this.height + 1)
-            || !map.pointIsCollidingWithWall(this.x + 2, this.y + this.height + 1))) {
-            this.direction *= -1;
-            this.x += this.direction;
+        // Basic logic: if we are on the ground and collide or there's a gap, turn around
+        if (this.collidesWithMap) {
+            if (
+                this.rightHit || 
+                this.leftHit ||
+                !map.pointIsCollidingWithWall(this.x + this.width - 2, this.y + this.height + 1) ||
+                !map.pointIsCollidingWithWall(this.x + 2, this.y + this.height + 1)
+            ) {
+                this.direction *= -1;
+                this.x += this.direction;
+            }
         }
-
-        // Set horizontal velocity based on direction
         this.velocity.x = this.speed * this.direction;
     }
 
+    applyFlockingBehavior(flock, corgi) {
+        this.gravity = 0; // No gravity for sheep
+        this.defaultGravity = 0; // No gravity for sheep
+        this.collidesWithMap = false; // No collision with map for sheep
+            
+        // We’ll apply 4 main “forces”: separation, alignment, cohesion, and corgi-follow.
+        const neighbors = flock.filter(s => s !== this && !s.dead);
+        if (neighbors.length === 0) return;
+
+        const sep = this.separationForce(neighbors);
+        const ali = this.alignmentForce(neighbors);
+        const coh = this.cohesionForce(neighbors);
+        const cf = this.corgiFollowForce(corgi);
+
+        const totalX = sep.x * this.separationWeight 
+                     + ali.x * this.alignmentWeight
+                     + coh.x * this.cohesionWeight
+                     + cf.x  * this.corgiFollowWeight;
+
+        const totalY = sep.y * this.separationWeight
+                     + ali.y * this.alignmentWeight
+                     + coh.y * this.cohesionWeight
+                     + cf.y  * this.corgiFollowWeight;
+
+        this.velocity.x += totalX;
+        this.velocity.y += totalY;
+
+        const speed = Math.sqrt(this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y);
+        if (speed > this.maxSpeed) {
+            this.velocity.x = (this.velocity.x / speed) * this.maxSpeed;
+            this.velocity.y = (this.velocity.y / speed) * this.maxSpeed;
+        }
+    }
+
+    separationForce(neighbors) {
+        let steerX = 0, steerY = 0, count = 0;
+        for (let other of neighbors) {
+            const dx = this.x - other.x;
+            const dy = this.y - other.y;
+            const distSq = dx*dx + dy*dy;
+            if (distSq < this.separationDist*this.separationDist) {
+                steerX += dx / distSq;
+                steerY += dy / distSq;
+                count++;
+            }
+        }
+        if (count > 0) {
+            steerX /= count;
+            steerY /= count;
+        }
+        return { x: steerX, y: steerY };
+    }
+
+    alignmentForce(neighbors) {
+        let avgVX = 0, avgVY = 0, count = 0;
+        for (let other of neighbors) {
+            if (!other.dead) {
+                avgVX += other.velocity.x;
+                avgVY += other.velocity.y;
+                count++;
+            }
+        }
+        if (count > 0) {
+            avgVX /= count;
+            avgVY /= count;
+        }
+        return { x: avgVX, y: avgVY };
+    }
+
+    cohesionForce(neighbors) {
+        let centerX = 0, centerY = 0, count = 0;
+        for (let other of neighbors) {
+            if (!other.dead) {
+                centerX += other.x;
+                centerY += other.y;
+                count++;
+            }
+        }
+        if (count > 0) {
+            centerX /= count;
+            centerY /= count;
+            centerX -= this.x;
+            centerY -= this.y;
+        }
+        return { x: centerX, y: centerY };
+    }
+
+    corgiFollowForce(corgi) {
+        // Simple steering toward corgi’s position
+        const dx = corgi.x - this.x;
+        const dy = corgi.y - this.y;
+        return { x: dx, y: dy };
+    }
+
     multiply() {
-        // Create a new SheepEnemy
-        const x = this.x + (Math.random() * 10 - 5); // Adjust position slightly
-        const y = this.y; // Same y position
+        const x = this.x + (Math.random() * 10 - 5);
+        const y = this.y;
 
         const newSheep = new SheepEnemy(x, y);
-        newSheep.direction = -this.direction; // Opposite direction
+        newSheep.direction = -this.direction;
 
         this.canMove = false;
         newSheep.canMove = false;
@@ -454,7 +586,6 @@ class SheepEnemy extends Enemy {
     }
 
     spawnRedParticle(entities) {
-        // Create a red particle at the sheep's position
         const x = this.x + Math.random() * this.width;
         const y = this.y + Math.random() * this.height;
         const particle = new Particle(x, y, 2, 2, "rgba(255, 0, 0, 0.5)", 60);
@@ -471,11 +602,7 @@ class SheepEnemy extends Enemy {
     }
 }
 
-// Helper function to find the player in entities
+// Finds a Player in the entities array
 function findPlayer(entities) {
-    return entities.find(entity => entity instanceof Player) || null;
+    return entities.find(e => e instanceof Player) || null;
 }
-
-
-
-

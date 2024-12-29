@@ -8,7 +8,13 @@ class GameObject {
         this.height = h;
 
         this.dead = false;
-        this.removeFromScene = false
+        this.removeFromScene = false;
+
+        // The hitboxes and hurtboxes are used for collision detection
+        // hitbox means that the object can be hit by other objects
+        // hurtbox means that the object can hit other objects
+        this.hitboxes = [{x: 0, y: 0, w: this.width, h: this.height}];
+        this.hurtboxes = [{x: 0, y: 0, w: this.width, h: this.height}];
     }
 
     update(map, entities) {
@@ -17,13 +23,42 @@ class GameObject {
     }
 
     draw(context) {
-        context.fillStyle = "red";
-        context.fillRect(this.x, this.y, this.width, this.height);
+        // context.fillStyle = "red";
+        // context.fillRect(this.x, this.y, this.width, this.height);
+
+        if(!CONSTANTS.DEBUG) return;
+        
+        // Draw transparent white on the entire bounding box
+        context.fillStyle = "rgba(255, 255, 255, 0.5)";
+        context.fillRect(this.x - context.view.x, this.y - context.view.y, this.width, this.height);
+
+        // Draw hitboxes
+        context.fillStyle = "rgba(0, 255, 0, 0.5)";
+        for(let hitbox of this.hitboxes) {
+            context.fillRect(this.x + hitbox.x - context.view.x, this.y + hitbox.y - context.view.y, hitbox.w, hitbox.h);
+        }
+
+        // Draw hurtboxes
+        context.fillStyle = "rgba(0, 0, 255, 0.5)";
+        for(let hurtbox of this.hurtboxes) {
+            context.fillRect(this.x + hurtbox.x - context.view.x, this.y + hurtbox.y - context.view.y, hurtbox.w, hurtbox.h);
+        }
     }
 
     colliding(other) {
-        return (this.x + this.width > other.x && this.x < other.x + other.width &&
-                this.y + this.height > other.y && this.y < other.y + other.height);
+        // return (this.x + this.width > other.x && this.x < other.x + other.width &&
+        //         this.y + this.height > other.y && this.y < other.y + other.height);
+        
+        // return whether any of the hitboxes of this are colliding with any of the hurtboxes of other
+        for(let hitbox of this.hitboxes) {
+            for(let hurtbox of other.hurtboxes) {
+                if(this.x + hitbox.x + hitbox.w > other.x + hurtbox.x && this.x + hitbox.x < other.x + hurtbox.x + hurtbox.w &&
+                    this.y + hitbox.y + hitbox.h > other.y + hurtbox.y && this.y + hitbox.y < other.y + hurtbox.y + hurtbox.h) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="30" height="22" tilewidth="8" tileheight="8" infinite="0" nextlayerid="12" nextobjectid="20">
+<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="30" height="22" tilewidth="8" tileheight="8" infinite="0" nextlayerid="12" nextobjectid="24">
  <tileset firstgid="1" source="../tower-tileset.tsx"/>
  <layer id="5" name="Background_2" width="30" height="22">
   <data encoding="csv">
@@ -57,14 +57,14 @@
   <object id="7" name="UnicyclistEnemy" x="119.273" y="78.3636">
    <point/>
   </object>
+  <object id="20" name="UnicyclistUnderlingEnemy" x="199.625" y="29.375">
+   <point/>
+  </object>
+  <object id="21" name="UnicyclistUnderlingEnemy" x="24.25" y="30.25">
+   <point/>
+  </object>
  </objectgroup>
  <objectgroup id="11" name="CrateLocations">
-  <object id="15" name="crateLocation" x="192" y="48">
-   <point/>
-  </object>
-  <object id="16" name="crateLocation" x="40" y="48">
-   <point/>
-  </object>
   <object id="17" name="crateLocation" x="64" y="88">
    <point/>
   </object>
@@ -72,6 +72,12 @@
    <point/>
   </object>
   <object id="19" name="crateLocation" x="116" y="120">
+   <point/>
+  </object>
+  <object id="22" name="crateLocation" x="24" y="120">
+   <point/>
+  </object>
+  <object id="23" name="crateLocation" x="204" y="120">
    <point/>
   </object>
  </objectgroup>
@@ -87,7 +93,7 @@
   </object>
  </objectgroup>
  <objectgroup id="7" name="Spawns">
-  <object id="2" name="PlayerSpawn" x="16" y="48">
+  <object id="2" name="PlayerSpawn" x="24" y="120">
    <point/>
   </object>
  </objectgroup>

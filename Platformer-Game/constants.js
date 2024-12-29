@@ -42,6 +42,7 @@ const CONSTANTS = {
     unlockedLevels: [],
     completedLevels: [],
     RIDDLES_ENABLED: false,
+    DEBUG: false,
 
 
     // levels: ['level_1', 'level_5', 'level_7']

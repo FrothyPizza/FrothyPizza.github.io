@@ -2,14 +2,19 @@
 
 class UnicyclistEnemy extends Boss {
     constructor(x, y) {
-        super(x, y, 18, 25, 4000);
+        super(x, y, 18, 25, 3000);
         this.speed = 0.25;
         this.direction = 1;
+
+        
 
         // Frames per animation frame
         this.animationSpeed = 10;
         this.sprite = new AnimatedSprite(Loader.spriteSheets.unicyclist, "Run", this.animationSpeed);
         this.sprite.isBackwards = true;
+
+        this.sprite.tint = "rgba(255, 0, 0, 0.5)";
+
 
         this.jumpingHorizontalSpeed = 1;
         this.gravity = 0.12;
@@ -319,6 +324,54 @@ class UnicyclistEnemy extends Boss {
     onDeath() {
         // Remove all MimeHeads
         this.removeAllMimeHeads();
+    }
+}
+
+
+class UnicyclistUnderlingEnemy extends UnicyclistEnemy {
+    // all the same properties as the UnicyclistEnemy
+    
+    constructor(x, y) {
+        super(x, y, 18, 25, 2000);
+        this.sprite.tint = null;
+
+        this.ejectionInterval = 400;
+    }
+
+    
+    setupStage(isStronger) {
+        switch (this.currentStage) {
+            case 1:
+                // Stage 1: Basic behavior, no MimeHeads
+                this.maxJuggling = 2;
+                this.removeAllMimeHeads();
+                this.juggleSpeed = isStronger ? 0.03 : 0.025;
+                this.hasShield = false;
+                break;
+            case 2:
+                // Stage 2: Start juggling MimeHeads
+                this.maxJuggling = isStronger ? 3 : 3; // More MimeHeads if stronger
+                this.jumpDelay = isStronger ? 250 : 400;
+                this.juggleSpeed = isStronger ? 0.05 : 0.04;
+                this.ejectionInterval = isStronger ? 250 : 300;
+                this.spawnMimeHeads();
+                this.hasShield = false;
+                break;
+            case 3:
+                // Stage 3: Advanced behavior with shields
+                this.maxJuggling = isStronger ? 5 : 5; // Even more MimeHeads if stronger
+                this.jumpDelay = isStronger ? 200 : 300;
+                this.juggleSpeed = isStronger ? 0.07 : 0.06;
+                this.ejectionInterval = isStronger ? 100 : 200;
+                this.spawnMimeHeads();
+                this.hasShield = true;
+                this.shieldActive = isStronger ? false : true; // Shield starts off if stronger
+                this.shootAllMimeHeadsChance = 0.5;
+
+                break;
+            default:
+                break;
+        }
     }
 }
 

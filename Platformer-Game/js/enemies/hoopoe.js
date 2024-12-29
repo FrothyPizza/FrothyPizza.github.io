@@ -2,6 +2,7 @@ class HoopoeEnemy extends Boss {
     constructor(x, y, entities, options = {}) {
         super(x, y, 36, 37, 6000); // Adjust health as needed
 
+        this.hurtboxes = [{ x: 4, y: 5, w: this.width - 8, h: this.height - 10 }];
 
         // Animation setup
         this.animationSpeed = 8;
@@ -17,6 +18,9 @@ class HoopoeEnemy extends Boss {
 
         this.startFlyingTimer = new Clock();
         this.startFlyingDelay = 200;
+
+        this.spawnTimer = new Clock();
+        this.spawnDelay = 50;
 
 
 
@@ -41,13 +45,13 @@ class HoopoeEnemy extends Boss {
     setupStage(isStronger) {
         switch (this.currentStage) {
             case 1:
-
+                this.spawnDelay = 80;
                 break;
             case 2:
-
+                this.spawnDelay = 70;
                 break;
             case 3:
-
+                this.spawnDelay = 50;
                 break;
             default:
                 break;
@@ -58,10 +62,11 @@ class HoopoeEnemy extends Boss {
 
     sharedStageBehavior(map, entities) {
 
-        if(Math.random() > 0.99) {
+        if(this.spawnTimer.getTime() > this.spawnDelay) {
             // spawn a hoopoe hatchling
-            let hatchling = new HoopoeHatchlingEnemy(this.x, this.y);
+            let hatchling = new HoopoeHatchlingEnemy(this.x + this.width / 2, this.y + this.height / 2);
             entities.push(hatchling);
+            this.spawnTimer.restart();
         }
 
         if(!this.target) {

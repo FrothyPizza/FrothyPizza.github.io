@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "levels/level_1.tmx",
+    "activeFile": "levels/level_run_2.tmx",
     "expandedProjectPaths": [
         ".",
         "levels"
@@ -57,14 +57,14 @@
         },
         "levels/level_3-5.tmx": {
             "expandedObjectLayers": [
-                9,
-                7
+                7,
+                9
             ],
             "scale": 1,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 214.5,
-                "y": 54.5
+                "x": 239.5,
+                "y": 87.5
             }
         },
         "levels/level_3.5.tmx": {
@@ -167,38 +167,46 @@
             "expandedObjectLayers": [
                 11
             ],
-            "scale": 1,
-            "selectedLayer": 6,
+            "scale": 3,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 130.5,
-                "y": 434.5
+                "x": -265.8333333333333,
+                "y": 345.16666666666663
             }
         },
         "levels/level_hoopoe.tmx": {
             "expandedObjectLayers": [
-                9,
                 7,
-                11,
-                10
+                9,
+                10,
+                11
             ],
             "scale": 3,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 171.5,
-                "y": 159.16666666666669
+                "x": 119.83333333333333,
+                "y": 175.83333333333331
             }
         },
         "levels/level_run_1.tmx": {
             "expandedObjectLayers": [
                 9,
-                11,
-                10
+                10,
+                11
             ],
             "scale": 1,
             "selectedLayer": 6,
             "viewCenter": {
-                "x": 301.5,
-                "y": 98.5
+                "x": 799.5,
+                "y": 88.5
+            }
+        },
+        "levels/level_run_2.tmx": {
+            "scale": 0.5,
+            "selectedLayer": 6,
+            "viewCenter": {
+                "x": -135,
+                "y": -769
             }
         },
         "levels/main_map.tmx": {
@@ -233,34 +241,27 @@
     "map.tileWidth": 8,
     "map.width": 30,
     "openFiles": [
-        "tower-tileset.tsx",
-        "levels/level_1.tmx",
-        "levels/level_3.tmx",
-        "levels/level_4.tmx",
-        "levels/level_5.tmx",
-        "levels/level_6.tmx",
-        "levels/level_2.tmx",
-        "levels/level_7.tmx",
-        "levels/level_8.tmx",
-        "levels/level_blank.tmx",
-        "levels/level_3.5.tmx",
         "levels/level_3-5.tmx",
-        "levels/level_8.tmx"
+        "levels/level_corgi.tmx",
+        "levels/level_hoopoe.tmx",
+        "levels/level_run_1.tmx",
+        "tower-tileset.tsx",
+        "levels/level_run_2.tmx"
     ],
     "project": "untitled.tiled-project",
     "recentFiles": [
+        "levels/level_3-5.tmx",
+        "levels/level_corgi.tmx",
+        "levels/level_hoopoe.tmx",
+        "levels/level_run_1.tmx",
+        "tower-tileset.tsx",
+        "levels/level_run_2.tmx",
         "levels/level_blank.tmx",
         "levels/level_8.tmx",
         "levels/level_7.tmx",
         "levels/level_2.tmx",
         "levels/level_6.tmx",
-        "levels/level_5.tmx",
-        "levels/level_4.tmx",
-        "tower-tileset.tsx",
-        "levels/level_1.tmx",
-        "levels/level_3.tmx",
-        "levels/level_3-5.tmx",
-        "levels/level_3.5.tmx"
+        "levels/level_5.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {

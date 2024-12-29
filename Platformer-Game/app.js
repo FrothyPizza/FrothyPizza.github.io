@@ -5,7 +5,7 @@ const context = canvas.getContext('2d');
 context.imageSmoothingEnabled = false;
 const WIDTH = 30 * 8;
 const HEIGHT = 22 * 8;
- 
+
 let PIXEL_SIZE = 5;
 canvas.height = HEIGHT;
 canvas.width = WIDTH;

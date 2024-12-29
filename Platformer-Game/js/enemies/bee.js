@@ -3,6 +3,8 @@ class BeeEnemy extends Boss {
         super(x, y, 42, 58, 6000); // Adjust health as needed
         this.speed = 1; // Base speed for circling (slowed down)
 
+        this.hurtboxes = [{ x: 4, y: 10, w: this.width - 8, h: this.height - 20 }];
+
         // Animation setup
         this.animationSpeed = 10;
         this.sprite = new AnimatedSprite(Loader.spriteSheets.bee, "Run", this.animationSpeed);
@@ -29,13 +31,25 @@ class BeeEnemy extends Boss {
         this.landingLocation = { x: 0, y: 0 };
         this.groundPatDuration = 400; // Duration of ground pat in milliseconds
         this.groundPatTimer = new Clock();
-        this.groundPatCooldown = 2000; // Time between ground pats
+        this.groundPatCooldown = 2600; // Time between ground pats
 
 
         // Tinting properties
         this.isTinted = false;
         this.tintDuration = 500; // Time the bee stays tinted before charging
         this.tintTimer = new Clock();
+
+
+        // Honeycomb spawning properties
+        this.honeycombSpawnCooldown = 300;
+        this.honeycombSpawnTimer = new Clock();
+
+        // Hatchling spawning properties
+        this.hatchlingSpawnCooldown = 300;
+        this.hatchlingSpawnTimer = new Clock();
+        this.spawnsHatchlings = true;
+
+
 
         // Deceleration properties
         this.decelerationStarted = false;
@@ -55,6 +69,7 @@ class BeeEnemy extends Boss {
     }
 
     setupStage(isStronger) {
+        isStronger = true;
         switch (this.currentStage) {
             case 1:
                 // this.circleSpeed = 0.01; // Slower circling
@@ -62,23 +77,34 @@ class BeeEnemy extends Boss {
 
                 this.circleSpeed = isStronger ? 0.015 : 0.010; // Faster circling but still slower than before
                 this.chargeProbability = isStronger ? 0 : 0; // Some probability to charge
-                this.chargeSpeed = isStronger ? 5 : 4; // Moderate charge speed
+                this.chargeSpeed = isStronger ? 3.5 : 3.5; // Moderate charge speed
                 this.chargeCooldown = isStronger ? 500 : 500; // Shorter cooldown if stronger
                 this.tintDuration = isStronger ? 300 : 500; // Shorter tint duration if stronger
+                this.spawnsHatchlings = false; // Does not spawn hatchlings
+
+                this.honeycombSpawnCooldown = isStronger ? 400 : 400;
                 break;
             case 2:
                 this.circleSpeed = isStronger ? 0.02 : 0.015; // Faster circling but still slower than before
-                this.chargeProbability = isStronger ? 0.005 : 0.003; // Some probability to charge
-                this.chargeSpeed = isStronger ? 5 : 4; // Moderate charge speed
+                this.chargeProbability = isStronger ? 0.01 : 0.01; // Some probability to charge
+                this.chargeSpeed = isStronger ? 3.5 : 3.5; // Moderate charge speed
                 this.chargeCooldown = isStronger ? 500 : 500; // Shorter cooldown if stronger
                 this.tintDuration = isStronger ? 300 : 500; // Shorter tint duration if stronger
+                this.spawnsHatchlings = true; // Spawns hatchlings
+                this.hatchlingSpawnCooldown = isStronger ? 400 : 400;
+
+                this.honeycombSpawnCooldown = isStronger ? 350 : 350;
                 break;
             case 3:
                 this.circleSpeed = isStronger ? 0.03 : 0.025; // Even faster circling
                 this.chargeProbability = isStronger ? 0.015 : 0.01; // Higher probability to charge
-                this.chargeSpeed = isStronger ? 6 : 5; // Faster charge
-                this.chargeCooldown = isStronger ? 1000 : 1500; // Even shorter cooldown
+                this.chargeSpeed = isStronger ? 4.5 : 4.5; // Faster charge
+                this.chargeCooldown = isStronger ? 300 : 300; // Even shorter cooldown
                 this.tintDuration = isStronger ? 200 : 400; // Even shorter tint duration
+                this.spawnsHatchlings = true; // Spawns hatchlings
+                this.hatchlingSpawnCooldown = isStronger ? 250 : 250;
+
+                this.honeycombSpawnCooldown = isStronger ? 250 : 250;
                 break;
             default:
                 break;
@@ -97,6 +123,15 @@ class BeeEnemy extends Boss {
             if (!this.player) {
                 return; // No player found, cannot proceed
             }
+        }
+
+
+        // Spawn honeycomb enemies
+        this.spawnHoneycombBehavior(map, entities);
+
+        // Spawn hatchling enemies
+        if (this.spawnsHatchlings) {
+            this.spawnHatchlingBehavior(map, entities);
         }
 
 
@@ -255,6 +290,52 @@ class BeeEnemy extends Boss {
 
     }
 
+    spawnHoneycombBehavior(map, entities) {
+        // Spawn honeycomb around the bee
+        if (this.honeycombSpawnTimer.getTime() > this.honeycombSpawnCooldown) {
+            let edge = Math.floor(Math.random() * 3);
+            let x, y;
+            switch (edge) {
+                case 0: // Top
+                    x = Math.floor(Math.random() * map.width * map.tilewidth);
+                    y = 0;
+                    break;
+                case 1: // Right
+                    x = map.width * map.tilewidth;
+                    y = Math.floor(Math.random() * map.height * map.tileheight);
+                    break;
+                // case 2: // Bottom
+                //     x = Math.floor(Math.random() * map.width * map.tilewidth);
+                //     y = map.height * map.tileheight - 8;
+                //     break;
+                case 2: // Left
+                    x = 0;
+                    y = Math.floor(Math.random() * map.height * map.tileheight);
+                    break;
+                default:
+                    break;
+            }
+
+            let honeycomb = new HoneyCombEnemy(x, y, entities);
+            entities.push(honeycomb);
+
+            this.honeycombSpawnTimer.restart();
+        }
+    }
+
+    spawnHatchlingBehavior(map, entities) {
+        // Spawn hatchlings around the bee
+        if (this.hatchlingSpawnTimer.getTime() > this.hatchlingSpawnCooldown) {
+            let x = this.x + this.width / 2;
+            let y = this.y + this.height / 2;
+
+            let hatchling = new BeeHatchlingEnemy(x, y, entities);
+            entities.push(hatchling);
+
+            this.hatchlingSpawnTimer.restart();
+        }
+    }
+
     stage1Behavior(map, entities) {
         // Circles the player
         // Behavior handled in sharedStageBehavior
@@ -308,7 +389,7 @@ class BeeEnemy extends Boss {
 
             // Heal slowly
             if (this.health < this.maxHealth) {
-                this.health += 1;
+                this.health += 6;
             }
 
             // Stop ground patting after duration
@@ -346,4 +427,154 @@ class BeeEnemy extends Boss {
 // Helper function to find the player in entities
 function findPlayer(entities) {
     return entities.find(entity => entity instanceof Player) || null;
+}
+
+
+
+// honeycomb enemy spawns on random edge of map with direction towards the center of the map.
+// As it moves towards the center, it moves in a sine wave pattern.
+class HoneyCombEnemy extends Enemy {
+    constructor(x, y, entities, options = {}) {
+        super(x, y, 12, 12, 300); // Adjust health as needed
+        this.speed = 0.25; // Base speed for circling (slowed down)
+
+        
+        this.hitboxes = [{ x: 0, y: 0, w: this.width, h: this.height }];
+        this.hurtboxes = [{ x: 2, y: 2, w: this.width - 4, h: this.height - 4 }];
+
+        this.collidesWithMap = false;
+        this.gravity = 0;
+        this.defaultGravity = 0;
+
+        // Animation setup
+        this.animationSpeed = 20;
+        this.sprite = new AnimatedSprite(Loader.spriteSheets.bee_honeycomb, "Idle", this.animationSpeed);
+
+        // Circling behavior properties
+        this.circleRadius = 50; // Initial radius of circle around player
+        this.circleSpeed = 0.01; // Angular speed (radians per frame, slowed down)
+        this.angle = 0; // Current angle around the player
+
+        // this.target = findPlayer(entities);
+
+        // the target is the center of the map
+        let map = currentScene.map;
+        let targetX = map.width * map.tilewidth / 2;
+        let targetY = map.height * map.tileheight / 2;
+        this.velocity.x = targetX - this.x;
+        this.velocity.y = targetY - this.y;
+        let distance = Math.sqrt(this.velocity.x * this.velocity.x + this.velocity.y * this.velocity.y) || 1;
+        this.velocity.x /= distance;
+        this.velocity.y /= distance;
+        this.velocity.x *= this.speed;
+        this.velocity.y *= this.speed;
+
+
+    }
+
+    update(map, entities) {
+        super.update(map, entities);
+
+        if(this.dead) return;
+
+        // // Find the player
+        // if (!this.target) {
+        //     this.target = findPlayer(entities);
+        //     if (!this.player) {
+        //         return; // No player found, cannot proceed
+        //     }
+        // }
+
+        // // move towards player
+        // const dx = (this.target.x + this.target.width / 2) - (this.x + this.width / 2);
+        // const dy = (this.target.y + this.target.height / 2) - (this.y + this.height / 2);
+        // const distance = Math.sqrt(dx * dx + dy * dy) || 1;
+        // const dirX = dx / distance;
+        // const dirY = dy / distance;
+
+
+        // // Set velocity for charging
+        // this.velocity.x = dirX * this.speed;
+        // this.velocity.y = dirY * this.speed;
+
+
+
+    }
+
+    draw(context) {
+        super.draw(context);
+
+        this.sprite.draw(context, this.x, this.y);
+    }
+
+}
+
+
+
+// bee hatchling flies towards the player
+class BeeHatchlingEnemy extends Enemy {
+    constructor(x, y, entities, options = {}) {
+        super(x, y, 8, 8, 100); // Adjust health as needed
+        this.speed = 0.5; // Base speed for circling (slowed down)
+        
+        this.hitboxes = [{ x: 0, y: 0, w: this.width, h: this.height }];
+        this.hurtboxes = [{ x: 1, y: 1, w: this.width - 2, h: this.height - 2 }];
+
+
+        // Animation setup
+        this.animationSpeed = 10;
+        this.sprite = new AnimatedSprite(Loader.spriteSheets.bee_hatchling, "Fly", this.animationSpeed);
+
+        this.collidesWithMap = false;
+
+        this.gravity = 0;
+        this.defaultGravity = 0;
+
+        // Target (player)
+        this.player = null; // To be set in update
+    } 
+
+    update(map, entities) {
+        super.update(map, entities);
+
+        if (this.dead) return;
+
+        // Find the player
+        if (!this.player) {
+            this.player = findPlayer(entities);
+            if (!this.player) {
+                return; // No player found, cannot proceed
+            }
+        }
+
+        // Handle movement
+        this.updateFlyingBehavior(map);
+
+
+        if(this.velocity.x > 0) {
+            this.sprite.direction = 1;
+        } else if(this.velocity.x < 0) {
+            this.sprite.direction = -1;
+        }
+
+    }
+
+    updateFlyingBehavior(map) {
+        // go towards player
+        const dx = (this.player.x + this.player.width / 2) - (this.x + this.width / 2);
+        const dy = (this.player.y + this.player.height / 2) - (this.y + this.height / 2);
+        const distance = Math.sqrt(dx * dx + dy * dy) || 1;
+        const dirX = dx / distance;
+        const dirY = dy / distance;
+
+        // Set velocity for charging
+        this.velocity.x = dirX * this.speed;
+        this.velocity.y = dirY * this.speed;
+    }
+
+    draw(context) {
+        super.draw(context);
+
+        this.sprite.draw(context, this.x, this.y);
+    }
 }
