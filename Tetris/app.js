@@ -239,6 +239,19 @@ document.addEventListener('keydown', e => {
         playerTetrisGame.inputGeneral(e.keyCode);
 });
 
+// if anything is tapped with touch, simulate pressing key p
+document.addEventListener('touchstart', e => {
+    if(!paused)
+        playerTetrisGame.inputGeneral(80);
+});
+
+// do the same for touch hold
+document.addEventListener('touchmove', e => {
+    if(!paused)
+        playerTetrisGame.inputGeneral(80);
+});
+
+
 
 
 
