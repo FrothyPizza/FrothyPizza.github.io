@@ -390,7 +390,7 @@ document.body.onload = () => {
 
 
 
-if(!localStorage.getItem('VERSION')) {
+if(!localStorage.getItem('VERSION') || localStorage.getItem('VERSION') !== CONSTANTS.VERSION) {
     localStorage.clear();
     localStorage.setItem('VERSION', CONSTANTS.VERSION);
 }
