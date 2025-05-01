@@ -1,7 +1,7 @@
 
 
 const CONSTANTS = {
-    VERSION: '0.0.1',
+    VERSION: '0.0.2',
 
     levels: ['level_hoopoe', 'level_7', 'level_1', 'level_5', 'level_corgi'],
 
