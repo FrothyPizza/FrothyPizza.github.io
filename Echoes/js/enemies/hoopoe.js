@@ -45,13 +45,13 @@ class HoopoeEnemy extends Boss {
     setupStage(isStronger) {
         switch (this.currentStage) {
             case 1:
-                this.spawnDelay = 80;
-                break;
-            case 2:
                 this.spawnDelay = 70;
                 break;
-            case 3:
+            case 2:
                 this.spawnDelay = 50;
+                break;
+            case 3:
+                this.spawnDelay = 40;
                 break;
             default:
                 break;

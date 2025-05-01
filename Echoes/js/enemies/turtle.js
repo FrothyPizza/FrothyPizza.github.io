@@ -42,8 +42,8 @@ class TurtleEnemy extends Boss {
 
         // Stage thresholds
         this.stageThresholds = [
-            { health: this.maxHealth * 2 / 3, stage: 2 },
-            { health: this.maxHealth / 3, stage: 3 }
+            { health: this.maxHealth * 3 / 4, stage: 2 },
+            { health: this.maxHealth / 2, stage: 3 }
         ];
 
         // Initialize behaviors based on initial stage
