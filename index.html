@@ -1,222 +1,196 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <title>Home</title>
-        <link rel="stylesheet" href="style.css">
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="icon" href="images/frothypizza.png">
-    </head>
-    <body>
-        <script id="replace_with_navbar" src="nav.js"></script>
-        <!-- <script src="cursor.js"></script> -->
-        <!-- <script>
-            window.onload = () => {
-                window.location.href = "games.html";
-            }
-        </script> -->
-        <img id="dvdImage" src="images/dvd-video.png" alt="dvd">
-        <!-- <button onclick="crash()" id="butt">Don't Click Me</button> -->
-        <style>
-            * {
-                overflow: hidden;
-            }
-        </style>
-        <script>
-            function crash() {
-                onbeforeunload = function(){localStorage.x=1};
+  <head>
+    <title>Hal Seamans — Portfolio</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Hal Seamans — CS & Engineering at the University of Iowa. Projects, games, research, and contact." />
+    <link rel="icon" href="images/frothypizza.png" />
+    <link rel="stylesheet" href="style.css" />
+    <!-- Open Graph -->
+    <meta property="og:title" content="Hal Seamans — Portfolio" />
+    <meta property="og:description" content="Projects, games, research, and contact." />
+    <meta property="og:type" content="website" />
+  </head>
+  <body>
+    <!-- Navbar inserted by nav.js -->
+    <!-- <script id="replace_with_navbar" src="nav.js"></script> -->
 
-                setTimeout(function() {
-                    while(1)
-                        location.reload(1)
-                }, 100);
-            }
+    <header class="hero">
+      <div class="container hero__content">
+        <div>
+          <h1>Hal Seamans</h1>
+          <p class="lead">hfseamans@gmail.com</p>
+          <p class="lead">
+            Computer Science & Engineering @ University of Iowa • Research Assistant (Holo Reality Lab) •
+            Teaching Assistant • President, Iowa Cycling Club
+          </p>
+          <div class="actions">
+            <a class="btn" href="#projects" aria-label="See projects">View Projects</a>
+            <a class="btn primary" href="games.html" aria-label="See games">Play My Games</a>
+            <a class="btn outline" href="#contact" aria-label="Contact me">Contact</a>
+          </div>
+        </div>
+        <div class="hero__badge">
+          <img src="images/face.jpeg" alt="Portrait of Hal Seamans" />
+        </div>
+      </div>
+    </header>
 
-            // //don't click me button
-            // onmousemove = function(e) {
-            //     var x = event.clientX * 0.7 + 200;
-            //     var y = event.clientY * 0.6 + 200;
-
-            //     butt.style.position = "absolute";
-            //     butt.style.left = `${x}px`;
-            //     butt.style.top = `${y}px`;
-            // };
-            
-            window.onload = () => {
-                let dvdImage = document.getElementById("dvdImage");
-                dvdImage.style.position = "absolute";
-                dvdImage.style.top = "0px";
-                dvdImage.style.left = "0px";
-
-                let x = Math.random() * (window.innerWidth - dvdImage.width * 2) + dvdImage.width;
-                let y = Math.random() * (window.innerHeight - dvdImage.height * 2) + dvdImage.height;
-                let dir = Math.random() * 2 * Math.PI;
-                let xVel = Math.cos(dir) * 5;
-                let yVel = Math.sin(dir) * 5;
-
-                let speed = 7;
-
-                let dvdImageWidth = dvdImage.clientWidth;
-                let dvdImageHeight = dvdImage.clientHeight;
-
-                function getDiffBetweenAngles(angle1, angle2) {
-                    return Math.atan2(Math.sin(angle1 - angle2), Math.cos(angle1 - angle2));
-                }
-
-                // document.addEventListener("mousemove", (e) => {
-                //     let mouseX = e.clientX;
-                //     let mouseY = e.clientY;
-
-                //     let imageDirection = Math.atan2(yVel, xVel);
-                //     let dirctionBetweenMouseAndDvd = getDiffBetweenAngles(imageDirection, Math.atan2(mouseY - y, mouseX - x));
-                //     console.log(dirctionBetweenMouseAndDvd);
-                // })
-
-                function pointTowardFurthestCorner() {
-                    let position = {x: dvdImage.offsetLeft + dvdImageWidth/2, y: dvdImage.offsetTop + dvdImageHeight/2};
-                    let target = {x: 0, y: 0};
-                    if(dvdImage.offsetLeft > window.innerWidth/2 && dvdImage.offsetTop > window.innerHeight/2) {
-                        target = {x: 0 + dvdImageWidth/2, y: 0 + dvdImageHeight/2};
-                    } else if(dvdImage.offsetLeft < window.innerWidth/2 && dvdImage.offsetTop < window.innerHeight/2) {
-                        target = {x: window.innerWidth - dvdImageWidth/2, y: 0 + dvdImageHeight/2};
-                    } else if(dvdImage.offsetLeft > window.innerWidth/2 && dvdImage.offsetTop < window.innerHeight/2) {
-                        target = {x: 0 + dvdImageWidth/2, y: window.innerHeight - dvdImageHeight/2};
-                    } else {
-                        target = {x: window.innerWidth - dvdImageWidth/2, y: window.innerHeight - dvdImageHeight/2};
-                    }
-
-                    let xDiff = target.x - position.x;
-                    let yDiff = target.y - position.y;
-                    let dist = Math.sqrt(xDiff*xDiff + yDiff*yDiff);
-                    xDiff /= dist;
-                    yDiff /= dist;
-                    xVel = xDiff * 7;
-                    yVel = yDiff * 7;
-                }
-
-                let corners = [
-                    {x: dvdImageWidth/2, y: dvdImageHeight/2},
-                    {x: window.innerWidth - dvdImageWidth/2, y: dvdImageHeight/2},
-                    {x: window.innerWidth - dvdImageWidth/2, y: window.innerHeight - dvdImageHeight/2},
-                    {x: dvdImageWidth/2, y: window.innerHeight - dvdImageHeight/2}
-                ];
-
-                document.addEventListener("resize", () => {
-                    corners = [
-                        {x: dvdImageWidth/2, y: dvdImageHeight/2},
-                        {x: window.innerWidth - dvdImageWidth/2, y: dvdImageHeight/2},
-                        {x: window.innerWidth - dvdImageWidth/2, y: window.innerHeight - dvdImageHeight/2},
-                        {x: dvdImageWidth/2, y: window.innerHeight - dvdImageHeight/2}
-                    ];
-                });
-
-                function getFurthestCorner(x, y) {
-                    let furthestCorner = {x: 0, y: 0};
-                    let furthestDist = 0;
-                    for(let i = 0; i < corners.length; i++) {
-                        let dist = Math.sqrt(Math.pow(x - corners[i].x, 2) + Math.pow(y - corners[i].y, 2));
-                        if(dist > furthestDist) {
-                            furthestCorner = corners[i];
-                            furthestDist = dist;
-                        }
-                    }
-                    return furthestCorner;
-                }
-
-                function getAngleToCorner(corner) {
-                    let position = {x: dvdImage.offsetLeft + dvdImageWidth/2, y: dvdImage.offsetTop + dvdImageHeight/2};
-                    let xDiff = corner.x - position.x;
-                    let yDiff = corner.y - position.y;
-                    let dist = Math.sqrt(xDiff*xDiff + yDiff*yDiff);
-                    xDiff /= dist;
-                    yDiff /= dist;
-                    return Math.atan2(yDiff, xDiff);
-                }
+    <main>
+<!-- About -->
+<section id="about" class="section">
+  <div class="container">
+    <h2>About</h2>
+    <p>
+      I’m a third-year Computer Science and Engineering student at the University of Iowa. Passionate about software development, AI, and game design, I enjoy building projects that push my problem-solving skills—from developing AI-driven Tetris agents to creating custom game engines from scratch.
+    </p>
+    <p>
+      I also conduct research in the Holo Reality Lab, where I’m building a real-time VR teacher-training simulation in Unreal Engine 5. My work spans C++/Blueprints, OpenAI Realtime–powered conversational agents, NVIDIA ACE lip-sync, and a JSON state-machine pipeline backed by a Node.js/MongoDB logging service. The goal is natural, performant interactions in PCVR while keeping a clean engineering surface for rapid iteration.
+    </p>
+    <p>
+      Beyond coursework, I’ve worked as a teaching assistant for a software design course, helping students navigate object-oriented programming and software architecture. I’m always looking to collaborate on innovative projects, whether in AI, game development, or software engineering.
+    </p>
+  </div>
+</section>
 
 
-                function normalizeVelocity() {
-                    let dist = Math.sqrt(xVel*xVel + yVel*yVel);
-                    xVel /= dist;
-                    yVel /= dist;
-                    xVel *= speed;
-                    yVel *= speed;
-                }
+      <!-- Projects -->
+      <section id="projects" class="section">
+        <div class="container">
+          <h2>Selected Projects</h2>
+          <div class="grid">
+            <article class="card">
+              <h3>VR Teacher-Training Simulator</h3>
+              <p>
+                UE5.5/5.6 simulation with conversational agents, hand-tracking, and logging pipeline. Integrates
+                OpenAI Realtime and NVIDIA ACE for natural interactions.
+              </p>
+              <div class="tags">
+                <span>UE5</span><span>C++/Blueprints</span><span>Realtime API</span><span>MongoDB</span>
+              </div>
+              <div class="card__actions">
+                <a class="btn small" href="#" aria-label="Read more about VR project">Case Study (soon)</a>
+              </div>
+            </article>
 
-                function adjustVelocityOnBounce() {
-                    //if(Math.random() > 0.5) return;
+            <article class="card">
+              <h3>Boss-Rush Platformer Game</h3>
+              <p>
+                Built on my own lightweight JavaScript engine with an object-oriented architecture that makes
+    new boss design fast and modular. Focused on tight feel, deterministic gameplay loops, and
+    rapid iteration.
+              </p>
+              <div class="tags"><span>JS/TS</span><span>LLM</span><span>Game Design</span></div>
+              <div class="card__actions">
+                <a class="btn small" href="games.html" aria-label="Open Games page">Play</a>
+                <a class="btn small outline" href="https://github.com/FrothyPizza/EXP-Jam-2025" target="_blank" rel="noopener">GitHub</a>
+              </div>
+            </article>
 
-                    let angle = getAngleToCorner(getFurthestCorner(dvdImage.offsetLeft + dvdImageWidth/2, dvdImage.offsetTop + dvdImageHeight/2));
+            <article class="card">
+                <h3>Tetris AI</h3>
+                <p>
+                    Programmed a full Tetris clone in C++ with SFML. The AI uses a beam-search planner guided
+                    by a heuristic to score future placements, and a genetic algorithm to evolve the heuristic
+                    weights across a population of agents.
+                </p>
+                <ul class="checklist" style="margin-top:8px">
+                    <li>C++ + SFML rendering and game loop</li>
+                    <li>Beam search with heuristic evaluation for look-ahead placement</li>
+                    <li>Genetic algorithm to discover the best heuristic weights</li>
+                </ul>
+                <div class="tags" style="margin-top:10px">
+                    <span>C++</span><span>SFML</span><span>Search Algorithms</span><span>Genetic Algorithm</span><span>Heuristics</span>
+                </div>
+                <div class="card__actions">
+                    <a class="btn small" href="/Tetris/index.html" aria-label="Open Games page">Play JS Port</a>
+                    <a class="btn small outline" href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+                    <!-- <a class="btn small" href="#" target="_blank" rel="noopener">Demo video</a> -->
+                </div>
+            </article>
+          </div>
+        </div>
+      </section>
 
-                    let currentAngle = Math.atan2(yVel, xVel);
-                    let diff = angle - currentAngle;
-                    if(Math.abs(diff) < Math.PI/4 && Math.abs(diff) > -Math.PI/4) {         
-                        xVel = Math.cos(angle) * speed;
-                        yVel = Math.sin(angle) * speed;
-                    }
+      <!-- Skills -->
+      <section id="skills" class="section">
+        <div class="container">
+          <h2>Skills</h2>
+          <div class="chips">
+            <span>Unreal Engine 5.x</span><span>C++</span><span>Blueprints</span><span>OpenAI Realtime</span>
+            <span>WebRTC / WebSocket</span><span>Node/Express</span><span>Java / JavaFX</span>
+            <span>Python</span><span>MongoDB</span><span>GitLab/GitHub</span>
+          </div>
+        </div>
+      </section>
 
-                    normalizeVelocity();
-                }
+      <!-- Experience -->
+      <section id="experience" class="section">
+        <div class="container">
+          <h2>Experience</h2>
+          <div class="timeline">
+            <div class="timeline__item">
+              <h3>Research Assistant — Holo Reality Lab</h3>
+              <p class="muted">2024–Present</p>
+              <p>VR simulation for teacher training; built agent pipeline, state machines, and analytics.</p>
+            </div>
+            <div class="timeline__item">
+              <h3>Teaching Assistant — ECE:3330 Intro to Software Design</h3>
+              <p class="muted">2024–Present</p>
+              <p>Oral-exam modules, Java/JavaFX setups, grading automation, GitLab workflows.</p>
+            </div>
+            <div class="timeline__item">
+              <h3>President — Iowa Cycling Club</h3>
+              <p class="muted">2024–Present</p>
+              <p>Operations, budgeting, equipment management, and race logistics.</p>
+            </div>
+          </div>
+        </div>
+      </section>
 
-                normalizeVelocity();
-                let lastTime = performance.now();
-                function update() {
-                    let now = performance.now();
-                    let dt = (now - lastTime) / 1000;
-                    lastTime = now;
+      <!-- Contact -->
+      <section id="contact" class="section">
+        <div class="container">
+          <h2>Contact</h2>
+          <p>Feel free to reach out for collaborations, internships, or to chat about bikes and VR.</p>
+          <div class="actions">
+            <a class="btn primary" href="mailto:hfseamans@gmail.com">Email</a>
+            <a class="btn outline" href="https://github.com/frothypizza" target="_blank" rel="noopener">GitHub</a>
+            <a class="btn outline" href="https://www.linkedin.com/in/hal-seamans-514119265/" target="_blank" rel="noopener">LinkedIn</a>
+            <!-- Optional resume link -->
+            <!-- <a class="btn" href="files/Hal_Seamans_Resume.pdf" target="_blank" rel="noopener">Resume</a> -->
+          </div>
+        </div>
+      </section>
+    </main>
 
-                    if(dt > 0.1) {
-                        dt = 0.1;
-                    }
+    <footer class="footer">
+      <div class="container footer__content">
+        <span>© <span id="year"></span> Hal Seamans</span>
+        <div class="footer__right">
+          <button id="themeToggle" class="btn small outline" aria-label="Toggle dark mode">Toggle theme</button>
+          <!-- tiny easter egg -->
+          <img class="dvd-mini" src="images/dvd-video.png" alt="" />
+        </div>
+      </div>
+    </footer>
 
-                    let bounces = 0;
-                    if (x < 0) {
-                        xVel = -xVel;
-                        x = 0;
-                        adjustVelocityOnBounce();
-                        ++bounces;
-                    }
-                    if (x > window.innerWidth - dvdImageWidth) {
-                        xVel = -xVel;
-                        x = window.innerWidth - dvdImageWidth;
-                        adjustVelocityOnBounce();
-                        ++bounces;
-                    }
-                    if (y < 0) {
-                        yVel = -yVel;
-                        y = 0;
-                        adjustVelocityOnBounce();
-                        ++bounces;
-                    }
-                    if (y > window.innerHeight - dvdImageHeight) {
-                        yVel = -yVel;
-                        y = window.innerHeight - dvdImageHeight;
-                        adjustVelocityOnBounce();
-                        ++bounces;
-                    }
+    <script>
+      // year
+      document.getElementById('year').textContent = new Date().getFullYear();
 
-                    // if(bounces > 0) {
-                    //     if(Math.random() < 0.7) {
-                    //         xVel += Math.random() * 2 - 1;
-                    //         yVel += Math.random() * 2 - 1;
+      // theme toggle with persistence
+      const toggle = document.getElementById('themeToggle');
+      const root = document.documentElement;
+      const stored = localStorage.getItem('theme');
+      if (stored) root.dataset.theme = stored;
 
-                    //         normalizeVelocity();
-                    //     }
-                    // }
-                    
-
-                    x += xVel * dt * 70;
-                    y += yVel * dt * 70;
-
-                    dvdImage.style.left = x + "px";
-                    dvdImage.style.top = y + "px";
-
-                    requestAnimationFrame(update);
-                } update();
-            }
-
-
-
-        </script>
-    </body>
-
+      toggle.addEventListener('click', () => {
+        const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+        root.dataset.theme = next;
+        localStorage.setItem('theme', next);
+      });
+    </script>
+  </body>
 </html>
