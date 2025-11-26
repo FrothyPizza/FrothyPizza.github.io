@@ -1,0 +1,40 @@
+{
+  "name": "Saloon - Wake Up",
+  "blockGameplay": true,
+  "requires": ["Sheriff"],
+  "actions": [
+
+    {
+      "type": "setAnimation",
+      "entity": "Sheriff",
+      "animation": "Run",
+      "speedMultiplier": 2,
+      "direction": "right",
+      "restart": true,
+      "pause": false
+    },
+
+    {
+      "type": "move",
+      "entity": "Sheriff",
+      "path": [
+        { "x": 0, "y": 1, "t": 0 },
+        { "x": -160, "y": 0, "t": 120 }
+      ],
+      "relative": true
+    },
+    { "type": "wait", "duration": 60 },
+
+    {
+      "type": "setAnimation",
+      "entity": "Sheriff",
+      "animation": "Idle",
+      "speedMultiplier": 1,
+      "direction": "right",
+      "restart": true,
+      "pause": false
+    }
+
+
+  ]
+}

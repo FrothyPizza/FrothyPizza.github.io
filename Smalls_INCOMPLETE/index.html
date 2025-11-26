@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">       
+        <title>Game</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+            }
+
+            @font-face {
+                font-family: 'm3x6';
+                src: url('assets/fonts/m3x6.ttf');
+            }
+
+            canvas {
+                width: 480px;
+                height: 480px;
+                image-rendering: pixelated;
+
+                font-smooth: never;
+                -webkit-font-smoothing : none;
+
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+
+            html {
+                background: #303030;
+
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="canvas" width="800" height="600"></canvas>
+
+        <script src="constants.js"></script>
+
+        <script src="util/util.js"></script>
+        <script src="util/input.js"></script>
+        <script src="util/vec2.js"></script>
+
+        <!-- <script src="view.js"></script> -->
+        <script src="globalState.js"></script>
+        <script src="view.js"></script>
+
+        <script src="js/ecs.js"></script>
+        <script src="js/components/physicsComponents.js"></script>
+        <script src="js/components/gameComponents.js"></script>
+        <script src="js/components/colliderComponents.js"></script>
+        <script src="js/components/spriteComponents.js"></script>
+        <script src="js/components/playerComponents.js"></script>
+        <script src="js/components/enemyComponents/enemyComponent.js"></script>
+        <script src="js/components/enemyComponents/littleEnemyComponents.js"></script>
+        <script src="js/components/enemyComponents/saloonEnemyComponents.js"></script>
+        <script src="js/components/enemyComponents/bossComponents.js"></script>
+        <script src="js/components/enemyComponents/crazedCowboyComponents.js"></script>
+        <script src="js/components/enemyComponents/desertEnemyComponents.js"></script>
+        <script src="js/components/enemyComponents/townBigHatComponents.js"></script>
+        
+
+        
+
+        <script src="js/systems/animationSystem.js"></script>
+        <script src="js/systems/entityCollisionSystem.js"></script>
+        <script src="js/systems/physicsSystem.js"></script>
+        <script src="js/systems/renderSystem.js"></script>
+        <script src="js/systems/mapCollisionSystem.js"></script>
+        <script src="js/systems/playerSystem.js"></script>
+        <script src="js/systems/viewSystem.js"></script>
+        <script src="js/systems/boundEntitySystem.js"></script>
+        <script src="js/systems/stunnedSystem.js"></script>
+        <script src="js/systems/enemySystems/bossSystems/bossSystem.js"></script>
+        <script src="js/systems/enemySystems/saloonSystems.js"></script>
+        <script src="js/systems/enemySystems/desertSystems.js"></script>
+        <script src="js/systems/enemySystems/townBigHatSystems.js"></script>
+
+
+
+
+        <script src="js/blueprints/playerBlueprint.js"></script>
+        <script src="js/blueprints/testEnemyBlueprint.js"></script>
+        <script src="js/blueprints/crazedCowboyBlueprint.js"></script>
+        <script src="js/blueprints/saloonEnemyBlueprints.js"></script>
+        <script src="js/blueprints/desertEnemyBlueprints.js"></script>
+        <script src="js/blueprints/townBigHatBlueprints.js"></script>
+        <script src="js/blueprints/miscBlueprints.js"></script>
+
+
+        <script src="util/animatedSprite.js"></script>
+        <script src="js/entity.js"></script>
+        <script src="js/map.js"></script>
+        <script src="js/cutscene/cutscenePlayer.js"></script>
+        
+        <script src="js/scene.js"></script>
+        <script src="js/sceneManager.js"></script>
+        <script src="js/scenes/levelScene.js"></script>
+        <script src="js/scenes/saloonScene.js"></script>
+        <script src="js/scenes/desertScene.js"></script>
+        <script src="js/scenes/townBigHatScene.js"></script>
+        <script src="app.js"></script>
+        <script src="loader.js"></script>
+    </body>
+</html>

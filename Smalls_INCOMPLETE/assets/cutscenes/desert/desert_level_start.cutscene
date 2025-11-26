@@ -1,0 +1,19 @@
+{
+  "name": "Saloon - Wake Up",
+  "blockGameplay": true,
+  "requires": ["OutlawLeft", "OutlawRight"],
+  "actions": [
+
+    {
+      "type": "dialogue",
+      "text": "LEVEL 2: START",
+      "hold": 180,
+      "charsPerFrame": 0.1,
+      "box": { "x": 0, "y": 60, "width": 240, "height": 20, "align": "center", "background": "rgba(0,0,0,0.5)", "borderWidth": 0 }
+    },
+
+    { "type": "fade", "to": 0, "duration": 60 }
+
+
+  ]
+}

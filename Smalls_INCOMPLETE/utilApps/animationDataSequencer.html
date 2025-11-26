@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sprite Data Sequencer V2</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #222; color: #eee; margin: 0; height: 100vh; display: flex; overflow: hidden; }
+        
+        /* Layout */
+        .app-container { display: flex; width: 100%; height: 100%; }
+        .main-area { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 20px; overflow-y: auto; }
+        .sidebar { width: 300px; background: #2a2a2a; border-left: 1px solid #444; display: flex; flex-direction: column; padding: 15px; box-sizing: border-box; }
+
+        /* Generic UI */
+        h2, h3 { margin: 0 0 15px 0; color: #fff; }
+        h3 { font-size: 1.1em; border-bottom: 1px solid #444; padding-bottom: 5px; margin-top: 20px; }
+        
+        button { padding: 8px 12px; cursor: pointer; background: #555; color: white; border: none; border-radius: 4px; font-weight: bold; transition: background 0.2s; }
+        button:hover { background: #666; }
+        button.active { background: #3b82f6; }
+        button.delete { background: #ef4444; padding: 4px 8px; font-size: 0.8em; margin-left: auto;}
+        button.save { background: #22c55e; width: 100%; margin-top: auto; padding: 15px;}
+        
+        input[type="text"] { padding: 8px; border-radius: 4px; border: 1px solid #555; background: #333; color: white; width: 65%; }
+        
+        /* Canvas */
+        .canvas-container { position: relative; border: 2px solid #444; box-shadow: 0 0 20px rgba(0,0,0,0.5); margin: 20px 0; }
+        canvas { image-rendering: pixelated; background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAABVJREFUKFNjTc3M/M9AEmDhoGaCKgCEsxIqF92fEwAAAABJRU5ErkJggg=='); cursor: crosshair; }
+
+        /* Controls Row */
+        .controls-row { display: flex; gap: 10px; align-items: center; background: #333; padding: 10px; border-radius: 8px; margin-bottom: 10px; }
+        
+        /* Tag List Styling */
+        .tag-list { display: flex; flex-direction: column; gap: 8px; max-height: 300px; overflow-y: auto; }
+        .tag-item { 
+            display: flex; align-items: center; padding: 8px; background: #333; border-radius: 4px; 
+            cursor: pointer; border: 2px solid transparent; 
+        }
+        .tag-item:hover { background: #3e3e3e; }
+        .tag-item.selected { border-color: #3b82f6; background: #2c3e50; }
+        .tag-color { width: 12px; height: 12px; border-radius: 50%; margin-right: 10px; background: #aaa; }
+        .tag-item.selected .tag-color { background: #3b82f6; box-shadow: 0 0 5px #3b82f6; }
+
+        /* Frame Data List */
+        .frame-data-list { overflow-y: auto; flex: 1; }
+        .data-entry { background: #333; padding: 8px; margin-bottom: 5px; border-radius: 4px; font-size: 0.9em; display: flex; justify-content: space-between; align-items: center; border-left: 3px solid #777;}
+        .data-entry.rect { border-left-color: #ef4444; }
+        .data-entry.point { border-left-color: #3b82f6; }
+
+        .input-group { display: flex; gap: 5px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="main-area">
+        <h2>Sprite Sequencer</h2>
+        
+        <div class="controls-row">
+            <label>Img:</label> <input type="file" id="imgInput" accept="image/png">
+            <label>JSON:</label> <input type="file" id="jsonInput" accept=".json">
+        </div>
+
+        <div class="controls-row" id="navControls" style="opacity: 0.5; pointer-events: none;">
+            <button id="prevBtn">◀</button>
+            <span id="frameDisplay" style="min-width: 100px; text-align: center;">Frame: 0/0</span>
+            <button id="nextBtn">▶</button>
+            <div style="width: 1px; height: 20px; background:#555; margin: 0 10px;"></div>
+            <button id="toolRect" class="active">Draw Box</button>
+            <button id="toolPoint">Draw Point</button>
+            <div style="width: 1px; height: 20px; background:#555; margin: 0 10px;"></div>
+            <button id="copyPrevBtn" title="Copy data from previous frame">Copy Prev</button>
+        </div>
+
+        <div class="canvas-container">
+            <canvas id="editorCanvas" width="500" height="400"></canvas>
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <h3>1. Tags (Palette)</h3>
+        <div style="margin-bottom: 10px; font-size: 0.85em; color: #aaa;">Select a tag below to draw with it.</div>
+        
+        <div class="input-group">
+            <input type="text" id="newTagInput" placeholder="New tag name...">
+            <button onclick="addTag()">Add</button>
+        </div>
+
+        <div class="tag-list" id="tagListContainer">
+            </div>
+
+        <h3>2. Frame Data</h3>
+        <div class="frame-data-list" id="frameDataContainer">
+            </div>
+
+        <button id="downloadBtn" class="save">Download JSON</button>
+    </div>
+</div>
+
+<script>
+    // --- State ---
+    let img = null;
+    let spriteData = null;
+    let currentFrame = 0;
+    let zoom = 10; 
+    let currentTool = 'rect'; // 'rect' or 'point'
+    
+    // Tag Management (Persisted in LocalStorage)
+    let availableTags = JSON.parse(localStorage.getItem('sequencerTags')) || ['hitbox', 'hurtbox', 'spawnPoint'];
+    let activeTag = availableTags[0] || null;
+
+    // Canvas Interaction
+    let isDrawing = false;
+    let startX, startY;
+    let dragRect = null;
+
+    // --- DOM Elements ---
+    const canvas = document.getElementById('editorCanvas');
+    const ctx = canvas.getContext('2d');
+    const frameDisplay = document.getElementById('frameDisplay');
+    const frameDataContainer = document.getElementById('frameDataContainer');
+    const tagListContainer = document.getElementById('tagListContainer');
+    const newTagInput = document.getElementById('newTagInput');
+
+    // --- Initialization ---
+    renderTagList();
+
+    document.getElementById('imgInput').addEventListener('change', e => {
+        const file = e.target.files[0];
+        if(!file) return;
+        const reader = new FileReader();
+        reader.onload = evt => {
+            img = new Image();
+            img.onload = () => { draw(); checkReady(); };
+            img.src = evt.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+
+    document.getElementById('jsonInput').addEventListener('change', e => {
+        const file = e.target.files[0];
+        if(!file) return;
+        const reader = new FileReader();
+        reader.onload = evt => {
+            spriteData = JSON.parse(evt.target.result);
+            if(!spriteData.meta.sequencerData) spriteData.meta.sequencerData = {};
+            checkReady();
+        };
+        reader.readAsText(file);
+    });
+
+    function checkReady() {
+        if(img && spriteData) {
+            const nav = document.getElementById('navControls');
+            nav.style.opacity = 1;
+            nav.style.pointerEvents = 'all';
+            resizeCanvas();
+            draw();
+            updateFrameDataUI();
+        }
+    }
+
+    // --- Tag System ---
+    function saveTags() {
+        localStorage.setItem('sequencerTags', JSON.stringify(availableTags));
+    }
+
+    function addTag() {
+        const val = newTagInput.value.trim();
+        if(val && !availableTags.includes(val)) {
+            availableTags.push(val);
+            activeTag = val; // Auto select new tag
+            newTagInput.value = '';
+            saveTags();
+            renderTagList();
+        }
+    }
+
+    function deleteTag(tag) {
+        if(confirm(`Delete tag "${tag}"?`)) {
+            availableTags = availableTags.filter(t => t !== tag);
+            if(activeTag === tag) activeTag = availableTags[0] || null;
+            saveTags();
+            renderTagList();
+        }
+    }
+
+    function selectTag(tag) {
+        activeTag = tag;
+        renderTagList();
+    }
+
+    function renderTagList() {
+        tagListContainer.innerHTML = '';
+        availableTags.forEach(tag => {
+            const div = document.createElement('div');
+            div.className = `tag-item ${tag === activeTag ? 'selected' : ''}`;
+            div.onclick = (e) => {
+                // Prevent triggering select if clicking delete button
+                if(e.target.tagName === 'BUTTON') return;
+                selectTag(tag);
+            };
+            div.innerHTML = `
+                <div class="tag-color"></div>
+                <span>${tag}</span>
+                <button class="delete" onclick="deleteTag('${tag}')">X</button>
+            `;
+            tagListContainer.appendChild(div);
+        });
+    }
+
+    // --- Navigation & Tools ---
+    document.getElementById('prevBtn').onclick = () => {
+        if(currentFrame > 0) { currentFrame--; draw(); updateFrameDataUI(); }
+    };
+    document.getElementById('nextBtn').onclick = () => {
+        if(currentFrame < spriteData.frames.length - 1) { currentFrame++; draw(); updateFrameDataUI(); }
+    };
+    
+    document.getElementById('toolRect').onclick = () => {
+        currentTool = 'rect';
+        document.getElementById('toolRect').classList.add('active');
+        document.getElementById('toolPoint').classList.remove('active');
+    };
+    document.getElementById('toolPoint').onclick = () => {
+        currentTool = 'point';
+        document.getElementById('toolPoint').classList.add('active');
+        document.getElementById('toolRect').classList.remove('active');
+    };
+    
+    document.getElementById('copyPrevBtn').onclick = () => {
+        if (currentFrame === 0) return;
+        const prevData = spriteData.meta.sequencerData[currentFrame - 1];
+        if (prevData) {
+            spriteData.meta.sequencerData[currentFrame] = JSON.parse(JSON.stringify(prevData));
+            draw();
+            updateFrameDataUI();
+        }
+    };
+
+    // --- Canvas Logic ---
+    function resizeCanvas() {
+        const w = spriteData.frames[0].sourceSize.w;
+        const h = spriteData.frames[0].sourceSize.h;
+        canvas.width = w * zoom;
+        canvas.height = h * zoom;
+    }
+
+    function getFrameData() {
+        if(!spriteData.meta.sequencerData[currentFrame]) {
+            spriteData.meta.sequencerData[currentFrame] = { rects: [], points: [] };
+        }
+        return spriteData.meta.sequencerData[currentFrame];
+    }
+
+    function draw() {
+        if(!img || !spriteData) return;
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // 1. Draw Sprite
+        const frameInfo = spriteData.frames[currentFrame];
+        const sx = frameInfo.frame.x;
+        const sy = frameInfo.frame.y;
+        const sw = frameInfo.frame.w;
+        const sh = frameInfo.frame.h;
+        ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(img, sx, sy, sw, sh, 0, 0, sw * zoom, sh * zoom);
+
+        // 2. Draw Existing Data
+        const data = getFrameData();
+
+        if(data.rects) {
+            data.rects.forEach(r => {
+                ctx.fillStyle = 'rgba(239, 68, 68, 0.3)'; 
+                ctx.strokeStyle = '#ef4444';
+                ctx.lineWidth = 2;
+                ctx.fillRect(r.x * zoom, r.y * zoom, r.w * zoom, r.h * zoom);
+                ctx.strokeRect(r.x * zoom, r.y * zoom, r.w * zoom, r.h * zoom);
+                
+                ctx.fillStyle = "white";
+                ctx.font = "10px sans-serif";
+                ctx.fillText(r.tag, r.x * zoom, r.y * zoom - 4);
+            });
+        }
+
+        if(data.points) {
+            data.points.forEach(p => {
+                const px = p.x * zoom;
+                const py = p.y * zoom;
+                ctx.strokeStyle = '#3b82f6'; 
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(px - 8, py); ctx.lineTo(px + 8, py);
+                ctx.moveTo(px, py - 8); ctx.lineTo(px, py + 8);
+                ctx.stroke();
+                
+                ctx.fillStyle = "#3b82f6";
+                ctx.fillText(p.tag, px + 5, py - 5);
+            });
+        }
+
+        // 3. Draw Dragging Shape
+        if(isDrawing && dragRect) {
+            ctx.strokeStyle = '#0f0';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(dragRect.x * zoom, dragRect.y * zoom, dragRect.w * zoom, dragRect.h * zoom);
+        }
+    }
+
+    // --- Mouse Events ---
+    function getLocalCoords(e) {
+        const rect = canvas.getBoundingClientRect();
+        const x = Math.floor((e.clientX - rect.left) / zoom);
+        const y = Math.floor((e.clientY - rect.top) / zoom);
+        return { x, y };
+    }
+
+    canvas.addEventListener('mousedown', e => {
+        if(!spriteData) return;
+        if(!activeTag) {
+            alert("Please select or add a Tag in the right sidebar first!");
+            return;
+        }
+        isDrawing = true;
+        const coords = getLocalCoords(e);
+        startX = coords.x;
+        startY = coords.y;
+        
+        if(currentTool === 'rect') {
+            dragRect = { x: startX, y: startY, w: 0, h: 0 };
+        }
+    });
+
+    canvas.addEventListener('mousemove', e => {
+        if(!isDrawing) return;
+        const coords = getLocalCoords(e);
+        
+        if(currentTool === 'rect') {
+            dragRect.w = coords.x - startX + (coords.x >= startX ? 1 : 0); 
+            dragRect.h = coords.y - startY + (coords.y >= startY ? 1 : 0);
+            draw();
+        }
+    });
+
+    canvas.addEventListener('mouseup', e => {
+        if(!isDrawing) return;
+        isDrawing = false;
+        const coords = getLocalCoords(e);
+        const data = getFrameData();
+
+        if(currentTool === 'rect') {
+            // Normalize
+            let finalX = dragRect.w < 0 ? startX + dragRect.w : startX;
+            let finalY = dragRect.h < 0 ? startY + dragRect.h : startY;
+            let finalW = Math.abs(dragRect.w);
+            let finalH = Math.abs(dragRect.h);
+
+            if(finalW > 0 && finalH > 0) {
+                data.rects.push({ tag: activeTag, x: finalX, y: finalY, w: finalW, h: finalH });
+            }
+            dragRect = null;
+        } 
+        else if (currentTool === 'point') {
+            data.points.push({ tag: activeTag, x: coords.x, y: coords.y });
+        }
+
+        draw();
+        updateFrameDataUI();
+    });
+
+    // --- Side Panel Data List ---
+    function updateFrameDataUI() {
+        frameDisplay.innerText = `Frame: ${currentFrame + 1} / ${spriteData.frames.length}`;
+        const data = getFrameData();
+        frameDataContainer.innerHTML = '';
+
+        const createItem = (type, tag, desc, index, arrayName) => {
+            const div = document.createElement('div');
+            div.className = `data-entry ${type}`;
+            div.innerHTML = `
+                <div>
+                    <strong style="color:#fff">${tag}</strong>
+                    <div style="color:#ccc; font-size:0.85em">${desc}</div>
+                </div>
+                <button class="delete" onclick="deleteDataItem('${arrayName}', ${index})">X</button>
+            `;
+            frameDataContainer.appendChild(div);
+        };
+
+        if(data.rects) data.rects.forEach((r, i) => createItem('rect', r.tag, `X:${r.x} Y:${r.y} [${r.w}x${r.h}]`, i, 'rects'));
+        if(data.points) data.points.forEach((p, i) => createItem('point', p.tag, `X:${p.x} Y:${p.y}`, i, 'points'));
+    }
+
+    window.deleteDataItem = (arrayName, index) => {
+        const data = getFrameData();
+        data[arrayName].splice(index, 1);
+        draw();
+        updateFrameDataUI();
+    };
+
+    // --- Export ---
+    document.getElementById('downloadBtn').onclick = () => {
+        if(!spriteData) return;
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(spriteData, null, 2));
+        const dl = document.createElement('a');
+        dl.setAttribute("href", dataStr);
+        dl.setAttribute("download", "Sequenced_Sprite.json");
+        document.body.appendChild(dl);
+        dl.click();
+        dl.remove();
+    };
+
+</script>
+</body>
+</html>

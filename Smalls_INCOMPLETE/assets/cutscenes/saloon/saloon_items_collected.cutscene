@@ -1,0 +1,19 @@
+{
+  "name": "Saloon - Wake Up",
+  "blockGameplay": true,
+  "requires": ["Player", "OutlawLeft", "OutlawRight"],
+  "actions": [
+
+    {
+      "type": "dialogue",
+      "text": "Press 'X' to use the GUN.\nPress 'S' to use the LASSO.",
+      "speaker": "God",
+      "hold": 180,
+      "charsPerFrame": 0.5,
+      "box": { "x": 60, "y": 32, "width": 120, "height": 64, "align": "center", "background": "rgba(0,0,0,0.5)", "borderWidth": 2 }
+    }
+
+
+
+  ]
+}

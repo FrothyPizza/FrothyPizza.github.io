@@ -1,0 +1,57 @@
+{
+  "name": "Saloon - Wake Up",
+  "blockGameplay": true,
+  "requires": ["Player", "BigHat"],
+  "actions": [
+
+
+    {
+      "type": "setAnimation",
+      "entity": "BigHat",
+      "animation": "Idle",
+      "speedMultiplier": 1,
+      "direction": "left",
+      "restart": true,
+      "pause": false,
+      "hidden": false
+    },
+    { "type": "wait", "duration": 60 },
+
+    {
+      "type": "setAnimation",
+      "entity": "BigHat",
+      "animation": "Run",
+      "direction": "left"
+    },
+    {
+      "type": "moveOverride",
+      "entity": "BigHat",
+      "relative": true,
+      "path": [{ "x": 0, "y": 0, "t": 0 }, { "x": -16, "y": 0, "t": 30 }]
+    },
+    {
+      "type": "setAnimation",
+      "entity": "BigHat",
+      "animation": "Idle"
+    },
+    {
+      "type": "dialogue",
+      "entity": "BigHat",
+      "text": "Well look who it is.",
+      "hold": 120
+    },
+    {
+      "type": "moveOverride",
+      "entity": "BigHat",
+      "relative": true,
+      "path": [{ "x": 0, "y": 0, "t": 0 }, { "x": 16, "y": 0, "t": 30 }]
+    }
+
+    
+
+
+
+
+
+  ]
+}

@@ -1,0 +1,104 @@
+{
+  "name": "Saloon - Wake Up",
+  "blockGameplay": true,
+  "requires": ["Player", "OutlawLeft", "OutlawRight"],
+  "actions": [
+    { "type": "fade", "from": 1, "to": 0.33, "duration": 60, "color": "#000000" },
+    { "type": "wait", "duration": 60 },
+    { "type": "shakeOnce", "amount": 3 },
+    { "type": "setVelocity", "entity": "OutlawLeft", "amount": { "x": 0, "y": -2 } },
+    {
+      "type": "setAnimation",
+      "entity": "OutlawLeft",
+      "animation": "Idle",
+      "speedMultiplier": 0.5,
+      "direction": "right",
+      "restart": true,
+      "pause": false
+    },
+    { "type": "wait", "duration": 60 },
+    {
+      "type": "dialogue",
+      "speaker": "Outlaw Jimbo",
+      "text": "I am the GREATEST cowboy in the North Sourtherly East!",
+      "hold": 180,
+      "charsPerFrame": 1.5,
+      "box": { "x": 10, "y": 40, "width": 120, "height": 40 }
+    },
+
+    
+    { "type": "shakeOnce", "amount": 3 },
+    { "type": "setVelocity", "entity": "OutlawRight", "amount": { "x": 0, "y": -2 } },
+    {
+      "type": "setAnimation",
+      "entity": "OutlawRight",
+      "animation": "Idle",
+      "direction": "left",
+      "pause": false,
+      "restart": true
+    },
+    { "type": "wait", "duration": 60 },
+    {
+      "type": "dialogue",
+      "speaker": "Outlaw Timothy",
+      "text": "No, I am the GREATEREST cowboy in the North Sourtherly East!",
+      "hold": 180,
+      "charsPerFrame": 2.5,
+      "box": { "x": 100, "y": 40, "width": 120, "height": 48 }
+    },
+    { "type": "wait", "duration": 60 },
+
+
+    { "type": "setVelocity", "entity": "OutlawRight", "amount": { "x": -1, "y": 0 } },
+    { "type": "setVelocity", "entity": "OutlawLeft", "amount": { "x": 1, "y": 0 } },
+    {
+      "type": "setAnimation",
+      "entity": "OutlawLeft",
+      "animation": "Lunge",
+      "speedMultiplier": 1,
+      "direction": "right",
+      "restart": true,
+      "pause": false
+    },
+    {
+      "type": "setAnimation",
+      "entity": "OutlawRight",
+      "animation": "Lunge",
+      "speedMultiplier": 1,
+      "direction": "left",
+      "restart": true,
+      "pause": false
+    },
+    { "type": "wait", "duration": 72 },
+
+
+    { "type": "shakeOnce", "amount": 5 },
+    { "type": "setVelocity", "entity": "OutlawRight", "amount": { "x": 0.25, "y": -1 } },
+    { "type": "setVelocity", "entity": "OutlawLeft", "amount": { "x": -0.25, "y": -1 } },
+    { "type": "wait", "duration": 20 },
+    { "type": "setVelocity", "entity": "OutlawRight", "amount": { "x": 0, "y": 0 } },
+    { "type": "setVelocity", "entity": "OutlawLeft", "amount": { "x": 0, "y": 0 } },
+    { "type": "addStunnedBirds", "entity": "OutlawLeft" },
+    { "type": "addStunnedBirds", "entity": "OutlawRight" },
+    { "type": "addComponent", "entity": "OutlawLeft", "component": "InvincibilityFrames", "args": [100]},
+    { "type": "addComponent", "entity": "OutlawRight", "component": "InvincibilityFrames", "args": [100]},
+    
+    { "type": "wait", "duration": 90 },
+    { "type": "addComponent", "entity": "OutlawLeft", "component": "RemoveFromScene", "args": [true]},
+    { "type": "addComponent", "entity": "OutlawRight", "component": "RemoveFromScene", "args": [true]},
+    
+    { "type": "wait", "duration": 60 },
+    {
+      "type": "dialogue",
+      "speaker": "Outlaw",
+      "text": "\n\n...           BAR FIGHT!",
+      "hold": 180,
+      "charsPerFrame": 0.5,
+      "box": { "x": 40, "y": 16, "width": 160, "height": 64 }
+    }
+
+
+
+
+  ]
+}

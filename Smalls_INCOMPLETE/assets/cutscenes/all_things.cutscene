@@ -1,0 +1,21 @@
+{
+  "name": "Saloon - Wake Up",
+  "blockGameplay": true,
+  "requires": ["Player", "OutlawLeft", "OutlawRight"],
+  "actions": [
+    { "type": "dialogue", "speaker": "Theo", "text": "Where am I...?", "hold": 120 },
+    {
+      "type": "move",
+      "entity": "Player",
+      "path": [
+        { "x": 0, "y": 0, "t": 0 },
+        { "x": 40, "y": 40, "t": 30 },
+        { "x": 80, "y": 20, "t": 60 }
+      ],
+      "relative": true
+    },
+    { "type": "setVelocity", "entity": "OutlawLeft", "amount": { "x": 0, "y": -2 } },
+    { "type": "setVelocity", "entity": "OutlawRight", "amount": { "x": 0, "y": -2 } },
+    { "type": "shakeOnce", "amount": 10 }
+  ]
+}

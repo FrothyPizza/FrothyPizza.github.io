@@ -1,0 +1,362 @@
+{
+    "activeFile": "levels/town_big_hat.tmx",
+    "expandedProjectPaths": [
+        ".",
+        "levels"
+    ],
+    "fileStates": {
+        "CowboyTilemap.tsx": {
+            "scaleInDock": 3,
+            "scaleInEditor": 5.5
+        },
+        "GameJamSpriteSheet.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 8,
+            "scaleInEditor": 5.5
+        },
+        "complete-tileset.tsx": {
+            "scaleInDock": 5.5,
+            "scaleInEditor": 8
+        },
+        "level_1.tmx": {
+            "scale": 3,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 89.49999999999999,
+                "y": 77.16666666666666
+            }
+        },
+        "levels/blank_level.tmx": {
+            "scale": 2,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 119.75,
+                "y": 88
+            }
+        },
+        "levels/charon.tmx": {
+            "scale": 3.518958333333333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 119.77976437155883,
+                "y": 87.81007637203244
+            }
+        },
+        "levels/desert.tmx": {
+            "expandedObjectLayers": [
+                7,
+                9
+            ],
+            "scale": 3,
+            "selectedLayer": 7,
+            "viewCenter": {
+                "x": 119.83333333333331,
+                "y": 88
+            }
+        },
+        "levels/hades.tmx": {
+            "scale": 2,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 119.75,
+                "y": 880
+            }
+        },
+        "levels/harpy.tmx": {
+            "expandedObjectLayers": [
+                7
+            ],
+            "scale": 1.5,
+            "selectedLayer": 6,
+            "viewCenter": {
+                "x": 1199.6666666666665,
+                "y": 88
+            }
+        },
+        "levels/level_1.tmx": {
+            "expandedObjectLayers": [
+                10,
+                11,
+                9,
+                7
+            ],
+            "scale": 0.75,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 117.33333333333337,
+                "y": 87.33333333333331
+            }
+        },
+        "levels/level_2.tmx": {
+            "expandedObjectLayers": [
+                9,
+                7
+            ],
+            "scale": 0.75,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 117.33333333333337,
+                "y": 85.99999999999994
+            }
+        },
+        "levels/level_3-5.tmx": {
+            "expandedObjectLayers": [
+                9,
+                7
+            ],
+            "scale": 1,
+            "selectedLayer": 4,
+            "viewCenter": {
+                "x": 238,
+                "y": -40.5
+            }
+        },
+        "levels/level_3.5.tmx": {
+            "scale": 0.5,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 345,
+                "y": -25
+            }
+        },
+        "levels/level_3.tmx": {
+            "expandedObjectLayers": [
+                7
+            ],
+            "scale": 3,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 158.66666666666666,
+                "y": 87.49999999999999
+            }
+        },
+        "levels/level_4.tmx": {
+            "expandedObjectLayers": [
+                7
+            ],
+            "scale": 0.5,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 116,
+                "y": 85
+            }
+        },
+        "levels/level_5.tmx": {
+            "expandedObjectLayers": [
+                9,
+                7
+            ],
+            "scale": 0.75,
+            "selectedLayer": 6,
+            "viewCenter": {
+                "x": -1372,
+                "y": -60.666666666666686
+            }
+        },
+        "levels/level_6.tmx": {
+            "expandedObjectLayers": [
+                7
+            ],
+            "scale": 1.5,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": -323.33333333333326,
+                "y": 265
+            }
+        },
+        "levels/level_7.tmx": {
+            "expandedObjectLayers": [
+                9,
+                10,
+                7
+            ],
+            "scale": 8,
+            "selectedLayer": 5,
+            "viewCenter": {
+                "x": 79.1875,
+                "y": 23.9375
+            }
+        },
+        "levels/level_8.tmx": {
+            "expandedObjectLayers": [
+                9
+            ],
+            "scale": 0.33,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": -787.8787878787879,
+                "y": 313.6363636363635
+            }
+        },
+        "levels/level_9.tmx": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 195.5,
+                "y": 217.5
+            }
+        },
+        "levels/level_blank.tmx": {
+            "expandedObjectLayers": [
+                7
+            ],
+            "scale": 3,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 109.66666666666669,
+                "y": 129.16666666666669
+            }
+        },
+        "levels/level_corgi.tmx": {
+            "expandedObjectLayers": [
+                11,
+                9
+            ],
+            "scale": 3,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 120,
+                "y": 87.83333333333334
+            }
+        },
+        "levels/level_hoopoe.tmx": {
+            "expandedObjectLayers": [
+                10,
+                11,
+                9,
+                7
+            ],
+            "scale": 3,
+            "selectedLayer": 6,
+            "viewCenter": {
+                "x": 120,
+                "y": 175.83333333333331
+            }
+        },
+        "levels/level_run_1.tmx": {
+            "expandedObjectLayers": [
+                9,
+                10,
+                11
+            ],
+            "scale": 0.5,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 547,
+                "y": 19
+            }
+        },
+        "levels/level_run_2.tmx": {
+            "scale": 0.33,
+            "selectedLayer": 6,
+            "viewCenter": {
+                "x": -736.3636363636365,
+                "y": 431.81818181818187
+            }
+        },
+        "levels/main_map.tmx": {
+            "expandedObjectLayers": [
+                3,
+                4
+            ],
+            "scale": 0.33,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 663.6363636363636,
+                "y": -207.5757575757575
+            }
+        },
+        "levels/saloon.tmx": {
+            "expandedObjectLayers": [
+                7,
+                9
+            ],
+            "scale": 2,
+            "selectedLayer": 8,
+            "viewCenter": {
+                "x": 116.75,
+                "y": 88
+            }
+        },
+        "levels/styx_level.tmx": {
+            "expandedObjectLayers": [
+                9
+            ],
+            "scale": 0.125,
+            "selectedLayer": 6,
+            "viewCenter": {
+                "x": 1708,
+                "y": 88
+            }
+        },
+        "levels/tower-tileset.tsx": {
+            "scaleInDock": 1
+        },
+        "levels/town_big_hat.tmx": {
+            "scale": 4,
+            "selectedLayer": 4,
+            "viewCenter": {
+                "x": 125,
+                "y": 100.375
+            }
+        },
+        "levels/town_goons.tmx": {
+            "scale": 3.8910416666666663,
+            "selectedLayer": 7,
+            "viewCenter": {
+                "x": 119.7622744552123,
+                "y": 87.76570112973177
+            }
+        },
+        "levels/underworld_level.tmx": {
+            "expandedObjectLayers": [
+                9
+            ],
+            "scale": 5.5,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 999.909090909091,
+                "y": 400
+            }
+        },
+        "tower-tileset.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 5.5,
+            "scaleInEditor": 5.5
+        }
+    },
+    "last.imagePath": "C:/Users/froth/Documents/GitHub/EPX_Jam_Smalls-World/tiled",
+    "openFiles": [
+        "levels/styx_level.tmx",
+        "levels/hades.tmx",
+        "CowboyTilemap.tsx",
+        "levels/saloon.tmx",
+        "levels/desert.tmx",
+        "levels/town_big_hat.tmx",
+        "levels/town_goons.tmx",
+        "levels/harpy.tmx",
+        "levels/charon.tmx",
+        "levels/blank_level.tmx",
+        "levels/underworld_level.tmx"
+    ],
+    "project": "untitled.tiled-project",
+    "recentFiles": [
+        "levels/styx_level.tmx",
+        "levels/hades.tmx",
+        "CowboyTilemap.tsx",
+        "levels/saloon.tmx",
+        "levels/desert.tmx",
+        "levels/underworld_level.tmx",
+        "levels/blank_level.tmx",
+        "levels/charon.tmx",
+        "levels/harpy.tmx",
+        "levels/town_goons.tmx",
+        "levels/town_big_hat.tmx",
+        "GameJamSpriteSheet.tsx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 8,
+        "width": 8
+    }
+}
