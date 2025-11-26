@@ -19,7 +19,7 @@ ECS.Blueprints.createExclamation = function(x, y) {
     let entity = new ECS.Entity();
     entity.addComponent(new ECS.Components.Position(x, y));
     entity.addComponent(new ECS.Components.AnimatedSprite(
-        Loader.spriteSheets.Exclamation, 
+        Loader.spriteSheets.exclamation, 
         "Init", 
         6
     ));
