@@ -427,7 +427,7 @@ document.body.onload = () => {
       "assets/sfx/cowboy/explosion.wav",
       "assets/sfx/cowboy/hatthrow.wav",
       "assets/sfx/cowboy/PointGain.wav",
-      "assets/sfx/cowboy/pointloss.wav",
+      "assets/sfx/cowboy/pointLoss.wav",
       "assets/sfx/cowboy/shotgunshot.wav",
       "assets/sfx/cowboy/whip.wav",
       "assets/sfx/cowboy/deathSound.wav",
