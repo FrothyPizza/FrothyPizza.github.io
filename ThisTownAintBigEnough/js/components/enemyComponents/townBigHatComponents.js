@@ -77,3 +77,9 @@ ECS.Components.BigHatStunned = class BigHatStunned {
         this.isStunned = true;
     }
 }
+
+ECS.Components.BigHatShotgunProjectile = class BigHatShotgunProjectile {
+    constructor() {
+
+    }
+}

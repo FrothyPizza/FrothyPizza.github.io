@@ -208,10 +208,11 @@ ECS.Blueprints.createBigHatBullet = function(x, y, vx, vy) {
     entity.addComponent(new ECS.Components.Position(x, y));
     entity.addComponent(new ECS.Components.Velocity(vx, vy));
     entity.addComponent(new ECS.Components.Dimensions(4, 4));
-    entity.addComponent(new ECS.Components.IsEnemy(true)); // Damages player
+    // entity.addComponent(new ECS.Components.IsEnemy(true)); // Damages player
     entity.addComponent(new ECS.Components.DamagesPlayer(true));
     entity.addComponent(new ECS.Components.Hitbox([{x: 0, y: 0, w: 0, h: 0}]));
     entity.addComponent(new ECS.Components.Hurtbox([{x: 0, y: 0, w: 2, h: 2}]));
+    entity.addComponent(new ECS.Components.BigHatShotgunProjectile());
     
     // Use bullet sprite or small dot
     entity.addComponent(new ECS.Components.AnimatedSprite(Loader.spriteSheets.BulletSmallBigHat, "Idle", 12));

@@ -322,6 +322,132 @@
     "spriteSourceSize": { "x": 0, "y": 0, "w": 20, "h": 20 },
     "sourceSize": { "w": 20, "h": 20 },
     "duration": 100
+   },
+   {
+    "filename": "BigHatHat 36.aseprite",
+    "frame": { "x": 720, "y": 0, "w": 20, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 20, "h": 20 },
+    "sourceSize": { "w": 20, "h": 20 },
+    "duration": 100
+   },
+   {
+    "filename": "BigHatHat 37.aseprite",
+    "frame": { "x": 740, "y": 0, "w": 20, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 20, "h": 20 },
+    "sourceSize": { "w": 20, "h": 20 },
+    "duration": 100
+   },
+   {
+    "filename": "BigHatHat 38.aseprite",
+    "frame": { "x": 760, "y": 0, "w": 20, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 20, "h": 20 },
+    "sourceSize": { "w": 20, "h": 20 },
+    "duration": 100
+   },
+   {
+    "filename": "BigHatHat 39.aseprite",
+    "frame": { "x": 780, "y": 0, "w": 20, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 20, "h": 20 },
+    "sourceSize": { "w": 20, "h": 20 },
+    "duration": 100
+   },
+   {
+    "filename": "BigHatHat 40.aseprite",
+    "frame": { "x": 800, "y": 0, "w": 20, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 20, "h": 20 },
+    "sourceSize": { "w": 20, "h": 20 },
+    "duration": 100
+   },
+   {
+    "filename": "BigHatHat 41.aseprite",
+    "frame": { "x": 820, "y": 0, "w": 20, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 20, "h": 20 },
+    "sourceSize": { "w": 20, "h": 20 },
+    "duration": 100
+   },
+   {
+    "filename": "BigHatHat 42.aseprite",
+    "frame": { "x": 840, "y": 0, "w": 20, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 20, "h": 20 },
+    "sourceSize": { "w": 20, "h": 20 },
+    "duration": 100
+   },
+   {
+    "filename": "BigHatHat 43.aseprite",
+    "frame": { "x": 860, "y": 0, "w": 20, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 20, "h": 20 },
+    "sourceSize": { "w": 20, "h": 20 },
+    "duration": 100
+   },
+   {
+    "filename": "BigHatHat 44.aseprite",
+    "frame": { "x": 880, "y": 0, "w": 20, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 20, "h": 20 },
+    "sourceSize": { "w": 20, "h": 20 },
+    "duration": 100
+   },
+   {
+    "filename": "BigHatHat 45.aseprite",
+    "frame": { "x": 900, "y": 0, "w": 20, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 20, "h": 20 },
+    "sourceSize": { "w": 20, "h": 20 },
+    "duration": 100
+   },
+   {
+    "filename": "BigHatHat 46.aseprite",
+    "frame": { "x": 920, "y": 0, "w": 20, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 20, "h": 20 },
+    "sourceSize": { "w": 20, "h": 20 },
+    "duration": 100
+   },
+   {
+    "filename": "BigHatHat 47.aseprite",
+    "frame": { "x": 940, "y": 0, "w": 20, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 20, "h": 20 },
+    "sourceSize": { "w": 20, "h": 20 },
+    "duration": 100
+   },
+   {
+    "filename": "BigHatHat 48.aseprite",
+    "frame": { "x": 960, "y": 0, "w": 20, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 20, "h": 20 },
+    "sourceSize": { "w": 20, "h": 20 },
+    "duration": 100
+   },
+   {
+    "filename": "BigHatHat 49.aseprite",
+    "frame": { "x": 980, "y": 0, "w": 20, "h": 20 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 20, "h": 20 },
+    "sourceSize": { "w": 20, "h": 20 },
+    "duration": 100
    }
  ],
  "meta": {
@@ -329,7 +455,7 @@
   "version": "1.3.15.5-x64",
   "image": "BigHatHat.png",
   "format": "RGBA8888",
-  "size": { "w": 720, "h": 20 },
+  "size": { "w": 1000, "h": 20 },
   "scale": "1",
   "frameTags": [
    { "name": "Gun Idle", "from": 2, "to": 6, "direction": "forward", "color": "#000000ff" },
@@ -337,7 +463,9 @@
    { "name": "Run", "from": 17, "to": 23, "direction": "forward", "color": "#000000ff" },
    { "name": "Thrown", "from": 24, "to": 24, "direction": "forward", "color": "#000000ff" },
    { "name": "Moving", "from": 25, "to": 28, "direction": "forward", "color": "#000000ff" },
-   { "name": "Shooting", "from": 29, "to": 33, "direction": "forward", "color": "#000000ff" }
+   { "name": "Shooting", "from": 29, "to": 33, "direction": "forward", "color": "#000000ff" },
+   { "name": "IdlePickUp", "from": 34, "to": 43, "direction": "forward", "color": "#000000ff" },
+   { "name": "MovingMalfunction ", "from": 44, "to": 48, "direction": "forward", "color": "#000000ff" }
   ],
   "slices": [
   ]

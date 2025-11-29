@@ -423,7 +423,8 @@ ECS.Systems.bigHatHatSystem = function(entities) {
                     const dist = Math.sqrt(dx*dx + dy*dy);
 
                     // set animation to Idle
-                    entity.AnimatedSprite.setAnimation("Idle");
+                    // entity.AnimatedSprite.setAnimation("Idle");
+                    entity.AnimatedSprite.setAnimation("MovingMalfunction");
 
                     if (dist < 2) {
                         pos.x = targetX;

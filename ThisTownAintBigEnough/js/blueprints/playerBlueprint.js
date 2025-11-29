@@ -144,6 +144,7 @@ ECS.Blueprints.BulletInteract = function(other) {
         if (other.has('BigHatSmallHatProjectile')) return; // Handled by projectile's own interact logic
         if (other.has('BigHatBossState')) return; // Handled by boss's own interact logic
         if (other.has('BigHatHatState')) return; // Handled by hat's own interact logic
+        if (other.has('BigHatShotgunProjectile')) return; // Handled by shotgun projectile's own interact logic
 
         if (!other.has('Stunned')) {
             const dir = Math.sign(this.Velocity.x) || 1;
