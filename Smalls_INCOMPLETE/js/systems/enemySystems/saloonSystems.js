@@ -143,7 +143,7 @@ ECS.Systems.saloonBottleSystem = function (entities, map, scene) {
         // Remove bottle from scene
         if (scene && typeof scene.removeEntity === "function") {
           scene.removeEntity(entity.id);
-          Loader.playSound("explosion.wav", 0.3);
+          Loader.playSound("explosion.wav", 0.08);
         }
       }
     }

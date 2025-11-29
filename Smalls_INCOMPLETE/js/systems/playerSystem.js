@@ -401,7 +401,8 @@ ECS.Helpers.playerTakeDamage = function (entity, shake) {
 
   if (invincibility.isInvincible || (dead && dead.dead)) return;
 
-  Loader.playSound("damage.wav", 0.3);
+  //Not playing
+  Loader.playSound("deathSound.wav", 0.3);
 
   if (lives.lives > 0) {
     // shakeScreen(shake || 10); // Implement if you have this function
@@ -500,6 +501,7 @@ ECS.Systems.playerAttackSystem = function (entities, map) {
 
         // Play sound here
         // console.log("Whip!");
+        Loader.playSound("whip.wav", 0.2);
       }
     }
 

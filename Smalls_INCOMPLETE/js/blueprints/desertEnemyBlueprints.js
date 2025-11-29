@@ -53,7 +53,8 @@ ECS.Blueprints.createDesertGunOutlaw = function(x, y, facingLeft = false, level 
         "Idle", 
         12
     );
-    sprite.flipX = facingLeft;
+    // sprite.flipX = facingLeft;
+    
     entity.addComponent(sprite);
 
     entity.addComponent(new ECS.Components.SpawnSide(facingLeft ? 'right' : 'left'));
@@ -85,7 +86,7 @@ ECS.Blueprints.DesertOutlawInteract = function(other) {
             shakeScreen(3);
             
             // Play sound here
-            Loader.playSound("hit.wav");
+            Loader.playSound("newOutlawBump.wav");
         }
     }
 }

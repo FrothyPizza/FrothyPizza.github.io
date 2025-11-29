@@ -1,0 +1,126 @@
+{
+  "name": "Town Goons - Initial",
+  "blockGameplay": true,
+  "requires": ["LeftOutlaw", "RightOutlaw"],
+  "actions": [
+
+    {
+      "type": "setAnimation",
+      "entity": "LeftOutlaw",
+      "animation": "Idle",
+      "speedMultiplier": 1,
+      "direction": "right",
+      "restart": true,
+      "pause": false,
+      "hidden": false
+    },
+    {
+      "type": "setAnimation",
+      "entity": "RightOutlaw",
+      "animation": "Idle",
+      "speedMultiplier": 1,
+      "direction": "left",
+      "restart": true,
+      "pause": false,
+      "hidden": false
+    },
+    { "type": "wait", "duration": 60 },
+
+    {
+      "type": "setAnimation",
+      "entity": "LeftOutlaw",
+      "animation": "Run",
+      "direction": "right"
+    },
+    {
+      "type": "moveOverride",
+      "entity": "LeftOutlaw",
+      "relative": true,
+      "path": [{ "x": 0, "y": 0, "t": 0 }, { "x": 16, "y": 0, "t": 30 }]
+    },
+    {
+      "type": "setAnimation",
+      "entity": "LeftOutlaw",
+      "animation": "Idle"
+    },
+    { "type": "wait", "duration": 15 },
+    {
+      "type": "dialogue",
+      "speaker": "Gang Lieutenant Link",
+      "text": "Well, well, well... If it ain't Smalls.",
+      "hold": 120,
+      "charsPerFrame": 0.5,
+      "box": { "x": 20, "y": 40, "width": 120, "height": 40 }
+    },
+    { "type": "wait", "duration": 15 },
+
+    {
+      "type": "setAnimation",
+      "entity": "RightOutlaw",
+      "animation": "Run",
+      "direction": "left"
+    },
+    {
+      "type": "moveOverride",
+      "entity": "RightOutlaw",
+      "relative": true,
+      "path": [{ "x": 0, "y": 0, "t": 0 }, { "x": -16, "y": 0, "t": 30 }]
+    },
+    {
+      "type": "setAnimation",
+      "entity": "RightOutlaw",
+      "animation": "Idle"
+    },
+    { "type": "wait", "duration": 15 },
+    {
+      "type": "dialogue",
+      "speaker": "Big Hat Enforcer Eric",
+      "text": "Boss BigHat says you're done.",
+      "hold": 100,
+      "charsPerFrame": 0.5,
+      "box": { "x": 100, "y": 40, "width": 120, "height": 40 }
+    },
+    { "type": "wait", "duration": 15 },
+
+    {
+      "type": "dialogue",
+      "speaker": "Big Hat Lieutenant Link",
+      "text": "You think you can just walk back into town after everything?",
+      "hold": 120,
+      "charsPerFrame": 0.5,
+      "box": { "x": 20, "y": 40, "width": 120, "height": 48 }
+    },
+    { "type": "wait", "duration": 15 },
+
+    {
+      "type": "dialogue",
+      "speaker": "Big Hat Enforcer Eric",
+      "text": "After what you did? The whole gang's been looking for you.",
+      "hold": 120,
+      "charsPerFrame": 0.5,
+      "box": { "x": 100, "y": 40, "width": 120, "height": 48 }
+    },
+    { "type": "wait", "duration": 15 },
+
+    {
+      "type": "dialogue",
+      "speaker": "Big Hat Lieutenant Link",
+      "text": "You ain't making it to BigHat, traitor.",
+      "hold": 100,
+      "charsPerFrame": 0.5,
+      "box": { "x": 20, "y": 50, "width": 120, "height": 40 }
+    },
+    { "type": "wait", "duration": 15 },
+
+    {
+      "type": "dialogue",
+      "speaker": "Big Hat Enforcer Eric",
+      "text": "TIME TO PAY!",
+      "hold": 80,
+      "charsPerFrame": 0.5,
+      "box": { "x": 100, "y": 50, "width": 80, "height": 40 }
+    },
+    { "type": "wait", "duration": 30 }
+
+  ]
+}

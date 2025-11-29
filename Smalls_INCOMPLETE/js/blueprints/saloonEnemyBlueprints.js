@@ -52,6 +52,9 @@ ECS.Blueprints.SaloonOutlawInteract = function(other) {
             other.addComponent(new ECS.Components.Stunned({x: 0.25 * -dir, y: -1}, 20, 90, true));
 
             // Sound Effect Here
+            // Loader.playSound("hit.wav");
+            Loader.playSound("newOutlawBump.wav");
+            
             // score points for player
             if (GlobalState.currentScene && GlobalState.currentScene.player && GlobalState.currentScene.player.has('PlayerState')) {
                 let middlePosisitionX = (this.Position.x + other.Position.x) / 2;

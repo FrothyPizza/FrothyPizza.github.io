@@ -4,26 +4,34 @@
   "requires": ["Sheriff"],
   "actions": [
 
+    { "type": "wait", "duration": 60 },
+    {
+      "type": "dialogue",
+      "speaker": "Drunken Sheriff",
+      "text": "WHAT IS GOING ON IN HERE?!?",
+      "hold": 40,
+      "charsPerFrame": 0.5,
+      "box": { "x": 60, "y": 60, "width": 120, "height": 40 }
+    },
+
     {
       "type": "setAnimation",
       "entity": "Sheriff",
       "animation": "Run",
-      "speedMultiplier": 2,
+      "explicitSpeed": 10,
       "direction": "right",
       "restart": true,
       "pause": false
     },
-
     {
       "type": "move",
       "entity": "Sheriff",
       "path": [
         { "x": 0, "y": 1, "t": 0 },
-        { "x": -160, "y": 0, "t": 120 }
+        { "x": -40, "y": 0, "t": 120 }
       ],
       "relative": true
     },
-    { "type": "wait", "duration": 60 },
 
     {
       "type": "setAnimation",
@@ -33,7 +41,200 @@
       "direction": "right",
       "restart": true,
       "pause": false
-    }
+    },
+
+    { "type": "wait", "duration": 30 },
+    {
+      "type": "dialogue",
+      "speaker": "Drunken Sheriff",
+      "text": "hiccup",
+      "hold": 30,
+      "charsPerFrame": 1,
+      "box": { "x": 120, "y": 30, "width": 100, "height": 30 }
+    },
+
+
+    {
+      "type": "dialogue",
+      "speaker": "Drunken Sheriff",
+      "text": "I may have lost my town but I can handle a few RUFFIANS!",
+      "hold": 60,
+      "charsPerFrame": 0.5,
+      "box": { "x": 60, "y": 50, "width": 120, "height": 48 }
+    },
+
+    {
+      "type": "dialogue",
+      "speaker": "Drunken Sheriff",
+      "text": "hiccup",
+      "hold": 20,
+      "charsPerFrame": 1,
+      "box": { "x": 30, "y": 30, "width": 100, "height": 30 }
+    },
+
+    {
+      "type": "dialogue",
+      "speaker": "Drunken Sheriff",
+      "text": "Wait a minute you look familar, probably some criminal",
+      "hold": 60,
+      "charsPerFrame": 0.5,
+      "box": { "x": 60, "y": 50, "width": 120, "height": 48 }
+    },
+
+    {
+      "type": "dialogue",
+      "speaker": "Drunken Sheriff",
+      "text": "hiccup",
+      "hold": 20,
+      "charsPerFrame": 1,
+      "box": { "x": 160, "y": 90, "width": 100, "height": 30 }
+    },
+
+    {
+      "type": "dialogue",
+      "speaker": "Drunken Sheriff",
+      "text": "Maybe I ought to put you behind bars",
+      "hold": 60,
+      "charsPerFrame": 0.5,
+      "box": { "x": 60, "y": 50, "width": 120, "height": 48 }
+    },
+    
+    { "type": "wait", "duration": 60 },
+
+
+
+
+    {
+      "type": "setAnimation",
+      "entity": "Sheriff",
+      "animation": "Run",
+      "speedMultiplier": 1,
+      "direction": "right",
+      "restart": true,
+      "pause": false
+    },
+    {
+      "type": "move",
+      "entity": "Sheriff",
+      "path": [
+        { "x": 0, "y": 1, "t": 0 },
+        { "x": -40, "y": 0, "t": 120 }
+      ],
+      "relative": true
+    },
+
+    {
+      "type": "setAnimation",
+      "entity": "Sheriff",
+      "animation": "Idle",
+      "speedMultiplier": 1,
+      "direction": "right",
+      "restart": true,
+      "pause": false
+    },
+
+
+    {
+      "type": "dialogue",
+      "speaker": "Drunken Sheriff",
+      "text": "After I'm finished with you, I will have myself a few more drinks",
+      "hold": 60,
+      "charsPerFrame": 0.5,
+      "box": { "x": 60, "y": 50, "width": 120, "height": 48 }
+    },
+    { "type": "wait", "duration": 15 },
+    {
+      "type": "dialogue",
+      "speaker": "Drunken Sheriff",
+      "text": "hiccup",
+      "hold": 20,
+      "charsPerFrame": 1,
+      "box": { "x": 90, "y": 80, "width": 100, "height": 30 }
+    },
+    { "type": "wait", "duration": 15 },
+    {
+      "type": "dialogue",
+      "speaker": "Drunken Sheriff",
+      "text": "You're so weak I won't even need my gun",
+      "hold": 60,
+      "charsPerFrame": 0.5,
+      "box": { "x": 60, "y": 50, "width": 120, "height": 48 }
+    },
+    { "type": "wait", "duration": 60 },
+
+
+
+
+    {
+      "type": "setAnimation",
+      "entity": "Sheriff",
+      "animation": "Run",
+      "explicitSpeed": 8,
+      "direction": "right",
+      "restart": true,
+      "pause": false
+    },
+    {
+      "type": "move",
+      "entity": "Sheriff",
+      "path": [
+        { "x": -0, "y": 1, "t": 0 },
+        { "x": -80, "y": 0, "t": 120 }
+      ],
+      "relative": true
+    },
+
+    {
+      "type": "setAnimation",
+      "entity": "Sheriff",
+      "animation": "Idle",
+      "speedMultiplier": 1,
+      "direction": "right",
+      "restart": true,
+      "pause": false
+    },
+
+    {
+      "type": "dialogue",
+      "speaker": "Drunken Sheriff",
+      "text": "hiccup",
+      "hold": 20,
+      "charsPerFrame": 1,
+      "box": { "x": 30, "y": 30, "width": 100, "height": 30 }
+    },
+    { "type": "wait", "duration": 15 },
+
+    {
+      "type": "dialogue",
+      "speaker": "Drunken Sheriff",
+      "text": "Then I will get my town back from BIG HAT",
+      "hold": 60,
+      "charsPerFrame": 0.5,
+      "box": { "x": 60, "y": 50, "width": 120, "height": 48 }
+    },
+    { "type": "wait", "duration": 15 },
+    {
+      "type": "dialogue",
+      "speaker": "Drunken Sheriff",
+      "text": "hiccup",
+      "hold": 20,
+      "charsPerFrame": 1,
+      "box": { "x": 80, "y": 100, "width": 100, "height": 30 }
+    },
+    { "type": "wait", "duration": 15 },
+
+    {
+      "type": "dialogue",
+      "speaker": "Drunken Sheriff",
+      "text": "GET READY CRIMINAL!",
+      "hold": 60,
+      "charsPerFrame": 0.5,
+      "box": { "x": 60, "y": 50, "width": 120, "height": 48 }
+    },
+
+    { "type": "wait", "duration": 60 }
+
+
 
 
   ]

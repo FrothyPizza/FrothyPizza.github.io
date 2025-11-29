@@ -91,7 +91,6 @@ class SaloonScene extends LevelScene {
           }
         );
       } else {
-        //Maybe change the position of this, it starts after the cutscene and doesn't stop
         Loader.playMusic("DrabBarFast.mp3", 0.3, true);
         this.playCutscene(
           "saloon",

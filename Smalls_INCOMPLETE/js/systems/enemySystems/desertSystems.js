@@ -15,7 +15,7 @@ ECS.Systems.DesertEnemySystem = function(entities) {
             if (Math.abs(totalDistToPlayer) > 48) {
                 const dir = Math.sign(diff);
                 entity.Velocity.x = dir * speed;
-                entity.AnimatedSprite.flipX = dir < 0;
+                entity.AnimatedSprite.direction = dir;
             } else {
                 // entity.Velocity.x = 0;
             }

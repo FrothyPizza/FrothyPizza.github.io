@@ -520,11 +520,22 @@ const Cutscene = (() => {
             const charsPerFrame = action.instantText || action.typewriter === false
                 ? Infinity
                 : Math.max(0.1, action.charsPerFrame || action.textSpeed || 1);
+
+            let speechSound = action.speechSound || null;
+            if (!speechSound && payload.speaker) {
+                if (payload.speaker.includes("Sheriff") || payload.speaker.includes("BigHat")) {
+                    speechSound = "BossSpeech.wav";
+                } else {
+                    speechSound = "OutlawSpeech2.wav";
+                }
+            }
+
             this.dialogueOverlay = {
                 text: action.instantText === true || action.typewriter === false ? fullText : '',
                 fullText,
                 speaker: payload.speaker || null,
                 portrait: payload.portrait || null,
+                speechSound: speechSound,
                 box,
                 typewriter: {
                     enabled: !(action.typewriter === false || action.instantText === true),
@@ -541,6 +552,8 @@ const Cutscene = (() => {
         }
 
         advanceDialogueTypewriter(delta = 1) {
+            
+
             if (!this.dialogueOverlay || !this.dialogueOverlay.typewriter) {
                 return true;
             }
@@ -550,6 +563,7 @@ const Cutscene = (() => {
                 tw.complete = true;
                 return true;
             }
+            const startChars = Math.floor(tw.visible);
             tw.visible += tw.charsPerFrame * delta;
             if (tw.visible >= tw.totalLength) {
                 tw.visible = tw.totalLength;
@@ -560,6 +574,18 @@ const Cutscene = (() => {
             if (tw.complete) {
                 this.dialogueOverlay.text = this.dialogueOverlay.fullText;
             }
+            
+            // Play sound on new characters (every 2nd char, skipping spaces)
+            if (chars > startChars) {
+                const lastChar = this.dialogueOverlay.fullText[chars - 1];
+                if (chars % 2 === 0 && lastChar !== ' ') {
+                    const soundName = this.dialogueOverlay.speechSound;
+                    if (soundName) {
+                        Loader.playSound(soundName, 0.2);
+                    }
+                }
+            }
+
             return tw.complete;
         }
 

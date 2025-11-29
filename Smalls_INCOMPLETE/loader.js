@@ -377,11 +377,16 @@ document.body.onload = () => {
       "assets/images/cowboy/Gun.json",
       "assets/images/cowboy/Bullet.json",
       "assets/images/cowboy/BulletSmall.json",
+      "assets/images/cowboy/BulletSmallBigHat.json",
       "assets/images/cowboy/Lasso.json",
       "assets/images/cowboy/BigHat.json",
       "assets/images/cowboy/BigHatHat.json",
       "assets/images/cowboy/GunBigHat.json",
       "assets/images/cowboy/BigHatSmallHatProjectile.json",
+      "assets/images/cowboy/Cannon.json",
+      "assets/images/cowboy/Barrel.json",
+      "assets/images/cowboy/TitleScreen.json",
+
       
       "assets/cutscenes/saloon/saloon.cutscene",
       "assets/cutscenes/saloon/saloon_start_part_2.cutscene",
@@ -392,6 +397,10 @@ document.body.onload = () => {
 
       "assets/cutscenes/desert/desert_initial.cutscene",
       "assets/cutscenes/desert/desert_level_start.cutscene",
+
+      "assets/cutscenes/town_goons/town_goons_initial.cutscene",
+      "assets/cutscenes/town_goons/town_goons_start.cutscene",
+
       "assets/cutscenes/big_hat/big_hat_initial.cutscene",
       "assets/cutscenes/big_hat/big_hat_level_start.cutscene",
 
@@ -405,6 +414,9 @@ document.body.onload = () => {
       "assets/music/cowboy/DrabBarFast.mp3",
       "assets/music/cowboy/RagAttackFinished.mp3",
       "assets/music/cowboy/TenseBase.mp3",
+      "assets/music/cowboy/TenseBaseSnare.mp3",
+      "assets/music/cowboy/Tenser_Sevens.mp3",
+      "assets/music/cowboy/FinalBoss4.mp3",
 
       // "assets/music/Bones and Demons -Decending baseline.mp3",
 
@@ -413,6 +425,22 @@ document.body.onload = () => {
       "assets/sfx/cowboy/guncock.wav",
       "assets/sfx/cowboy/gunshot.wav",
       "assets/sfx/cowboy/explosion.wav",
+      "assets/sfx/cowboy/hatthrow.wav",
+      "assets/sfx/cowboy/PointGain.wav",
+      "assets/sfx/cowboy/pointloss.wav",
+      "assets/sfx/cowboy/shotgunshot.wav",
+      "assets/sfx/cowboy/whip.wav",
+      "assets/sfx/cowboy/deathSound.wav",
+      "assets/sfx/cowboy/HatGunshot.wav",
+      "assets/sfx/cowboy/ItemPickup.wav",
+      "assets/sfx/cowboy/attackStart.wav",
+      "assets/sfx/cowboy/Exclamation.wav",
+      "assets/sfx/cowboy/newOutlawBump.wav",
+      "assets/sfx/cowboy/OutlawSpeech1.wav",
+      "assets/sfx/cowboy/OutlawSpeech2.wav",
+      "assets/sfx/cowboy/BossSpeech.wav",
+      "assets/sfx/cowboy/VictoryDoot.wav",
+
 
       "assets/sfx/sam/powerup2.wav",
       "assets/sfx/sam/damage.wav",

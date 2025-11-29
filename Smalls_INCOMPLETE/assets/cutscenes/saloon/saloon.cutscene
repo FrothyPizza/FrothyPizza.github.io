@@ -19,11 +19,11 @@
     { "type": "wait", "duration": 60 },
     {
       "type": "dialogue",
-      "speaker": "Outlaw Jimbo",
+      "speaker": "Rapscallion Jimbo",
       "text": "I am the GREATEST cowboy in the North Sourtherly East!",
-      "hold": 180,
+      "hold": 140,
       "charsPerFrame": 1.5,
-      "box": { "x": 10, "y": 40, "width": 120, "height": 40 }
+      "box": { "x": 20, "y": 32, "width": 120, "height": 44 }
     },
 
     
@@ -40,14 +40,36 @@
     { "type": "wait", "duration": 60 },
     {
       "type": "dialogue",
-      "speaker": "Outlaw Timothy",
-      "text": "No, I am the GREATEREST cowboy in the North Sourtherly East!",
-      "hold": 180,
-      "charsPerFrame": 2.5,
-      "box": { "x": 100, "y": 40, "width": 120, "height": 48 }
+      "speaker": "Troublemaker Timothy",
+      "text": "No, that cant be true",
+      "hold": 90,
+      "charsPerFrame": 1.5,
+      "box": { "x": 100, "y": 32, "width": 120, "height": 44 }
     },
-    { "type": "wait", "duration": 60 },
 
+    { "type": "wait", "duration": 30 },
+
+    {
+      "type": "dialogue",
+      "speaker": "Troublemaker Timothy",
+      "text": "After all, I am the GREATER-EST cowboy in the North Sourtherly East!",
+      "hold": 140,
+      "charsPerFrame": 1.5,
+      "box": { "x": 100, "y": 32, "width": 120, "height": 44 }
+    },
+
+    { "type": "wait", "duration": 30 },
+
+    {
+      "type": "dialogue",
+      "speaker": "Rapscallion Jimbo",
+      "text": "Well, this town aint big enough for 2 GREATER-EST-ER cowboys!",
+      "hold": 200,
+      "charsPerFrame": 1.5,
+      "box": { "x": 20, "y": 32, "width": 120, "height": 44 }
+    },
+
+    { "type": "wait", "duration": 60 },
 
     { "type": "setVelocity", "entity": "OutlawRight", "amount": { "x": -1, "y": 0 } },
     { "type": "setVelocity", "entity": "OutlawLeft", "amount": { "x": 1, "y": 0 } },
@@ -90,11 +112,22 @@
     { "type": "wait", "duration": 60 },
     {
       "type": "dialogue",
-      "speaker": "Outlaw",
-      "text": "\n\n...           BAR FIGHT!",
-      "hold": 180,
+      "speaker": "Outlaw Jerry",
+      "text": "Well uh,",
+      "hold": 40,
       "charsPerFrame": 0.5,
-      "box": { "x": 40, "y": 16, "width": 160, "height": 64 }
+      "box": { "x": 88, "y": 80, "width": 60, "height": 24 }
+    },
+
+    { "type": "wait", "duration": 15 },
+
+    {
+      "type": "dialogue",
+      "speaker": "Outlaw Jerry",
+      "text": "BAR FIGHT!",
+      "hold": 80,
+      "charsPerFrame": 0.5,
+      "box": { "x": 88, "y": 80, "width": 60, "height": 24 }
     }
 
 

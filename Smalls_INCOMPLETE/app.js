@@ -38,14 +38,10 @@ function startGameloop() {
 function init() {
   GlobalState.sceneManager = new SceneManager();
 
-  // Load the styx_level
-  if (Loader.levels["saloon"]) {
-    const styxLevel = new SaloonScene(Loader.levels["saloon"].xml);
-    styxLevel.init();
-    GlobalState.sceneManager.setScene(styxLevel);
-  } else {
-    console.error("styx_level not found in Loader.levels");
-  }
+  // Load the MenuScene
+  const menuScene = new MenuScene();
+  menuScene.init();
+  GlobalState.sceneManager.setScene(menuScene);
 
   startGameloop();
 }
@@ -64,8 +60,9 @@ window.addEventListener(
   "keydown",
   (e) => {
     //Loader.playMusic('TenseBase.mp3', true, 0.5);
+    //Loader.playSound("explosion.wav", 0.08);
 
-    Loader.playSound("Slash.wav", 0.7);
+    //Loader.playSound("shotgunshot.wav", 0.3);
     // Test sound here
 
     // remove this event listener after first key press

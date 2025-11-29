@@ -1,0 +1,85 @@
+{
+  "name": "Saloon - Wake Up",
+  "blockGameplay": true,
+  "requires": ["LeftOutlaw", "RightOutlaw"],
+  "actions": [
+
+
+
+    {
+      "type": "setAnimation",
+      "entity": "LeftOutlaw",
+      "animation": "Idle",
+      "speedMultiplier": 1,
+      "direction": "right",
+      "restart": true,
+      "pause": false,
+      "hidden": false
+    },
+    {
+      "type": "setAnimation",
+      "entity": "RightOutlaw",
+      "animation": "Idle",
+      "speedMultiplier": 1,
+      "direction": "right",
+      "restart": true,
+      "pause": false,
+      "hidden": false
+    },
+    { "type": "wait", "duration": 60 },
+
+    {
+      "type": "setAnimation",
+      "entity": "LeftOutlaw",
+      "animation": "Run",
+      "direction": "right"
+    },
+    {
+      "type": "moveOverride",
+      "entity": "LeftOutlaw",
+      "relative": true,
+      "path": [{ "x": 0, "y": 0, "t": 0 }, { "x": 16, "y": 0, "t": 30 }]
+    },
+    {
+      "type": "setAnimation",
+      "entity": "LeftOutlaw",
+      "animation": "Idle"
+    },
+    {
+      "type": "dialogue",
+      "entity": "LeftOutlaw",
+      "text": "Well look who it is.",
+      "hold": 120
+    },
+
+    
+    {
+      "type": "setAnimation",
+      "entity": "RightOutlaw",
+      "animation": "Run",
+      "direction": "left"
+    },
+    {
+      "type": "moveOverride",
+      "entity": "RightOutlaw",
+      "relative": true,
+      "path": [{ "x": 0, "y": 0, "t": 0 }, { "x": -16, "y": 0, "t": 30 }]
+    },
+    {
+      "type": "setAnimation",
+      "entity": "RightOutlaw",
+      "animation": "Idle"
+    },
+    {
+      "type": "dialogue",
+      "entity": "RightOutlaw",
+      "text": "Time to die.",
+      "hold": 120
+    }
+
+
+
+
+
+  ]
+}

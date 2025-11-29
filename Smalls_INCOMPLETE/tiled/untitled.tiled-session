@@ -1,5 +1,5 @@
 {
-    "activeFile": "levels/town_big_hat.tmx",
+    "activeFile": "levels/town_goons.tmx",
     "expandedProjectPaths": [
         ".",
         "levels"
@@ -44,8 +44,8 @@
         },
         "levels/desert.tmx": {
             "expandedObjectLayers": [
-                7,
-                9
+                9,
+                7
             ],
             "scale": 3,
             "selectedLayer": 7,
@@ -268,8 +268,8 @@
         },
         "levels/saloon.tmx": {
             "expandedObjectLayers": [
-                7,
-                9
+                9,
+                7
             ],
             "scale": 2,
             "selectedLayer": 8,
@@ -294,18 +294,18 @@
         },
         "levels/town_big_hat.tmx": {
             "scale": 4,
-            "selectedLayer": 4,
+            "selectedLayer": 9,
             "viewCenter": {
-                "x": 125,
-                "y": 100.375
+                "x": 119.875,
+                "y": 88
             }
         },
         "levels/town_goons.tmx": {
             "scale": 3.8910416666666663,
             "selectedLayer": 7,
             "viewCenter": {
-                "x": 119.7622744552123,
-                "y": 87.76570112973177
+                "x": 119.89077474969216,
+                "y": 87.89420142421162
             }
         },
         "levels/underworld_level.tmx": {
@@ -346,12 +346,12 @@
         "CowboyTilemap.tsx",
         "levels/saloon.tmx",
         "levels/desert.tmx",
+        "levels/town_big_hat.tmx",
         "levels/underworld_level.tmx",
         "levels/blank_level.tmx",
         "levels/charon.tmx",
         "levels/harpy.tmx",
         "levels/town_goons.tmx",
-        "levels/town_big_hat.tmx",
         "GameJamSpriteSheet.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",

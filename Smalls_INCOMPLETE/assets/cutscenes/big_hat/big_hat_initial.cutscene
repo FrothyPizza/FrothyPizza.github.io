@@ -21,6 +21,7 @@
       "type": "setAnimation",
       "entity": "BigHat",
       "animation": "Run",
+      "speedMultiplier": 1,
       "direction": "left"
     },
     {
@@ -32,12 +33,49 @@
     {
       "type": "setAnimation",
       "entity": "BigHat",
+      "speedMultiplier": 1,
       "animation": "Idle"
     },
     {
       "type": "dialogue",
       "entity": "BigHat",
-      "text": "Well look who it is.",
+      "text": "Now, now, if it ain't my old right hand",
+      "hold": 120
+    },
+    {
+      "type": "dialogue",
+      "entity": "BigHat",
+      "text": "Such a small world ay, didn't think I'd see ya again so soon",
+      "hold": 120
+    },
+    {
+      "type": "dialogue",
+      "entity": "BigHat",
+      "text": "After all the damage you've done with the crew",
+      "hold": 120
+    },
+    {
+      "type": "dialogue",
+      "entity": "BigHat",
+      "text": "Ya think ya can redeem ya self with a good deed?",
+      "hold": 120
+    },
+    {
+      "type": "dialogue",
+      "entity": "BigHat",
+      "text": "HUH SMALLS!?!",
+      "hold": 120
+    },
+    {
+      "type": "dialogue",
+      "entity": "BigHat",
+      "text": "Well don't ya go thinkin that...",
+      "hold": 120
+    },
+    {
+      "type": "dialogue",
+      "entity": "BigHat",
+      "text": "THIS TOWN IS BIG ENOUGH FOR THE TWO O' US",
       "hold": 120
     },
     {

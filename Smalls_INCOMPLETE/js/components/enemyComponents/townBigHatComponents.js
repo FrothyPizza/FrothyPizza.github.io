@@ -51,7 +51,7 @@ ECS.Components.BigHatHatState = class BigHatHatState {
         this.moveSpeed = 1.5;
         this.returnSpeed = 0.75;
         this.shootTimer = 0;
-        this.shootInterval = 45;
+        this.shootInterval = 50;
 
         // Phase 3 Sine Wave
         this.isSineWave = false;

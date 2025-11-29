@@ -39,7 +39,7 @@ ECS.Systems.bigHatBossSystem = function(entities) {
 
                     // Setup Hat for Phase 3
                     if (hatEntity && hatEntity.has('BigHatHatState')) {
-                        hatEntity.AnimatedSprite.animationSpeed = 6;
+                        hatEntity.AnimatedSprite.animationSpeed = 8;
                         const hatState = hatEntity.BigHatHatState;
                         hatState.state = "CENTERING";
                         hatState.cues = state.bossCues;
@@ -83,7 +83,7 @@ ECS.Systems.bigHatBossSystem = function(entities) {
 
                     // Setup Hat
                     if (hatEntity.has('BigHatHatState')) {
-                        hatEntity.AnimatedSprite.animationSpeed = 6;
+                        hatEntity.AnimatedSprite.animationSpeed = 10;
                         const hatState = hatEntity.BigHatHatState;
                         hatState.state = "DETACHING";
                         hatState.cues = state.bossCues; // Pass cues to hat
@@ -238,10 +238,12 @@ ECS.Systems.bigHatBossSystem = function(entities) {
                                         const player = players[0];
                                         const dx = player.Position.x - shotgun.Position.x;
                                         const dy = player.Position.y - shotgun.Position.y;
-                                        const speed = 2;
+                                        const speed = 1.5;
                                         
                                         const baseAngle = Math.atan2(dy, dx);
                                         const angleStep = 2 * (Math.PI / 180); // 2 degrees in radians
+
+                                        Loader.playSound("shotgunshot.wav", 0.3);
 
                                         for (let i = -2; i <= 2; i++) {
                                             const angle = baseAngle + (i * angleStep);
@@ -325,13 +327,14 @@ ECS.Systems.bigHatBossSystem = function(entities) {
                                     const dy = player.Position.y - entity.Position.y;
                                     const dist = Math.sqrt(dx*dx + dy*dy);
                                     
-                                    const speed = 2;
+                                    const speed = 1.5;
                                     const vx = (dx / dist) * speed;
                                     const vy = (dy / dist) * speed;
                                     
                                     const projectile = ECS.Blueprints.createBigHatSmallHatProjectile(entity.Position.x, entity.Position.y, vx, vy);
                                     if (GlobalState.currentScene) {
                                         GlobalState.currentScene.addEntity(projectile);
+                                        Loader.playSound("hatthrow.wav", 0.2);
                                     }
                                 }
                                 
@@ -377,6 +380,7 @@ ECS.Systems.bigHatHatSystem = function(entities) {
                     if (pos.x > WIDTH - 24) {
                         // remove DamagesPlayer component
                         console.log("Hat returned offscreen, centering.");
+                        if(entity.has('DamagesPlayer')) entity.removeComponent('DamagesPlayer');
                         // remove velocity
                         if(entity.has('Velocity')) {
                             entity.Velocity.x = 0;
@@ -427,7 +431,30 @@ ECS.Systems.bigHatHatSystem = function(entities) {
                         state.state = "MOVING_LEFT"; // Start moving left
                         state.isSineWave = true;
                         state.sineTime = 0; // Start sine at 0 (center)
-                        entity.addComponent(new ECS.Components.DamagesPlayer(true));
+                        if(!entity.has('DamagesPlayer')) {
+                            entity.addComponent(new ECS.Components.DamagesPlayer(true));
+                        }
+
+                        // remove all small hats from scene (stunned or not stunned). They should all have their map colliders removed and be given gravity so they fall off screen.
+                        ECS.getEntitiesWithComponents('BigHatSmallHatProjectile').forEach(smallHat => {
+                            if(smallHat.has('CollidesWithMap')) smallHat.removeComponent('CollidesWithMap');
+                            if(smallHat.has('MapCollisionState')) smallHat.removeComponent('MapCollisionState');
+                            
+                            // Stop system from freezing velocity if stunned
+                            if(smallHat.has('BigHatSmallHatProjectile')) smallHat.removeComponent('BigHatSmallHatProjectile');
+                            if(smallHat.has('DamagesPlayer')) smallHat.removeComponent('DamagesPlayer');
+
+                            if (!smallHat.has('Gravity')) {
+                                smallHat.addComponent(new ECS.Components.Gravity(0.2));
+                            } else {
+                                smallHat.Gravity.gravity = 0.2;
+                            }
+                            if(smallHat.has('Velocity')) {
+                                smallHat.Velocity.x = 0;
+                                smallHat.Velocity.y = -1.5;
+                            }
+                        });  
+                        shakeScreen(5);                      
                         if(entity.has('InvincibilityFrames')) {
                             entity.removeComponent('InvincibilityFrames');
                         }
@@ -439,6 +466,7 @@ ECS.Systems.bigHatHatSystem = function(entities) {
                     break;
 
                 case "MOVING_LEFT":
+                    if(entity.has('InvincibilityFrames')) entity.removeComponent('InvincibilityFrames');
                     // Move to Top Left Cue
                     if (state.cues && state.cues.hatTopLeft) {
                         const target = state.cues.hatTopLeft;
@@ -479,6 +507,8 @@ ECS.Systems.bigHatHatSystem = function(entities) {
                                 const bulletSpeed = 2;
                                 const vx = -0.707 * bulletSpeed;
                                 const vy = 0.707 * bulletSpeed;
+
+                                Loader.playSound("HatGunshot.wav", 0.3);
                                 
                                 const bullet = ECS.Blueprints.createBigHatBullet(pos.x + 3, pos.y + 12, vx, vy);
                                 const bullet2 = ECS.Blueprints.createBigHatBullet(pos.x + 9, pos.y + 12, vx, vy);
@@ -492,6 +522,7 @@ ECS.Systems.bigHatHatSystem = function(entities) {
                     break;
 
                 case "MOVING_RIGHT":
+                    if(entity.has('InvincibilityFrames')) entity.removeComponent('InvincibilityFrames');
                     // Move back to Top Right
                     if (state.cues && state.cues.hatTopRight) {
                         const target = state.cues.hatTopRight;

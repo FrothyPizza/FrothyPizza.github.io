@@ -24,18 +24,26 @@
     { "type": "addComponent", "entity": "OutlawRight", "component": "RemoveFromScene", "args": [true]},
     
     { "type": "wait", "duration": 20 },
+
     {
       "type": "dialogue",
-      "speaker": "Outlaw",
-      "text": "\n\n...           BAR FIGHT!",
-      "hold": 20,
+      "speaker": "Outlaw Jerry",
+      "text": "well uh,",
+      "hold": 80,
       "charsPerFrame": 0.5,
-      "box": { "x": 40, "y": 16, "width": 160, "height": 64 }
+      "box": { "x": 88, "y": 80, "width": 60, "height": 24 }
     },
 
+    { "type": "wait", "duration": 15 },
 
-
-
+    {
+      "type": "dialogue",
+      "speaker": "Outlaw Jerry",
+      "text": "BAR FIGHT!",
+      "hold": 80,
+      "charsPerFrame": 0.5,
+      "box": { "x": 88, "y": 80, "width": 60, "height": 24 }
+    },
 
 
 

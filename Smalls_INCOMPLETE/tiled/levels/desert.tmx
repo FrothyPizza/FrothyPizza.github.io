@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="30" height="22" tilewidth="8" tileheight="8" infinite="0" nextlayerid="14" nextobjectid="67">
+<map version="1.11" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="30" height="22" tilewidth="8" tileheight="8" infinite="0" nextlayerid="14" nextobjectid="67">
  <tileset firstgid="1" source="../CowboyTilemap.tsx"/>
  <layer id="5" name="Background_2(Solid Color)" width="30" height="22">
   <data encoding="csv">
@@ -65,11 +65,11 @@
 0,0,0,0,0,0,0,0,0,0,625,626,627,0,0,0,0,0,0,0,0,0,0,780,781,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,740,741,0,0,0,0,0,
 0,0,0,789,790,791,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,740,741,0,0,0,0,0,
-0,0,827,829,830,831,824,825,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,827,829,830,831,824,825,909,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,702,703,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,742,743,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,782,783,0,0,0,0,792,793,794,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,827,823,823,824,825,826,827,832,833,834,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,906,827,823,823,824,825,826,827,832,833,834,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -130,7 +130,7 @@
  </objectgroup>
  <objectgroup id="11" name="CrateLocations"/>
  <objectgroup id="10" name="BossCues"/>
- <objectgroup id="7" name="Spawns">
+ <objectgroup id="7" name="Spawns" visible="0">
   <object id="2" name="PlayerSpawn" x="120" y="112">
    <point/>
   </object>

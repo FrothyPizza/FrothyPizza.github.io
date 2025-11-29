@@ -346,7 +346,7 @@ Scene.prototype.drawDialogueBox = function(context, overlay) {
 };
 
 Scene.prototype.createBitmapFontMap = function() {
-    const chars = ` ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,'''''"?!@_*   :$%+-/:;<=>              `;
+    const chars = ` ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,''''''?!@_*   :$%+-/:;<=>              `;
     const charArray = chars.split('');
     const fontMap = {};
     for (let i = 0; i < charArray.length; i++) {

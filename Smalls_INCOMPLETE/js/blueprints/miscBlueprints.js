@@ -27,6 +27,9 @@ ECS.Blueprints.createExclamation = function(x, y) {
         entity.AnimatedSprite.setAnimation("Idle");
     };
 
+    
+    Loader.playSound("Exclamation.wav", 0.5);
+
     entity.addComponent(new ECS.Components.Dimensions(8, 8));
     return entity;
 }
@@ -114,6 +117,7 @@ ECS.Helpers.scorePoints = function(points, x, y, color = 'yellow', duration = 60
     // Update player score if available
     if (applyToScore && GlobalState.currentScene && GlobalState.currentScene.player && GlobalState.currentScene.player.has('PlayerState')) {
         GlobalState.currentScene.player.PlayerState.score += points;
+        Loader.playSound("PointGain.wav", 0.5);
     }
 
     let entity = new ECS.Entity();

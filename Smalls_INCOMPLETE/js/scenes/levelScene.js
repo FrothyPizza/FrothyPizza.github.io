@@ -135,6 +135,7 @@ class LevelScene extends Scene {
                             
                             // Show the visual text for the total amount lost, but don't apply it to score again
                             ECS.Helpers.scorePoints(-totalLoss, this.player.Position.x, this.player.Position.y - 10, 'maroon', 60, 0.5, false);
+                            Loader.playSound("pointloss.wav", 0.5);
                             
                             // Save the new state with the penalty applied so it persists across multiple deaths
                             this.createSaveState();

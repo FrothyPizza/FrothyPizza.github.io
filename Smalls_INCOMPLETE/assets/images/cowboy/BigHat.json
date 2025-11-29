@@ -254,7 +254,8 @@
    { "name": "Gun Idle", "from": 2, "to": 6, "direction": "forward", "color": "#000000ff" },
    { "name": "Idle", "from": 7, "to": 16, "direction": "forward", "color": "#000000ff" },
    { "name": "Run", "from": 17, "to": 23, "direction": "forward", "color": "#000000ff" },
-   { "name": "Throw", "from": 24, "to": 24, "direction": "forward", "color": "#000000ff" }
+   { "name": "Throw", "from": 24, "to": 24, "direction": "forward", "color": "#000000ff" },
+   { "name": "Death", "from": 25, "to": 25, "direction": "forward", "color": "#000000ff" }
   ],
   "slices": [
   ]

@@ -6,7 +6,7 @@
 
     {
       "type": "dialogue",
-      "text": "LEVEL 1: START",
+      "text": "LEVEL 1: BAR FIGHT - START",
       "hold": 180,
       "charsPerFrame": 0.1,
       "box": { "x": 0, "y": 60, "width": 240, "height": 20, "align": "center", "background": "rgba(0,0,0,0.5)", "borderWidth": 0 }

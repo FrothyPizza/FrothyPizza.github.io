@@ -6,11 +6,11 @@
 
     {
       "type": "dialogue",
-      "text": "Press 'X' to use the GUN.\nPress 'S' to use the LASSO.",
+      "text": "Press 'X' to use the GUN.\nPress 'C' to use the LASSO. \nUse the GUN to stun enemies \nbefore using the LASSO",
       "speaker": "God",
-      "hold": 180,
+      "hold": 280,
       "charsPerFrame": 0.5,
-      "box": { "x": 60, "y": 32, "width": 120, "height": 64, "align": "center", "background": "rgba(0,0,0,0.5)", "borderWidth": 2 }
+      "box": { "x": 60, "y": 32, "width": 120, "height": 80, "align": "center", "background": "rgba(0,0,0,0.5)", "borderWidth": 2 }
     }
 
 
