@@ -3,12 +3,9 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">       
-        <title>Hal's Tower 3</title>
-        <script>
-            if (confirm("Try the optimized version of Hal's Tower 3? It uses less processing power and shares your saved progress automatically in this browser. Choose Cancel to play the original.")) {
-                location.replace("../Hal's Tower 3 Optimized/" + location.search + location.hash);
-            }
-        </script>
+        <title>Hal's Tower 3 Optimized</title>
+        <!-- Share the original map, menu, styles, images and music. -->
+        <base href="../Hal's Tower 3/">
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
@@ -37,6 +34,6 @@
         </section>
         <script src="map.js"></script>
         <script src="menu.js"></script>
-        <script src="app.js"></script>
+        <script src="../Hal's Tower 3 Optimized/app.js"></script>
     </body>
 </html>
