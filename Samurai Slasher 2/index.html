@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+		<meta name="description" content="Samurai Slasher 2 — a 176x144 pixel arena slasher." />
+		<meta name="theme-color" content="#000000" />
+		<title>Samurai Slasher 2</title>
+		<link href="style.css" rel="stylesheet" type="text/css" />
+	</head>
+	<body>
+		<!--
+			One canvas, sized to the viewport in device pixels. Everything the
+			game draws — HUD, menus, text, touch buttons — is rendered into a
+			176x144 buffer and blitted here at a whole-number scale. There is
+			deliberately no DOM text: no overlays, no browser fonts.
+		-->
+		<canvas id="game"></canvas>
+		<noscript>Samurai Slasher 2 needs JavaScript.</noscript>
+		<script type="module" src="src/main.js"></script>
+	</body>
+</html>

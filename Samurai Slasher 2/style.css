@@ -1,0 +1,44 @@
+/*
+ * The page is a frame around one canvas and nothing else.
+ *
+ * Letterboxing is painted by the renderer inside the canvas, not by CSS, so
+ * the black bars and the game share a single integer pixel grid. The canvas is
+ * sized in device pixels and only ever scaled by whole numbers, which is what
+ * keeps 176x144 art crisp on hidpi screens.
+ */
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	background: #000;
+	overflow: hidden;
+	overscroll-behavior: none;
+}
+
+#game {
+	display: block;
+	width: 100%;
+	height: 100%;
+
+	image-rendering: pixelated;
+	image-rendering: -moz-crisp-edges;
+	image-rendering: crisp-edges;
+
+	/* Touch play: no scroll, no pinch-zoom, no double-tap zoom, no callouts. */
+	touch-action: none;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	user-select: none;
+	outline: none;
+}
+
+noscript {
+	position: absolute;
+	inset: 0;
+	display: grid;
+	place-items: center;
+	color: #e8e6df;
+	font: 14px monospace;
+}
