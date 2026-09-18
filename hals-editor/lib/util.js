@@ -145,7 +145,9 @@ function addKeyPressListener(key, callback) {
         key: key,
         func: event => {
             if(event.key == key) {
-                callback();
+                // Pass the event through so a listener can tell whether the
+                // key was typed into a text field.
+                callback(event);
             }
         }
     }

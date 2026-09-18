@@ -1138,10 +1138,21 @@ function unpadMap(shiftStuff=true) {
 
 let blockSelectionBar = document.getElementById("block-selection-bar");
 
+// Keystrokes meant for the search box must not also drive the editor.
+function isTypingInAField(event) {
+    const el = event && event.target;
+    if (!el || !el.tagName) return false;
+    const tag = el.tagName.toLowerCase();
+    return tag === 'input' || tag === 'textarea' || tag === 'select' || el.isContentEditable;
+}
+
 function selectBlock(blockName, blockType) {
     selectedBlock = blockType;
     document.querySelectorAll(".selected").forEach(element => element.classList.remove("selected"));
-    document.getElementById(blockName).classList.add("selected");
+    // Only the first 14 block types get a button in the bar; the rest are
+    // selectable by key but have nothing to highlight.
+    const button = document.getElementById(blockName);
+    if (button) button.classList.add("selected");
 }
 
 function addBlockSelection(blockName, blockStr) {
@@ -1178,6 +1189,7 @@ function startLevelEditor() {
 
     document.addEventListener("keydown", e => {
         if(!LEVEL_EDITOR_MODE) return;
+        if(isTypingInAField(e)) return;
         for(const [index, [key, value]] of Object.entries(Object.entries(MAP_BLOCK_TYPES))) {
             if(e.key === value) {
                 selectBlock(key, value);
@@ -1189,14 +1201,13 @@ function startLevelEditor() {
     canvas.addEventListener('mousedown', attemptBlockAdd);
     canvas.addEventListener('mouseup', attemptBlockAdd);
 
-    addKeyPressListener('q', () => {
+    const toggleFly = event => {
         if(!LEVEL_EDITOR_MODE) return;
+        if(isTypingInAField(event)) return;
         flyMode = !flyMode;
-    });
-    addKeyPressListener('Q', () => {
-        if(!LEVEL_EDITOR_MODE) return;
-        flyMode = !flyMode;
-    });
+    };
+    addKeyPressListener('q', toggleFly);
+    addKeyPressListener('Q', toggleFly);
 
     setInterval(() => {
         if(!LEVEL_EDITOR_MODE) return;
@@ -1205,6 +1216,8 @@ function startLevelEditor() {
 
     document.addEventListener("keydown", function(e) {
         if(!LEVEL_EDITOR_MODE) return;
+        // Ctrl+C/Z/Y belong to the search box when that is what has focus.
+        if(isTypingInAField(e)) return;
 
         if(e.key === 'c' && e.ctrlKey) {
             let mapCopy = map.map(row => row.slice());

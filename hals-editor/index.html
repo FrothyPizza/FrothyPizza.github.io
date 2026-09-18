@@ -21,8 +21,11 @@
             <p id="now-playing"><i>Upward</i> - Ethan Hill</p>
         </div>
         <div id="loaded-map-menu">
-            <button id="back-to-start-button">Back</button>
-            <h1>Select a map</h1>
+            <div id="map-browser-header">
+                <button id="back-to-start-button">&larr; Menu</button>
+                <nav id="map-breadcrumb" aria-label="Where you are"></nav>
+            </div>
+            <h1 id="map-browser-title">All maps</h1>
             <div id="map-browser-controls">
                 <input type="search" id="map-search" placeholder="Search maps or creators" autocomplete="off">
                 <select id="map-sort" title="Sort the list">
@@ -32,10 +35,6 @@
                     <option value="plays">Most played</option>
                     <option value="name">Name (A-Z)</option>
                 </select>
-            </div>
-            <div id="map-filter-notice">
-                <span id="map-filter-text"></span>
-                <button id="clear-filter-button">Show all maps</button>
             </div>
             <p id="map-list-status">Loading maps...</p>
             <div id="loaded-maps-container">

@@ -105,6 +105,7 @@ startEditorButton.onclick = () => {
     }
 
     endRun();
+    stopEditingPublishedMap();
     trackEvent("editor_start");
     restartGame();
     helpButton.style.display = "block";
@@ -125,6 +126,7 @@ function loadMap(record) {
     // (which pads the map as you approach its edges) cannot corrupt the list.
     map = record.map.slice();
     player.hardRestart();
+    stopEditingPublishedMap();
     beginRun(record);
     hideMenu();
     helpButton.style.display = "none";
@@ -171,7 +173,12 @@ if(urlParams.get("map") || urlParams.get("user")) {
 }
 
 
-backButton.onclick = hideMapFinder;
+// Back undoes the step you actually took: out of a creator's maps first, and
+// only then out of the map list entirely.
+backButton.onclick = () => {
+    if (viewIsFiltered()) setView({}, true);
+    else hideMapFinder();
+};
 
 clearButton.onclick = () => {
     if(!confirm("Are you sure you want to clear the map?")) return;

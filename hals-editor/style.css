@@ -590,3 +590,54 @@ img {
     opacity: 0.6;
     cursor: wait;
 }
+
+
+/* ---- map browser navigation ----------------------------------------- */
+
+#map-browser-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6em;
+
+    padding: 0.5em 0 0 0;
+    text-align: left;
+}
+
+#map-browser-header button {
+    font-size: 1em;
+    flex: 0 0 auto;
+}
+
+/* Says where you are, so a creator's maps no longer look identical to the
+   full list. */
+#map-breadcrumb {
+    flex: 1 1 auto;
+    min-width: 0;
+
+    font-size: 0.9em;
+    color: rgba(255, 255, 255, 0.7);
+    text-align: left;
+    overflow-wrap: anywhere;
+}
+
+.crumb-link {
+    color: #ff8bff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.crumb-link:hover {
+    text-decoration: underline;
+}
+
+.crumb-sep {
+    opacity: 0.6;
+}
+
+.crumb-current {
+    color: white;
+}
+
+#map-browser-title {
+    overflow-wrap: anywhere;
+}

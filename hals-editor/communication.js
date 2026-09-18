@@ -72,6 +72,27 @@ function trackEvent(type, extra) {
         .catch(() => {});
 }
 
+// Which maps this browser published. Only used to decide whether to offer an
+// Edit button -- the password is what actually authorises the edit, because
+// anyone can put anything in localStorage.
+function getMyMapIds() {
+    try {
+        const saved = JSON.parse(localStorage.getItem("myMaps"));
+        return Array.isArray(saved) ? saved.filter(n => typeof n === "number") : [];
+    } catch (err) {
+        return [];
+    }
+}
+
+function rememberMyMap(id) {
+    const ids = getMyMapIds();
+    if (ids.includes(id)) return;
+    ids.push(id);
+    try {
+        localStorage.setItem("myMaps", JSON.stringify(ids));
+    } catch (err) { /* private browsing; the password still works */ }
+}
+
 function formatTime(ms) {
     if (ms === null || ms === undefined) return "--:--";
     const totalSeconds = ms / 1000;
@@ -90,6 +111,14 @@ function formatTime(ms) {
 // session. This one polls at a sane rate and is cancellable.
 let publishWatcher = null;
 
+// Set while editing an already-published map, so the same "beat it to save"
+// flow updates that map instead of creating a new one.
+let editingMap = null;      // { id, name, password }
+
+function isEditingPublishedMap() {
+    return editingMap !== null;
+}
+
 function cancelPublish(silent) {
     if (publishWatcher === null) return;
     clearInterval(publishWatcher);
@@ -98,9 +127,45 @@ function cancelPublish(silent) {
     goToMenuButton.click();
 }
 
+// Loads a published map back into the editor. The server checks the password
+// before anything opens, so a faked localStorage entry gets you as far as the
+// prompt and no further.
+function editPublishedMap(record) {
+    const password = prompt(`Enter the edit password for "${record.name}".`);
+    if (password === null) return;
+    if (!password) return showToast("You need the password to edit this map.");
+
+    postJSON(SERVER_URL + `/maps/${record.id}/unlock`, { password: password })
+        .then(unlocked => {
+            editingMap = { id: unlocked.id, name: unlocked.name, password: password };
+            map = unlocked.map.slice();
+            endRun();
+            restartGame();
+            helpButton.style.display = "block";
+            saveButton.style.display = "block";
+            publishButton.style.display = "block";
+            clearButton.style.display = "block";
+            blockSelectionBar.style.display = "flex";
+            LEVEL_EDITOR_MODE = true;
+            hideMenu();
+            publishButton.textContent = "Save";
+            showToast(`Editing "${unlocked.name}". Saving replaces the published version.`, 6000);
+        })
+        .catch(err => showToast(err.message, 5000));
+}
+
+function stopEditingPublishedMap() {
+    editingMap = null;
+    publishButton.textContent = "Publish";
+}
+
 function publishMap() {
     if (publishWatcher !== null) return;
-    if (!confirm("Are you sure you want to publish this map?\n\nIt cannot be edited once uploaded, and you must beat it before it can be uploaded.")) return;
+    if (isEditingPublishedMap()) {
+        if (!confirm(`Save changes to "${editingMap.name}"?\n\nThis replaces the published version, and you have to beat it again first. Votes and leaderboard times are kept.`)) return;
+    } else {
+        if (!confirm("Are you sure you want to publish this map?\n\nYou must beat it before it can be uploaded.")) return;
+    }
 
     saveMap();
     player.hardRestart();
@@ -116,7 +181,11 @@ function publishMap() {
     pauseGame(false);
     unpadMap();
 
-    showToast("Beat your own map to publish it. Press Escape to cancel.", 6000);
+    showToast(
+        isEditingPublishedMap()
+            ? "Beat your edited map to save it. Press Escape to cancel."
+            : "Beat your own map to publish it. Press Escape to cancel.",
+        6000);
 
     publishWatcher = setInterval(() => {
         if (!player.hasWon) return;
@@ -124,17 +193,48 @@ function publishMap() {
         clearInterval(publishWatcher);
         publishWatcher = null;
 
+        if (isEditingPublishedMap()) {
+            const newName = prompt("You beat it!\n\nMap name:", editingMap.name);
+            if (newName === null) return cancelPublish(true);
+
+            postJSON(SERVER_URL + `/maps/${editingMap.id}/update`,
+                { password: editingMap.password, map: map, name: newName,
+                  client: getVoterToken() })
+                .then(updated => {
+                    alert(`"${updated.name}" has been updated.`);
+                    stopEditingPublishedMap();
+                    window.location.href = window.location.pathname +
+                        "?map=" + encodeURIComponent(updated.name);
+                })
+                .catch(err => {
+                    alert("Could not save: " + err.message);
+                    cancelPublish(true);
+                });
+            return;
+        }
+
         const name = prompt("You beat it!\n\nWhat is this map called?");
         if (name === null) return cancelPublish(true);
         const creator = prompt("What is your name?", getRememberedName());
         if (creator === null) return cancelPublish(true);
 
+        // Optional on purpose: a blank password just means the map can never
+        // be edited, which is how it behaved for everyone before this.
+        const password = prompt(
+            "Set an edit password for this map." + "\n\n" +
+            "You need it to change the map later. Leave blank if you never want to edit it.");
+        if (password === null) return cancelPublish(true);
+
         rememberName(creator);
 
         postJSON(SERVER_URL + "/maps",
-            { name: name, creator: creator, map: map, client: getVoterToken() })
+            { name: name, creator: creator, map: map,
+              password: password || undefined, client: getVoterToken() })
             .then(published => {
-                alert(`"${published.name}" is published.`);
+                if (published.editable) rememberMyMap(published.id);
+                alert(published.editable
+                    ? `"${published.name}" is published. Keep your password to edit it later.`
+                    : `"${published.name}" is published. You set no password, so it cannot be edited.`);
                 // Drop back to the map list showing the new map rather than
                 // reloading into the editor with the level still loaded.
                 window.location.href = window.location.pathname + "?map=" + encodeURIComponent(published.name);
@@ -230,8 +330,83 @@ const mapListStatus = document.getElementById("map-list-status");
 const loadMoreButton = document.getElementById("load-more-button");
 const searchInput = document.getElementById("map-search");
 const sortSelect = document.getElementById("map-sort");
+const browserTitle = document.getElementById("map-browser-title");
+const breadcrumb = document.getElementById("map-breadcrumb");
 
 let urlParams = new URLSearchParams(window.location.search);
+
+// Where in the list you are. Previously this lived only in the URL and a
+// click on a creator reloaded the whole page, so you lost your place and the
+// heading always said "Select a map" no matter what you were looking at.
+const listView = {
+    user: urlParams.get("user") || "",
+    map: urlParams.get("map") || ""
+};
+
+function viewIsFiltered() {
+    return !!(listView.user || listView.map);
+}
+
+// Moves to a new view without reloading, and records it in history so the
+// browser's own Back button walks back out of a creator's maps.
+function setView(next, push) {
+    listView.user = next.user || "";
+    listView.map = next.map || "";
+
+    const query = new URLSearchParams();
+    if (listView.user) query.set("user", listView.user);
+    if (listView.map) query.set("map", listView.map);
+    const url = window.location.pathname + (query.toString() ? "?" + query.toString() : "");
+    if (push) history.pushState({ user: listView.user, map: listView.map }, "", url);
+    else history.replaceState({ user: listView.user, map: listView.map }, "", url);
+
+    paintNavigation();
+    refreshMaps();
+}
+
+window.addEventListener("popstate", event => {
+    const state = event.state || {};
+    listView.user = state.user || "";
+    listView.map = state.map || "";
+    paintNavigation();
+    refreshMaps();
+});
+
+// Heading, breadcrumb and Back button all say the same thing about where you
+// are, so a filtered list no longer looks identical to the full one.
+function paintNavigation() {
+    // menu.js declares `backButton` and loads after this file, so referencing
+    // that name here would hit its temporal dead zone.
+    const backBtn = document.getElementById("back-to-start-button");
+    breadcrumb.textContent = "";
+
+    if (!viewIsFiltered()) {
+        browserTitle.textContent = "All maps";
+        backBtn.innerHTML = "&larr; Menu";
+        backBtn.title = "Back to the main menu";
+        return;
+    }
+
+    const root = el("a", "crumb-link", "All maps");
+    root.href = window.location.pathname;
+    root.addEventListener("click", e => {
+        e.preventDefault();
+        setView({}, true);
+    });
+    breadcrumb.append(root, el("span", "crumb-sep", " › "));
+
+    if (listView.map) {
+        browserTitle.textContent = listView.map;
+        breadcrumb.append(el("span", "crumb-current", listView.map));
+    } else {
+        browserTitle.textContent = "Maps by " + listView.user;
+        breadcrumb.append(el("span", "crumb-current", "by " + listView.user));
+    }
+
+    // Back should undo the step you actually took, not jump to the menu.
+    backBtn.innerHTML = "&larr; All maps";
+    backBtn.title = "Back to every map";
+}
 
 function el(tag, className, text) {
     const node = document.createElement(tag);
@@ -309,6 +484,12 @@ function buildMapCard(record) {
     const creatorLink = el("a", "map-creator", record.creator);
     creatorLink.href = "?user=" + encodeURIComponent(record.creator);
     creatorLink.title = "See every map by " + record.creator;
+    creatorLink.addEventListener("click", e => {
+        // Filter in place instead of reloading the page.
+        e.preventDefault();
+        searchInput.value = "";
+        setView({ user: record.creator }, true);
+    });
     info.append(creatorLink);
 
     const stats = el("p", "map-stats");
@@ -339,6 +520,16 @@ function buildMapCard(record) {
     const scoresButton = el("button", "small-button", "Leaderboard");
     const shareButton = el("button", "small-button", "Copy link");
     actions.append(scoresButton, shareButton);
+    // Offered only on maps this browser published. The password is what
+    // actually authorises the edit, so the worst a faked localStorage entry
+    // buys you is a prompt.
+    if (record.editable && getMyMapIds().includes(record.id)) {
+        const editButton = el("button", "small-button", "Edit");
+        editButton.title = "Edit this map (needs your password)";
+        editButton.addEventListener("click", () => editPublishedMap(record));
+        actions.append(editButton);
+    }
+
     card.append(actions);
 
     const board = el("div", "leaderboard");
@@ -416,9 +607,9 @@ function listQuery() {
     const query = new URLSearchParams();
     query.set("sort", sortSelect.value);
     if (searchInput.value.trim()) query.set("q", searchInput.value.trim());
-    // Share links pin the list to one creator or one map.
-    if (urlParams.get("user")) query.set("user", urlParams.get("user"));
-    if (urlParams.get("map")) query.set("map", urlParams.get("map"));
+    // Share links and creator clicks pin the list to one creator or one map.
+    if (listView.user) query.set("user", listView.user);
+    if (listView.map) query.set("map", listView.map);
     return query;
 }
 
@@ -504,21 +695,7 @@ searchInput.addEventListener("input", () => {
 });
 sortSelect.addEventListener("change", refreshMaps);
 
-document.getElementById("clear-filter-button").addEventListener("click", () => {
-    window.location.href = window.location.pathname;
-});
-
-// Only show the "showing one creator / one map" notice when a share link put
-// us there.
-if (urlParams.get("user") || urlParams.get("map")) {
-    const filter = document.getElementById("map-filter-notice");
-    filter.style.display = "flex";
-    document.getElementById("map-filter-text").textContent =
-        urlParams.get("user")
-            ? "Maps by " + urlParams.get("user")
-            : "Map: " + urlParams.get("map");
-}
-
 trackEvent("session_start");
 
-refreshMaps();
+paintNavigation();
+setView({ user: listView.user, map: listView.map }, false);
