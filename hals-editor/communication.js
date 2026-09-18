@@ -63,6 +63,15 @@ function rememberName(name) {
     if (name) localStorage.setItem("playerName", name);
 }
 
+// Usage events the server cannot observe for itself. Plays, clears, publishes
+// and votes are recorded by the routes that perform them, so they are not sent
+// from here. Fire-and-forget: analytics must never interrupt the game.
+function trackEvent(type, extra) {
+    post(SERVER_URL + "/events",
+        Object.assign({ type: type, client: getVoterToken() }, extra || {}))
+        .catch(() => {});
+}
+
 function formatTime(ms) {
     if (ms === null || ms === undefined) return "--:--";
     const totalSeconds = ms / 1000;
@@ -122,7 +131,8 @@ function publishMap() {
 
         rememberName(creator);
 
-        postJSON(SERVER_URL + "/maps", { name: name, creator: creator, map: map })
+        postJSON(SERVER_URL + "/maps",
+            { name: name, creator: creator, map: map, client: getVoterToken() })
             .then(published => {
                 alert(`"${published.name}" is published.`);
                 // Drop back to the map list showing the new map rather than
@@ -156,7 +166,7 @@ function beginRun(mapRecord) {
     runSubmitted = false;
 
     if (currentMapId !== null) {
-        post(SERVER_URL + `/maps/${currentMapId}/play`, {}).catch(() => {});
+        post(SERVER_URL + `/maps/${currentMapId}/play`, { client: getVoterToken() }).catch(() => {});
     }
 }
 
@@ -176,6 +186,12 @@ function submitRunIfWon() {
     const deaths = player.deaths;
     const mapId = currentMapId;
 
+    // Report the clear now, not from the leaderboard submission: plenty of
+    // people beat a map and then cancel the name prompt, and counting only
+    // named submissions would make the completion rate look far worse than
+    // it is.
+    trackEvent("map_clear", { mapId: mapId, timeMs: timeMs, deaths: deaths });
+
     // This is called from inside the draw pass. prompt() blocks, so let the
     // frame finish and the "YOU WIN!" text actually appear before asking.
     setTimeout(() => {
@@ -183,7 +199,8 @@ function submitRunIfWon() {
         if (name === null) return;
         rememberName(name);
 
-        postJSON(SERVER_URL + `/maps/${mapId}/scores`, { player: name, timeMs: timeMs, deaths: deaths })
+        postJSON(SERVER_URL + `/maps/${mapId}/scores`,
+            { player: name, timeMs: timeMs, deaths: deaths, client: getVoterToken() })
             .then(() => showToast("Score submitted."))
             .catch(err => showToast("Could not submit score: " + err.message, 5000));
     }, 0);
@@ -501,5 +518,7 @@ if (urlParams.get("user") || urlParams.get("map")) {
             ? "Maps by " + urlParams.get("user")
             : "Map: " + urlParams.get("map");
 }
+
+trackEvent("session_start");
 
 refreshMaps();

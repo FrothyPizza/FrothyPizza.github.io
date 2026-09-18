@@ -105,6 +105,7 @@ startEditorButton.onclick = () => {
     }
 
     endRun();
+    trackEvent("editor_start");
     restartGame();
     helpButton.style.display = "block";
     saveButton.style.display = "block";
