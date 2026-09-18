@@ -199,11 +199,18 @@ function getRunElapsedMs() {
  * Map list
  * ------------------------------------------------------------------ */
 
+// Each card draws a preview canvas of the whole map, and every map's block
+// grid comes down with the list, so fetching all of them at once gets slow
+// well before it gets expensive. Pull a page at a time instead.
+const MAPS_PER_PAGE = 12;
+
 let loadedMaps = [];
 let myVotes = {};
+let totalMaps = 0;
 
 const mapsContainer = document.getElementById("loaded-maps-container");
 const mapListStatus = document.getElementById("map-list-status");
+const loadMoreButton = document.getElementById("load-more-button");
 const searchInput = document.getElementById("map-search");
 const sortSelect = document.getElementById("map-sort");
 
@@ -359,47 +366,110 @@ function buildMapCard(record) {
     return card;
 }
 
-function renderMaps() {
-    mapsContainer.textContent = "";
-    if (!loadedMaps.length) {
-        mapListStatus.textContent = "No maps found.";
-        return;
-    }
-    mapListStatus.textContent = `${loadedMaps.length} map${loadedMaps.length === 1 ? '' : 's'}`;
+// Appends one page's worth of cards rather than rebuilding the list, so the
+// previews already on screen are not redrawn every time you load more.
+function appendMapCards(records) {
     const fragment = document.createDocumentFragment();
-    for (const record of loadedMaps) fragment.append(buildMapCard(record));
+    for (const record of records) fragment.append(buildMapCard(record));
     mapsContainer.append(fragment);
 }
 
-let refreshToken = 0;
-function refreshMaps() {
-    const token = ++refreshToken;
-    mapsContainer.textContent = "";
-    mapListStatus.textContent = "Loading maps...";
+function paintListStatus() {
+    if (!totalMaps) {
+        mapListStatus.textContent = "No maps found.";
+        loadMoreButton.style.display = "none";
+        return;
+    }
+    mapListStatus.textContent = loadedMaps.length < totalMaps
+        ? `Showing ${loadedMaps.length} of ${totalMaps} maps`
+        : `${totalMaps} map${totalMaps === 1 ? '' : 's'}`;
+    loadMoreButton.style.display = loadedMaps.length < totalMaps ? "inline-block" : "none";
+}
 
+function listQuery() {
     const query = new URLSearchParams();
     query.set("sort", sortSelect.value);
     if (searchInput.value.trim()) query.set("q", searchInput.value.trim());
     // Share links pin the list to one creator or one map.
     if (urlParams.get("user")) query.set("user", urlParams.get("user"));
     if (urlParams.get("map")) query.set("map", urlParams.get("map"));
+    return query;
+}
+
+// Reads the page and the match count together. The count is a header so the
+// body stays a plain array, which is what the old server returned.
+async function fetchMapPage(offset) {
+    const query = listQuery();
+    query.set("limit", String(MAPS_PER_PAGE));
+    query.set("offset", String(offset));
+
+    const response = await fetch(SERVER_URL + "/maps?" + query.toString());
+    const text = await response.text();
+    let body = null;
+    try { body = text ? JSON.parse(text) : null; } catch (err) { body = null; }
+    if (!response.ok) {
+        throw new Error(body && body.error ? body.error : `Server error (${response.status})`);
+    }
+
+    const header = response.headers.get("X-Total-Count");
+    return {
+        maps: body || [],
+        // An older server sends no header; fall back to what we can see.
+        total: header === null ? offset + (body ? body.length : 0) : Number(header)
+    };
+}
+
+// Bumped on every refresh so a slow earlier request cannot overwrite a newer
+// one's results, and so a "load more" from a stale filter is discarded.
+let refreshToken = 0;
+
+function refreshMaps() {
+    const token = ++refreshToken;
+    mapsContainer.textContent = "";
+    loadedMaps = [];
+    totalMaps = 0;
+    mapListStatus.textContent = "Loading maps...";
+    loadMoreButton.style.display = "none";
 
     Promise.all([
-        requestJSON(SERVER_URL + "/maps?" + query.toString()),
+        fetchMapPage(0),
         requestJSON(SERVER_URL + "/votes?voter=" + encodeURIComponent(getVoterToken())).catch(() => ({}))
     ])
-        .then(([maps, votes]) => {
-            // A slow earlier request must not overwrite a newer one's results.
+        .then(([page, votes]) => {
             if (token !== refreshToken) return;
-            loadedMaps = maps;
+            loadedMaps = page.maps;
+            totalMaps = page.total;
             myVotes = votes || {};
-            renderMaps();
+            appendMapCards(page.maps);
+            paintListStatus();
         })
         .catch(err => {
             if (token !== refreshToken) return;
             mapListStatus.textContent = "Could not reach the map server: " + err.message;
         });
 }
+
+function loadMoreMaps() {
+    const token = refreshToken;
+    loadMoreButton.disabled = true;
+    loadMoreButton.textContent = "Loading...";
+
+    fetchMapPage(loadedMaps.length)
+        .then(page => {
+            if (token !== refreshToken) return;
+            loadedMaps = loadedMaps.concat(page.maps);
+            totalMaps = page.total;
+            appendMapCards(page.maps);
+            paintListStatus();
+        })
+        .catch(err => showToast("Could not load more maps: " + err.message))
+        .finally(() => {
+            loadMoreButton.disabled = false;
+            loadMoreButton.textContent = "Load more";
+        });
+}
+
+loadMoreButton.addEventListener("click", loadMoreMaps);
 
 let searchDebounce = null;
 searchInput.addEventListener("input", () => {

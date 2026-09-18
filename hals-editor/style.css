@@ -540,3 +540,17 @@ img {
     border: 1px solid magenta;
     border-radius: 0.3em;
 }
+
+
+/* ---- paging --------------------------------------------------------- */
+
+#load-more-button {
+    display: none;
+    margin: 0 0.5em 1em 0.5em;
+    font-size: 1.1em;
+}
+
+#load-more-button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
