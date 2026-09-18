@@ -236,6 +236,9 @@ function showToast(message, duration) {
 
 function buildMapCard(record) {
     const card = el("div", "map-container");
+    // Votes and title are siblings in one flex row; nesting the title inside
+    // the vote container is what made them overlap.
+    const header = el("div", "map-header");
 
     /* --- votes --- */
     const voteContainer = el("div", "upvote-container");
@@ -297,13 +300,19 @@ function buildMapCard(record) {
         : `record ${formatTime(record.bestTimeMs)} by ${record.bestPlayer}`;
     info.append(stats);
 
-    voteContainer.append(info);
-    card.append(voteContainer);
+    header.append(voteContainer, info);
+    card.append(header);
 
     /* --- preview --- */
+    // Shape the preview to the map instead of always being square: a square
+    // buffer left a wide map floating in a band of empty card.
     const preview = document.createElement("canvas");
-    preview.width = 400;
-    preview.height = 400;
+    const cols = record.map[0].length;
+    const rows = record.map.length;
+    const scale = Math.min(400 / cols, 400 / rows);
+    // Towers are tall and narrow, so clamp before a preview becomes a sliver.
+    preview.width = Math.max(80, Math.round(cols * scale));
+    preview.height = Math.max(80, Math.round(rows * scale));
     preview.title = "Play " + record.name;
     card.append(preview);
     preview.addEventListener("click", () => loadMap(record));

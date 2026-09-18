@@ -63,6 +63,7 @@ let clearButton = document.getElementById("clear-button");
 function hideMenu() {
     startMenu.style.display = "none";
     mapFinderContainer.style.display = "none";
+    canvas.style.display = "block";
     paused = false;
     document.getElementById("side-buttons").style.display = "flex";
     document.querySelector("html").classList.remove("scroll");
@@ -138,10 +139,29 @@ function loadMap(record) {
 
 // urlParams is declared in communication.js, which loads first.
 
-findButton.onclick = () => {
+// The map list is narrower than the window, so the start menu behind it stayed
+// visible and you could still click Create while browsing maps. Swap the two
+// rather than stacking them.
+function showMapFinder() {
+    startMenu.style.display = "none";
     mapFinderContainer.style.display = "block";
+    // The list is narrower than the window, so without this the running game
+    // (and its FPS readout) showed either side of it.
+    canvas.style.display = "none";
     document.querySelector("html").classList.add("scroll");
+    window.scrollTo(0, 0);
 }
+
+function hideMapFinder() {
+    mapFinderContainer.style.display = "none";
+    startMenu.style.display = "flex";
+    canvas.style.display = "block";
+    // Leaving this on left the page scrollable with nothing to scroll.
+    document.querySelector("html").classList.remove("scroll");
+    window.scrollTo(0, 0);
+}
+
+findButton.onclick = showMapFinder;
 
 // A share link opens straight into the list. Clearing the filter is now the
 // "Show all maps" button, so Back just closes the list like it does otherwise.
@@ -150,9 +170,7 @@ if(urlParams.get("map") || urlParams.get("user")) {
 }
 
 
-backButton.onclick = () => {
-    mapFinderContainer.style.display = "none";
-}
+backButton.onclick = hideMapFinder;
 
 clearButton.onclick = () => {
     if(!confirm("Are you sure you want to clear the map?")) return;
@@ -181,10 +199,8 @@ goToMenuButton.onclick = () => {
     pauseDisplay.style.display = "none";
     endRun();
 
-    document.getElementById("start-menu").style.display = "flex";
     document.getElementById("side-buttons").style.display = "none";
-
-    mapFinderContainer.style.display = "none";
+    hideMapFinder();
 
     if(LEVEL_EDITOR_MODE) {
         saveMap();

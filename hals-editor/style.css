@@ -237,8 +237,16 @@ img {
     left: 50%;
     transform: translateX(-50%);
 
-    display: flex;
+    /* Only the editor uses this; menu.js shows it. It used to default to
+       visible, and being wider than a phone screen it stretched the page
+       sideways on the menus even though the start screen covered it. */
+    display: none;
     flex-direction: row;
+    /* Wrap rather than run off the side of a narrow screen. */
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 100vw;
+    box-sizing: border-box;
 
     text-align: center;
     font-size: 1.2em;
@@ -288,11 +296,16 @@ img {
     left: 50%;
     transform: translate(-50%, 0%);
     z-index: 1;
-    
+
     color: white;
     text-align: center;
-    
+
     background-color: #000;
+
+    width: 100%;
+    max-width: 460px;
+    padding: 0 0.5em 1em 0.5em;
+    box-sizing: border-box;
 
     display: none;
 }
@@ -312,21 +325,37 @@ img {
 #loaded-maps-container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    width: min-content;
+    align-items: stretch;
+    width: 100%;
 }
 
 
-.upvote-container {
-    width: 50%;
-    float: left;
-
+/* The vote column and the title sit side by side in one flex row. This used to
+   be done with floats plus a translate trick, which assumed a layout the card
+   no longer has: the buttons ended up drawn on top of the title, and the title
+   was squeezed into 100px and wrapped one word per line. */
+.map-header {
     display: flex;
-    justify-content: flex-start;
-    flex-direction: row;    
+    flex-direction: row;
     align-items: center;
+    gap: 0.6em;
 
-    padding: 0 0.7em;
+    padding: 0.5em 0.7em;
+    text-align: left;
+}
+
+.upvote-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.3em;
+
+    flex: 0 0 auto;
+}
+
+.upvote-count {
+    min-width: 1.6em;
+    text-align: center;
 }
 
 .upvote-button, .downvote-button {
@@ -348,15 +377,18 @@ img {
 }
 
 .map-container .map-info {
-    width: 100px;
-    float: right;
-    position: relative;
-    left: -50%;
-    transform: translateX(50%);
+    /* min-width: 0 lets a long name wrap instead of stretching the card. */
+    flex: 1 1 auto;
+    min-width: 0;
 
     display: flex;
     flex-direction: column;
     justify-content: center;
+}
+
+.map-name {
+    font-size: 1.1em;
+    overflow-wrap: anywhere;
 }
 
 
@@ -366,16 +398,20 @@ img {
 .map-container {
     background-color: rgba(83, 15, 80, 0.8);
     border: 1px solid magenta;
-    max-width: fit-content;
-    max-height: fit-content;
     text-align: center;
 
-    margin: 0.5em;
+    width: 100%;
+    box-sizing: border-box;
 
-    
+    margin: 0.5em 0;
 }
 
+/* The preview is a fixed 400x400 buffer; let CSS scale it down so a card fits
+   a phone screen instead of forcing the page to scroll sideways. */
 .map-container canvas {
+    display: block;
+    width: calc(100% - 1em);
+    height: auto;
     margin: 0.5em;
 }
 

@@ -861,12 +861,19 @@ function drawMapOnSmallCanvas(otherCanvas, otherMap) {
     let saveBlockSize = BLOCK_SIZE;
     let saveMap = map;
     map = otherMap;
-    BLOCK_SIZE = Math.ceil(Math.max(otherCanvas.height, otherCanvas.width) / Math.max(map[0].length, map.length));
+    // Fit the map inside the canvas on both axes. Scaling by the larger of the
+    // two dimensions overflowed the preview and pinned it to the top, which
+    // left a band of empty card below every wide map.
+    BLOCK_SIZE = Math.max(1, Math.floor(Math.min(
+        otherCanvas.width / map[0].length,
+        otherCanvas.height / map.length
+    )));
 
     let saveView = view;
-    // draw it centered
+    // draw it centered on both axes
     let viewX = Math.round((map[0].length * BLOCK_SIZE - otherCanvas.width) / 2);
-    view = {x: viewX, y: 0};
+    let viewY = Math.round((map.length * BLOCK_SIZE - otherCanvas.height) / 2);
+    view = {x: viewX, y: viewY};
 
     let saveContext = context;
     context = otherCanvas.getContext('2d');
