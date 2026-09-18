@@ -91,11 +91,19 @@ startEditorButton.onclick = () => {
     // } else {
     //     restartGame();
     // }
-    if(localStorage.getItem("map")) {
-        map = JSON.parse(localStorage.getItem("map"));
-    } else {
-        map = ["S", "#"];
+    // A half-written or hand-edited localStorage entry used to throw here and
+    // leave the Create button doing nothing at all.
+    map = ["S", "#"];
+    try {
+        const saved = JSON.parse(localStorage.getItem("map"));
+        if (Array.isArray(saved) && saved.length && typeof saved[0] === "string") {
+            map = saved;
+        }
+    } catch (err) {
+        console.warn("Saved map was unreadable; starting a new one.", err);
     }
+
+    endRun();
     restartGame();
     helpButton.style.display = "block";
     saveButton.style.display = "block";
@@ -110,10 +118,12 @@ startEditorButton.onclick = () => {
 
 
 
-function loadMap(loadMap) {
-    console.log("Loading map" + loadMap);
-    map = loadMap.map;
+function loadMap(record) {
+    // Server maps are shared objects in loadedMaps; copy so that playing one
+    // (which pads the map as you approach its edges) cannot corrupt the list.
+    map = record.map.slice();
     player.hardRestart();
+    beginRun(record);
     hideMenu();
     helpButton.style.display = "none";
     publishButton.style.display = "none";   
@@ -126,23 +136,18 @@ function loadMap(loadMap) {
 }
 
 
-let urlParams = new URLSearchParams(window.location.search);
+// urlParams is declared in communication.js, which loads first.
 
 findButton.onclick = () => {
     mapFinderContainer.style.display = "block";
     document.querySelector("html").classList.add("scroll");
 }
 
-setTimeout(() => {
-    if(urlParams.get("map") || urlParams.get("user")) {
-        // click find button
-        findButton.click();
-        backButton.addEventListener("click", () => {
-            // reload page without url params
-            window.location.href = window.location.href.split("?")[0];
-        });
-    }
-}, 100);
+// A share link opens straight into the list. Clearing the filter is now the
+// "Show all maps" button, so Back just closes the list like it does otherwise.
+if(urlParams.get("map") || urlParams.get("user")) {
+    findButton.click();
+}
 
 
 backButton.onclick = () => {
@@ -174,6 +179,7 @@ publishButton.onclick = () => {
 goToMenuButton.onclick = () => {
     paused = true;
     pauseDisplay.style.display = "none";
+    endRun();
 
     document.getElementById("start-menu").style.display = "flex";
     document.getElementById("side-buttons").style.display = "none";
@@ -199,7 +205,9 @@ function pauseGame(shouldPause) {
     } else {
         paused = shouldPause;
         pauseDisplay.style.display = paused ? "block" : "none";
-        pauseButton.className = paused ? "none" : "block";
+        // This used to set the class to the literal strings "none"/"block",
+        // so the paused styling never came back after an explicit pause.
+        pauseButton.className = paused ? "paused" : "";
     }
 }
 pauseButton.onclick = pauseGame;

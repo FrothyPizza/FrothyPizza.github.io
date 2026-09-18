@@ -1,3 +1,10 @@
+// The physics loop runs in fixed steps, several per animation frame. During a
+// step gameNow() returns that step's own timestamp, so a timer checked inside
+// the step still advances between steps. Outside a step (drawing, input) it is
+// plain wall-clock time, exactly as Date.now() was.
+let stepTime = null;
+function gameNow() { return stepTime === null ? Date.now() : stepTime; }
+
 
 
 let LEVEL_EDITOR_MODE = true;
@@ -73,7 +80,7 @@ function constrain(a, b, c) {
 // Make the view smoothly follow the player
 function updateView(player){
 
-    if(Date.now() - player.deathAnimationTimer < player.deathAnimationTimeMS) {
+    if(gameNow() - player.deathAnimationTimer < player.deathAnimationTimeMS) {
         targetX = player.deathX - player.width / 2;
         targetY = player.deathY - player.height / 2;
     } else {
@@ -237,40 +244,40 @@ class Player {
 
         // draw the speed trail
         for(let i = 0; i < this.speedTrail.length; i++) {
-            if(Date.now() - this.speedTrail[i].time > this.speedTrailLifetime) {
+            if(gameNow() - this.speedTrail[i].time > this.speedTrailLifetime) {
                 this.speedTrail.splice(i, 1);
                 i--;
             } else {
                 let trail = this.speedTrail[i];
-                let alpha = 1 - (Date.now() - trail.time) / this.speedTrailLifetime;
+                let alpha = 1 - (gameNow() - trail.time) / this.speedTrailLifetime;
                 fill(0, 200, 200, alpha);
                 rect(Math.round(trail.x), Math.round(trail.y), this.width, this.height, view);
             }
         }
 
         // every tenth of a second, add a speed trail point
-        if(Date.now() - this.speedTrailTimer > 100 && Date.now() - this.speedUpTimer < this.speedUpTimeMS) {
-            this.speedTrailTimer = Date.now();
-            this.speedTrail.push({x: this.x, y: this.y, time: Date.now()});
+        if(gameNow() - this.speedTrailTimer > 100 && gameNow() - this.speedUpTimer < this.speedUpTimeMS) {
+            this.speedTrailTimer = gameNow();
+            this.speedTrail.push({x: this.x, y: this.y, time: gameNow()});
         }
 
         // draw the high jump trail
         for(let i = 0; i < this.highJumpTrail.length; i++) {
-            if(Date.now() - this.highJumpTrail[i].time > this.highJumpTrailLifetime) {
+            if(gameNow() - this.highJumpTrail[i].time > this.highJumpTrailLifetime) {
                 this.highJumpTrail.splice(i, 1);
                 i--;
             } else {
                 let trail = this.highJumpTrail[i];
-                let alpha = 1 - (Date.now() - trail.time) / this.highJumpTrailLifetime;
+                let alpha = 1 - (gameNow() - trail.time) / this.highJumpTrailLifetime;
                 fill(0, 230, 100, alpha);
                 rect(Math.round(trail.x), Math.round(trail.y), this.width, this.height, view);
             }
         }
 
         // every seventh of a second, add a high jump trail point
-        if(Date.now() - this.lastTimerGrounded > 10 && Date.now() - this.highJumpTrailTimer > 1000/7 && Date.now() - this.highJumpTimer < this.highJumpTimeMS) {
-            this.highJumpTrailTimer = Date.now();
-            this.highJumpTrail.push({x: this.x, y: this.y, time: Date.now()});
+        if(gameNow() - this.lastTimerGrounded > 10 && gameNow() - this.highJumpTrailTimer > 1000/7 && gameNow() - this.highJumpTimer < this.highJumpTimeMS) {
+            this.highJumpTrailTimer = gameNow();
+            this.highJumpTrail.push({x: this.x, y: this.y, time: gameNow()});
         }
 
 
@@ -293,22 +300,22 @@ class Player {
 
         // draw a teal blue bar at the right of the player to indicate how much time they have left sped up
         fill(0, 240, 240, 0.9);
-        let fraction = 1 - (Date.now() - this.speedUpTimer) / this.speedUpTimeMS;
+        let fraction = 1 - (gameNow() - this.speedUpTimer) / this.speedUpTimeMS;
         if(fraction > 0) {
             rect(Math.round(this.x), Math.round(this.y + (1-fraction)*this.height), 5, Math.round(this.height * fraction), view);
         }
 
         // draw the jump bar
         fill(0, 230, 100, 0.8);
-        fraction = 1 - (Date.now() - this.highJumpTimer) / this.highJumpTimeMS;
+        fraction = 1 - (gameNow() - this.highJumpTimer) / this.highJumpTimeMS;
         if(fraction > 0) {
             rect(Math.round(this.x + this.width-5), Math.round(this.y + (1-fraction)*this.height), 5, Math.round(this.height * fraction), view);
         }
 
         // draw the golden gravity changing bar in the middle
-        if(Date.now() - this.gravityChangingTimer < this.gravityChangingTimeMS) {
+        if(gameNow() - this.gravityChangingTimer < this.gravityChangingTimeMS) {
             fill(255, 255, 0, 0.8);
-            fraction = 1 - (Date.now() - this.gravityChangingTimer) / this.gravityChangingTimeMS;
+            fraction = 1 - (gameNow() - this.gravityChangingTimer) / this.gravityChangingTimeMS;
             if(fraction > 0) {
                 rect(Math.round(this.x + this.width/2 - 5), Math.round(this.y + (1-fraction)*this.height), 5, Math.round(this.height * fraction), view);
             }
@@ -316,17 +323,17 @@ class Player {
 
 
         // draw the death animation
-        if(Date.now() - this.deathAnimationTimer > this.deathAnimationTimeMS) {
+        if(gameNow() - this.deathAnimationTimer > this.deathAnimationTimeMS) {
             this.deathAnimationTimer = 0;
         } else {
-            let a = (Date.now() - this.deathAnimationTimer) / this.deathAnimationTimeMS;
+            let a = (gameNow() - this.deathAnimationTimer) / this.deathAnimationTimeMS;
             fill(255, 0, 0, 1-a);
             rect(Math.round(this.deathX), Math.round(this.deathY), this.width, this.height, view);
         }
 
 
         // draw a faint blue arrow next to the player to indicate the direction of gravity
-        if(Date.now() - this.gravityChangingTimer < this.gravityChangingTimeMS) {
+        if(gameNow() - this.gravityChangingTimer < this.gravityChangingTimeMS) {
             if(this.gravity < 0) {
                 fill(0, 200, 211, 0.9);
                 triangle(this.x + this.width, this.y + this.height/2,
@@ -366,20 +373,20 @@ class Player {
         this.x += this.xVel * delta / 1000;
         this.y += this.yVel * delta / 1000;
 
-        if(Date.now() - this.speedUpTimer < this.speedUpTimeMS) {
+        if(gameNow() - this.speedUpTimer < this.speedUpTimeMS) {
             this.speed = this.speedUpSpeed;
         } else {
             this.speed = this.defaultSpeed;
         }
 
-        if(Date.now() - this.highJumpTimer < this.highJumpTimeMS) {
+        if(gameNow() - this.highJumpTimer < this.highJumpTimeMS) {
             this.jumpForce = this.highJumpForce;
         } else {
             this.jumpForce = this.defaultJumpForce;
         }
 
 
-        // console.log(Date.now() - this.lastTimerGrounded);
+        // console.log(gameNow() - this.lastTimerGrounded);
         if(isMobile) { 
             for(let i = 0; i < touches.length; ++i) {
                 if(touches[i].clientX > canvas.width/2 && touches[i].clientY > canvas.height/2) {
@@ -388,7 +395,7 @@ class Player {
                 if(touches[i].clientX < canvas.width/2 && touches[i].clientY > canvas.height/2) {
                     this.x -= this.speed * delta / 1000;
                 }
-                if(Date.now() - this.lastTimerGrounded < 10 && touches[i].clientY < canvas.height/2) {
+                if(gameNow() - this.lastTimerGrounded < 10 && touches[i].clientY < canvas.height/2) {
                     if(this.gravity < 0) {
                         this.yVel = -this.jumpForce;
                     } else {
@@ -400,7 +407,7 @@ class Player {
             }
         }
 
-        if(Date.now() - this.gravityChangingTimer > this.gravityChangingTimeMS) {
+        if(gameNow() - this.gravityChangingTimer > this.gravityChangingTimeMS) {
             this.gravityMode = false;
         } else {
             this.gravityMode = true;
@@ -443,6 +450,9 @@ class Player {
         this.yVel = 0;
         this.speed = this.defaultSpeed;
         this.deaths = 0;
+        // Checkpoints used to carry over from the previous map, so the "Level"
+        // counter started partway up whenever you opened a second map.
+        this.acquiredCheckpoints = [];
         // this.gravity = this.defaultGravity;
 
         this.deathAnimationTimer = 0;
@@ -454,7 +464,7 @@ class Player {
     }
 
     restart() {
-        this.deathAnimationTimer = Date.now();
+        this.deathAnimationTimer = gameNow();
         this.deathX = this.x;
         this.deathY = this.y;
 
@@ -491,7 +501,7 @@ class Projectile {
         this.gravity = Math.abs(player.gravity);
         this.xVel = Math.cos(angle) * this.speed;
         this.yVel = Math.sin(angle) * this.speed;
-        this.lifetime = Date.now() + 1000;
+        this.lifetime = gameNow() + 1000;
     }
 
     draw() {
@@ -512,7 +522,7 @@ const SHOOT_DELAY_MS = 1500;
 function updateProjectiles(player, delta) {
     for(let i = 0; i < projectiles.length; ++i) {
         projectiles[i].update(delta);
-        if(projectiles[i].lifetime < Date.now()) {
+        if(projectiles[i].lifetime < gameNow()) {
             projectiles.splice(i, 1);
             --i;
             continue;
@@ -587,14 +597,14 @@ function collidePlayerWithBlock(player, blockType, blockX, blockY) {
                     } else {
                         player.yVel = 0;
                         player.y = blockY-player.height;
-                        player.lastTimerGrounded = Date.now();
+                        player.lastTimerGrounded = gameNow();
                     }
                 }
             } else {
                 if(player.yVel > 0) {
                     player.yVel = 0;
                     player.y = blockY-player.height;
-                    // player.lastTimerGrounded = Date.now();
+                    // player.lastTimerGrounded = gameNow();
                 }
             }
         }
@@ -608,14 +618,14 @@ function collidePlayerWithBlock(player, blockType, blockX, blockY) {
                     } else {
                         player.yVel = 0;
                         player.y = blockY+BLOCK_SIZE;
-                        player.lastTimerGrounded = Date.now();
+                        player.lastTimerGrounded = gameNow();
                     }
                 }
             } else {
                 if(player.yVel < 0) {
                     player.yVel = 0;
                     player.y = blockY+BLOCK_SIZE;
-                    // player.lastTimerGrounded = Date.now();
+                    // player.lastTimerGrounded = gameNow();
                 }
             }
         }
@@ -651,19 +661,19 @@ function collidePlayerWithBlock(player, blockType, blockX, blockY) {
 
     if(blockType === MAP_BLOCK_TYPES.speedUp) {
         if(collidingWithBlock(player, blockX, blockY, 0)) {
-            player.speedUpTimer = Date.now();
+            player.speedUpTimer = gameNow();
         }
     }
 
     if(blockType === MAP_BLOCK_TYPES.highJump) {
         if(collidingWithBlock(player, blockX, blockY, 0)) {
-            player.highJumpTimer = Date.now();
+            player.highJumpTimer = gameNow();
         }
     }
 
     if(blockType === MAP_BLOCK_TYPES.gravityChangeMode) {
         if(collidingWithBlock(player, blockX, blockY, 0)) {
-            player.gravityChangingTimer = Date.now();
+            player.gravityChangingTimer = gameNow();
         }
     }
 
@@ -821,10 +831,10 @@ function drawMap(delta) {
 
 
     // the length of the bar is based on the flashing block timer
-    let barLength = BLOCK_SIZE * (1 - (Date.now() - flashingBlockTimer) / TIME_PER_FLASH_MS);
+    let barLength = BLOCK_SIZE * (1 - (gameNow() - flashingBlockTimer) / TIME_PER_FLASH_MS);
     let inverseBarLength = BLOCK_SIZE - barLength;
 
-    let shootBarLength = BLOCK_SIZE * (1 - (Date.now() - shootTimer) / SHOOT_DELAY_MS);
+    let shootBarLength = BLOCK_SIZE * (1 - (gameNow() - shootTimer) / SHOOT_DELAY_MS);
     
 
     for(let y = startY; y <= endY; y++) {
@@ -877,12 +887,12 @@ function drawMapOnSmallCanvas(otherCanvas, otherMap) {
 
 
 
-let flashingBlockTimer = Date.now();
-let redFlahsingBlockTimer = Date.now();
+let flashingBlockTimer = gameNow();
+let redFlahsingBlockTimer = gameNow();
 let flashingPaused = false;
 function updateMap(player, delta) {
     if(!flashingPaused || !paused) {
-        if(Date.now() - flashingBlockTimer > TIME_PER_FLASH_MS) {
+        if(gameNow() - flashingBlockTimer > TIME_PER_FLASH_MS) {
             for(let y = 0; y < map.length; y++) {
                 for(let x = 0; x < map[y].length; x++) {
                     if(map[y][x] === MAP_BLOCK_TYPES.flashingOn) {
@@ -893,9 +903,9 @@ function updateMap(player, delta) {
                     }
                 }
             }
-            flashingBlockTimer = Date.now();
+            flashingBlockTimer = gameNow();
         }
-        if(Date.now() - redFlahsingBlockTimer > TIME_PER_FLASH_MS) {
+        if(gameNow() - redFlahsingBlockTimer > TIME_PER_FLASH_MS) {
             for(let y = 0; y < map.length; y++) {
                 for(let x = 0; x < map[y].length; x++) {
                     if(map[y][x] === MAP_BLOCK_TYPES.redFlashOn) {
@@ -908,7 +918,7 @@ function updateMap(player, delta) {
 
                 }
             }
-            redFlahsingBlockTimer = Date.now();
+            redFlahsingBlockTimer = gameNow();
         }
     }
 
@@ -922,7 +932,7 @@ function updateMap(player, delta) {
     let endX = Math.floor((view.x + canvas.width) / BLOCK_SIZE) + 1;
     startX = Math.max(startX, 0);
     endX = Math.min(endX, map[0].length-1);
-    if(Date.now() - shootTimer > SHOOT_DELAY_MS) {
+    if(gameNow() - shootTimer > SHOOT_DELAY_MS) {
         for(let y = startY; y <= endY; y++) {
             for(let x = startX; x <= endX; x++) {
                 if(map[y][x] == MAP_BLOCK_TYPES.projectileLauncher) {
@@ -932,7 +942,7 @@ function updateMap(player, delta) {
                 }
             }
         }
-        shootTimer = Date.now();
+        shootTimer = gameNow();
     }
 
     updateProjectiles(player, delta);
@@ -1242,8 +1252,6 @@ let updateFPS = 0;
 
 let renderingDeltaTimer = performance.now();
 function renderLoop() {
-    window.requestAnimationFrame(renderLoop);
-
     let delta = performance.now() - renderingDeltaTimer;
     renderingDeltaTimer = performance.now();
 
@@ -1254,8 +1262,12 @@ function renderLoop() {
         lastFrameTime = performance.now();
     }
     if(fullScreen) {
-        canvas.width = document.documentElement.clientWidth;
-        canvas.height = document.documentElement.clientHeight;
+        // Assigning to canvas.width reallocates the backing buffer and clears
+        // it, so only do it when the viewport actually changed size.
+        const width = document.documentElement.clientWidth;
+        const height = document.documentElement.clientHeight;
+        if(canvas.width !== width) canvas.width = width;
+        if(canvas.height !== height) canvas.height = height;
     }
 
 
@@ -1288,28 +1300,39 @@ function renderLoop() {
     context.fillText(`Deaths: ${player.deaths}`, canvas.width/2 - context.measureText(`Deaths: ${player.deaths}`).width/2, 40);
 
 
+    // draw the run clock while playing someone's published map
+    const elapsed = getRunElapsedMs();
+    if(elapsed !== null && !LEVEL_EDITOR_MODE) {
+        const clock = formatTime(elapsed);
+        context.fillText(clock, canvas.width/2 - context.measureText(clock).width/2, 60);
+    }
+
     // if player has won, draw big yellow has won text
     if(player.hasWon && !LEVEL_EDITOR_MODE) {
         context.font = "100px Arial";
         context.fillStyle = "yellow";
         context.fillText("YOU WIN!", canvas.width/2 - context.measureText("YOU WIN!").width/2, canvas.height/2);
+        submitRunIfWon();
     }
 
 }
 
 
 
-let lastUpdateStamp = performance.now();
-function updateLoop() {
+// The original ran a 250 Hz setInterval. Browsers clamp and coalesce timers,
+// and on a loaded machine that meant a burst of callbacks each doing almost no
+// work. This keeps the same 4 ms physics step -- the collision margins and the
+// 1000 px/s projectiles need a step that small -- but drives it from one
+// animation-frame callback instead of 250 timer callbacks a second.
+const PHYSICS_STEP_MS = 4;
+const MAX_CATCH_UP_MS = 100;
+let accumulator = 0;
+let lastFrameStamp = null;
+let gameStarted = false;
+
+function updateLoop(delta) {
     // Update /////////////////////////////////////////////////////////////
-    for(let i = 0; i < 1; i++) {
-        let delta = (performance.now() - lastUpdateStamp);
-        lastUpdateStamp = performance.now();
-
-        if(delta > 10) {
-            delta = 10;
-        }
-
+    {
         if(keys['r']) {
             player.hardRestart();
         }
@@ -1367,15 +1390,66 @@ function updateLoop() {
         updateMap(player, delta);
 
         ++framesUpdated;
-        if(performance.now() - lastUpdateTime > 1000) {
-            updateFPS = framesUpdated;
-            framesUpdated = 0;
-            lastUpdateTime = performance.now();
-        }
     }
 
     updateView(player);
 }
+
+
+function gameLoop(timestamp) {
+    window.requestAnimationFrame(gameLoop);
+
+    // A hidden tab gets throttled to about one frame a second. Banking that
+    // time and replaying it on return would teleport the player through walls,
+    // so drop it instead.
+    if(document.hidden) {
+        lastFrameStamp = null;
+        accumulator = 0;
+        return;
+    }
+
+    if(lastFrameStamp !== null && !paused) {
+        accumulator += Math.min(Math.max(timestamp - lastFrameStamp, 0), MAX_CATCH_UP_MS);
+    }
+    lastFrameStamp = timestamp;
+
+    const now = Date.now();
+    while(accumulator >= PHYSICS_STEP_MS) {
+        // Each step gets its own wall-clock stamp so power-up and flashing
+        // block timers still advance across the steps in one frame.
+        stepTime = now - accumulator + PHYSICS_STEP_MS;
+        updateLoop(PHYSICS_STEP_MS);
+        accumulator -= PHYSICS_STEP_MS;
+    }
+    stepTime = null;
+
+    if(timestamp - lastUpdateTime >= 1000) {
+        updateFPS = Math.round(framesUpdated * 1000 / (timestamp - lastUpdateTime));
+        framesUpdated = 0;
+        lastUpdateTime = timestamp;
+    }
+
+    renderLoop();
+}
+
+
+// Don't let a key that was held when the tab or window lost focus stay held:
+// the keyup never arrives, so the player would run into a wall on return.
+// (util.js tried to do this, but iterating a string-keyed array with forEach
+// visits nothing.)
+function releaseAllInput() {
+    for(const key in keys) keys[key] = false;
+    touches = [];
+    mouse.leftDown = false;
+    mouse.rightDown = false;
+}
+
+document.addEventListener('visibilitychange', () => {
+    lastFrameStamp = null;
+    accumulator = 0;
+    if(document.hidden) releaseAllInput();
+});
+window.addEventListener('blur', releaseAllInput);
 
 
 function restartGame() {
@@ -1398,12 +1472,11 @@ function startGame() {
 
     
     player.hardRestart();
-    renderLoop();
-    
-    window.setInterval(() => {
-        if(!paused)
-            updateLoop();
-    }, 1000/250);
+
+    if(gameStarted) return;
+    gameStarted = true;
+    lastUpdateTime = performance.now();
+    window.requestAnimationFrame(gameLoop);
 }
 
 startGame();

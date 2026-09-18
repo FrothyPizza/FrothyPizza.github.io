@@ -383,3 +383,160 @@ img {
     background-color: rgba(83, 15, 80, 1);
     cursor: pointer;
 }
+
+/* ---- map browser: search, sort, filter notice ---------------------- */
+
+#map-browser-controls {
+    display: flex;
+    gap: 0.5em;
+    justify-content: center;
+    margin: 0 0.5em 0.5em 0.5em;
+}
+
+#map-search {
+    flex: 1;
+    min-width: 0;
+    font-size: 1em;
+    padding: 0.4em;
+    color: white;
+    background-color: rgba(83, 15, 80, 0.8);
+    border: 1px solid magenta;
+}
+
+#map-search::placeholder {
+    color: rgba(255, 255, 255, 0.55);
+}
+
+#map-sort {
+    font-size: 1em;
+    padding: 0.4em;
+    cursor: pointer;
+    color: white;
+    background-color: rgba(83, 15, 80, 0.8);
+    border: 1px solid magenta;
+}
+
+#map-filter-notice {
+    display: none;
+    gap: 0.5em;
+    align-items: center;
+    justify-content: center;
+    margin: 0 0.5em 0.5em 0.5em;
+}
+
+#map-filter-notice button {
+    font-size: 0.9em;
+}
+
+#map-list-status {
+    margin-bottom: 0.5em;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+
+/* ---- map cards ----------------------------------------------------- */
+
+.map-creator {
+    color: #ff8bff;
+    text-decoration: none;
+}
+
+.map-creator:hover {
+    text-decoration: underline;
+}
+
+.map-stats {
+    font-size: 0.8em;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* The vote you cast is filled in rather than outlined. The old version
+   stripped the border off both buttons once you had voted either way, so you
+   could not tell which way you had gone. */
+.upvote-button.voted {
+    background-color: #00c27a;
+    color: black;
+}
+
+.downvote-button.voted {
+    background-color: #d0446b;
+    color: black;
+}
+
+.upvote-button:disabled, .downvote-button:disabled {
+    opacity: 0.5;
+    cursor: wait;
+}
+
+.map-actions {
+    display: flex;
+    gap: 0.5em;
+    justify-content: center;
+    margin-bottom: 0.5em;
+}
+
+.small-button {
+    font-size: 0.9em;
+    padding: 0.25em 0.6em;
+}
+
+
+/* ---- leaderboard --------------------------------------------------- */
+
+.leaderboard {
+    margin: 0 0.5em 0.5em 0.5em;
+    padding: 0.4em;
+    border-top: 1px solid magenta;
+    color: white;
+    font-size: 0.9em;
+}
+
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.leaderboard-table td {
+    padding: 0.15em 0.4em;
+    text-align: left;
+}
+
+.lb-rank {
+    color: rgba(255, 255, 255, 0.6);
+    width: 2.5em;
+}
+
+.lb-time {
+    text-align: right;
+}
+
+.lb-deaths {
+    text-align: right;
+    color: rgba(255, 255, 255, 0.6);
+    width: 3.5em;
+}
+
+.leaderboard-empty {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+
+/* ---- toast --------------------------------------------------------- */
+
+#toast {
+    display: none;
+    position: absolute;
+    bottom: 1.5em;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+
+    max-width: 80vw;
+    padding: 0.6em 1em;
+
+    color: white;
+    text-align: center;
+    background-color: rgba(83, 15, 80, 0.95);
+    border: 1px solid magenta;
+    border-radius: 0.3em;
+}

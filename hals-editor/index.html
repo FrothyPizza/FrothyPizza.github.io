@@ -22,6 +22,21 @@
         <div id="loaded-map-menu">
             <button id="back-to-start-button">Back</button>
             <h1>Select a map</h1>
+            <div id="map-browser-controls">
+                <input type="search" id="map-search" placeholder="Search maps or creators" autocomplete="off">
+                <select id="map-sort" title="Sort the list">
+                    <option value="top">Top rated</option>
+                    <option value="new">Newest</option>
+                    <option value="old">Oldest</option>
+                    <option value="plays">Most played</option>
+                    <option value="name">Name (A-Z)</option>
+                </select>
+            </div>
+            <div id="map-filter-notice">
+                <span id="map-filter-text"></span>
+                <button id="clear-filter-button">Show all maps</button>
+            </div>
+            <p id="map-list-status">Loading maps...</p>
             <div id="loaded-maps-container">
                 <!-- e.g. -->
                 <!-- <div class="map-container">
@@ -71,6 +86,7 @@
                 </div>
             </div>
         </nav>
+        <div id="toast"></div>
         <div id="pause-display">
             <div id="pause-text">
                 <p>Paused</p>
