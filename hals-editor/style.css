@@ -237,16 +237,23 @@ img {
     left: 50%;
     transform: translateX(-50%);
 
+    /* An absolutely positioned box with `left` set but no `width` shrinks to
+       fit using only the space to the right of `left` as its budget -- here
+       that's half the viewport -- so it wrapped to two rows long before it
+       ran out of real room. Sizing to content directly fixes that. */
+    width: max-content;
+    max-width: 100vw;
+    box-sizing: border-box;
+
     /* Only the editor uses this; menu.js shows it. It used to default to
        visible, and being wider than a phone screen it stretched the page
        sideways on the menus even though the start screen covered it. */
     display: none;
     flex-direction: row;
-    /* Wrap rather than run off the side of a narrow screen. */
-    flex-wrap: wrap;
+    /* One row always: scroll sideways rather than wrap to a second row. */
+    flex-wrap: nowrap;
+    overflow-x: auto;
     justify-content: center;
-    max-width: 100vw;
-    box-sizing: border-box;
 
     text-align: center;
     font-size: 1.2em;
@@ -265,6 +272,9 @@ img {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    /* Keep every icon full size and let the bar scroll instead -- a shrinking
+       flex item would squash icons down to nothing on a narrow screen. */
+    flex: 0 0 auto;
 
     padding-left: 0.3em;
     padding-right: 0.3em;

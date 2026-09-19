@@ -1181,12 +1181,17 @@ function addBlockSelection(blockName, blockStr) {
 
 
 
+// The "off" half of a flashing/red-flashing pair is reached by toggling the
+// "on" block, not selected directly, and spawn is unique to the map -- so
+// none of the three get their own button.
+const BLOCKS_HIDDEN_FROM_BAR = new Set(["redFlashOff", "flashingOff", "spawn"]);
+
 function startLevelEditor() {
     blockSelectionBar.innerHTML = "";
-    for(let [index, [blockName, blockStr]] of Object.entries(Object.entries(MAP_BLOCK_TYPES))) {
-        if(index > 13) continue;
+    for(const [blockName, blockStr] of Object.entries(MAP_BLOCK_TYPES)) {
+        if(BLOCKS_HIDDEN_FROM_BAR.has(blockName)) continue;
         addBlockSelection(blockName, blockStr);
-    } 
+    }
     selectBlock("block", "#");
 
     document.addEventListener("keydown", e => {
