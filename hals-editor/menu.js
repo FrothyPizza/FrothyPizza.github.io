@@ -50,6 +50,12 @@ let startMenu = document.getElementById("start-menu");
 let findButton = document.getElementById("open-map-finder-button");
 let mapFinderContainer = document.getElementById("loaded-map-menu");
 
+let projectMenu = document.getElementById("project-menu");
+let backToProjectsMenuButton = document.getElementById("back-to-start-from-projects-button");
+let newProjectButton = document.getElementById("new-project-button");
+let projectListStatus = document.getElementById("project-list-status");
+let projectListContainer = document.getElementById("project-list-container");
+
 let backButton = document.getElementById("back-to-start-button");
 let goToMenuButton = document.getElementById("goto-menu-button");
 
@@ -63,6 +69,7 @@ let clearButton = document.getElementById("clear-button");
 function hideMenu() {
     startMenu.style.display = "none";
     mapFinderContainer.style.display = "none";
+    projectMenu.style.display = "none";
     canvas.style.display = "block";
     paused = false;
     document.getElementById("side-buttons").style.display = "flex";
@@ -79,30 +86,18 @@ window.onbeforeunload = function () {
 
 let gameStartedOnce = false;
 startEditorButton.onclick = () => {
-    // if(!gameStartedOnce) {
-    //     startGame();
+    showProjectMenu();
+}
 
-    //     let music = new Audio(musicFiles[0].src);
-    //     music.loop = true;
-    //     music.volume = 0.3;
-    //     music.play();
-    //     showNowPlaying(`<i>${musicFiles[0].name}</i> - ${musicFiles[0].artist}`, 5000);
-
-    //     gameStartedOnce = true;
-    // } else {
-    //     restartGame();
-    // }
-    // A half-written or hand-edited localStorage entry used to throw here and
-    // leave the Create button doing nothing at all.
-    map = ["S", "#"];
-    try {
-        const saved = JSON.parse(localStorage.getItem("map"));
-        if (Array.isArray(saved) && saved.length && typeof saved[0] === "string") {
-            map = saved;
-        }
-    } catch (err) {
-        console.warn("Saved map was unreadable; starting a new one.", err);
-    }
+// Opens a local draft (new or existing) into the editor. Shared by "New Map"
+// and picking a card from the project list.
+function openProject(project) {
+    currentProjectId = project.id;
+    // Projects are shared objects in the list; copy so editing one (which
+    // pads the map as you approach its edges) cannot corrupt the stored copy.
+    map = project.map.slice();
+    undoStack = [];
+    redoStack = [];
 
     endRun();
     stopEditingPublishedMap();
@@ -114,10 +109,94 @@ startEditorButton.onclick = () => {
     clearButton.style.display = "block";
     blockSelectionBar.style.display = "flex";
 
-
     LEVEL_EDITOR_MODE = true;
+    projectMenu.style.display = "none";
     hideMenu();
 }
+
+function createNewProject() {
+    const name = prompt("Name your new map:", "Untitled Map");
+    if (name === null) return;
+    openProject(createProject(name.trim() || "Untitled Map", ["S", "#"]));
+}
+
+function buildProjectCard(project) {
+    const card = el("div", "map-container");
+
+    const header = el("div", "map-header");
+    const info = el("div", "map-info");
+    info.append(el("h2", "map-name", project.name));
+    info.append(el("p", "map-stats", "Edited " + formatRelativeTime(project.updatedAt)));
+    header.append(info);
+    card.append(header);
+
+    // Shape the preview to the map instead of always being square, same as
+    // the published-map cards in the Find list.
+    const preview = document.createElement("canvas");
+    const cols = project.map[0].length;
+    const rows = project.map.length;
+    const scale = Math.min(400 / cols, 400 / rows);
+    preview.width = Math.max(80, Math.round(cols * scale));
+    preview.height = Math.max(80, Math.round(rows * scale));
+    preview.title = "Open " + project.name;
+    card.append(preview);
+    preview.addEventListener("click", () => openProject(project));
+
+    const actions = el("div", "map-actions");
+    const openButton = el("button", "small-button", "Open");
+    openButton.addEventListener("click", () => openProject(project));
+    const deleteButton = el("button", "small-button danger-button", "Delete");
+    deleteButton.addEventListener("click", () => {
+        if (!confirm(`Delete "${project.name}"? This cannot be undone.`)) return;
+        deleteProject(project.id);
+        refreshProjectList();
+    });
+    actions.append(openButton, deleteButton);
+    card.append(actions);
+
+    // Borrows the global map/view/context, so it has to run after the canvas
+    // is in the document and sized.
+    drawMapOnSmallCanvas(preview, project.map);
+
+    return card;
+}
+
+function refreshProjectList() {
+    migrateLegacyMapIfNeeded();
+
+    const projects = loadProjects().slice().sort((a, b) => b.updatedAt - a.updatedAt);
+    projectListContainer.textContent = "";
+
+    if (!projects.length) {
+        projectListStatus.textContent = "You have no maps yet. Create one to get started.";
+        return;
+    }
+    projectListStatus.textContent = "";
+
+    const fragment = document.createDocumentFragment();
+    for (const project of projects) fragment.append(buildProjectCard(project));
+    projectListContainer.append(fragment);
+}
+
+function showProjectMenu() {
+    startMenu.style.display = "none";
+    projectMenu.style.display = "block";
+    canvas.style.display = "none";
+    document.querySelector("html").classList.add("scroll");
+    window.scrollTo(0, 0);
+    refreshProjectList();
+}
+
+function hideProjectMenu() {
+    projectMenu.style.display = "none";
+    startMenu.style.display = "flex";
+    canvas.style.display = "block";
+    document.querySelector("html").classList.remove("scroll");
+    window.scrollTo(0, 0);
+}
+
+newProjectButton.onclick = createNewProject;
+backToProjectsMenuButton.onclick = hideProjectMenu;
 
 
 
@@ -127,16 +206,17 @@ function loadMap(record) {
     map = record.map.slice();
     player.hardRestart();
     stopEditingPublishedMap();
+    currentProjectId = null;
     beginRun(record);
     hideMenu();
     helpButton.style.display = "none";
-    publishButton.style.display = "none";   
+    publishButton.style.display = "none";
     saveButton.style.display = "none";
     blockSelectionBar.style.display = "none";
     clearButton.style.display = "none";
     document.getElementById('help-page-container').classList.remove('open');
     pauseGame(false);
-    LEVEL_EDITOR_MODE = false;   
+    LEVEL_EDITOR_MODE = false;
 }
 
 
@@ -190,7 +270,9 @@ clearButton.onclick = () => {
 
 function saveMap() {
     unpadMap();
-    localStorage.setItem("map", JSON.stringify(map));
+    // A no-op when nothing is open, e.g. saving while editing an
+    // already-published map (currentProjectId is null there).
+    updateProjectMap(currentProjectId, map);
 }
 saveButton.onclick = () => {
     saveMap();
@@ -218,6 +300,16 @@ goToMenuButton.onclick = () => {
     if(LEVEL_EDITOR_MODE) {
         saveMap();
     }
+
+    // The start menu covers the whole screen, so these being left visible
+    // never showed -- until a narrower panel (Find, or the project list) was
+    // opened on top of it and the editor's bar peeked out from behind.
+    helpButton.style.display = "none";
+    saveButton.style.display = "none";
+    publishButton.style.display = "none";
+    clearButton.style.display = "none";
+    blockSelectionBar.style.display = "none";
+    document.getElementById('help-page-container').classList.remove('open');
 }
 
 let helpButton = document.getElementById("help-button");

@@ -101,6 +101,102 @@ function formatTime(ms) {
     return `${minutes}:${seconds.toFixed(2).padStart(5, '0')}`;
 }
 
+function formatRelativeTime(ms) {
+    const diff = Date.now() - ms;
+    const MINUTE = 60 * 1000, HOUR = 60 * MINUTE, DAY = 24 * HOUR;
+    if (diff < MINUTE) return "just now";
+    if (diff < HOUR) {
+        const n = Math.floor(diff / MINUTE);
+        return `${n} minute${n === 1 ? '' : 's'} ago`;
+    }
+    if (diff < DAY) {
+        const n = Math.floor(diff / HOUR);
+        return `${n} hour${n === 1 ? '' : 's'} ago`;
+    }
+    const days = Math.floor(diff / DAY);
+    if (days < 30) return `${days} day${days === 1 ? '' : 's'} ago`;
+    return new Date(ms).toLocaleDateString();
+}
+
+
+/* ------------------------------------------------------------------ *
+ * Local projects
+ *
+ * Unpublished drafts, kept in the browser so someone can be mid-way through
+ * several maps at once instead of the editor only ever holding one. A
+ * project is folded back out of local storage the moment it is published --
+ * from then on the server is the source of truth, and editing it again goes
+ * through editPublishedMap's password flow instead.
+ * ------------------------------------------------------------------ */
+
+const PROJECTS_KEY = "editorProjects";
+
+// Which project is open in the editor right now, if any. Null while playing
+// a map or editing an already-published one.
+let currentProjectId = null;
+
+function loadProjects() {
+    try {
+        const saved = JSON.parse(localStorage.getItem(PROJECTS_KEY));
+        return Array.isArray(saved)
+            ? saved.filter(p => p && typeof p.id === "string" && Array.isArray(p.map))
+            : [];
+    } catch (err) {
+        return [];
+    }
+}
+
+function saveProjects(projects) {
+    try {
+        localStorage.setItem(PROJECTS_KEY, JSON.stringify(projects));
+    } catch (err) { /* private browsing, or storage full -- nothing to do */ }
+}
+
+function makeProjectId() {
+    return 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+}
+
+function createProject(name, mapData) {
+    const projects = loadProjects();
+    const project = { id: makeProjectId(), name: name, map: mapData, updatedAt: Date.now() };
+    projects.push(project);
+    saveProjects(projects);
+    return project;
+}
+
+// Called from saveMap() every time the editor autosaves. A no-op when
+// nothing is open (id is null) so it is always safe to call unconditionally.
+function updateProjectMap(id, mapData) {
+    if (id === null) return;
+    const projects = loadProjects();
+    const project = projects.find(p => p.id === id);
+    if (!project) return;
+    project.map = mapData;
+    project.updatedAt = Date.now();
+    saveProjects(projects);
+}
+
+function deleteProject(id) {
+    saveProjects(loadProjects().filter(p => p.id !== id));
+}
+
+// The editor used to keep exactly one in-progress map under the "map" key.
+// The first time someone with an existing draft opens the (now multi-map)
+// project list, fold that draft in as a project instead of losing it.
+function migrateLegacyMapIfNeeded() {
+    if (localStorage.getItem(PROJECTS_KEY) !== null) return;
+    try {
+        const legacyMap = JSON.parse(localStorage.getItem("map"));
+        if (Array.isArray(legacyMap) && legacyMap.length && typeof legacyMap[0] === "string") {
+            createProject("My Map", legacyMap);
+        } else {
+            saveProjects([]);
+        }
+    } catch (err) {
+        saveProjects([]);
+    }
+}
+
 
 /* ------------------------------------------------------------------ *
  * Publishing
@@ -145,6 +241,7 @@ function editPublishedMap(record) {
     postJSON(SERVER_URL + `/maps/${record.id}/unlock`, { password: password })
         .then(unlocked => {
             editingMap = { id: unlocked.id, name: unlocked.name, password: password };
+            currentProjectId = null;
             map = unlocked.map.slice();
             endRun();
             restartGame();
@@ -239,6 +336,13 @@ function publishMap() {
               password: password || undefined, client: getVoterToken() })
             .then(published => {
                 if (published.editable) rememberMyMap(published.id);
+                // It's live on the server now, so drop the local draft --
+                // editing it again goes through the password-protected Edit
+                // button instead.
+                if (currentProjectId !== null) {
+                    deleteProject(currentProjectId);
+                    currentProjectId = null;
+                }
                 alert(published.editable
                     ? `"${published.name}" is published. Keep your password to edit it later.`
                     : `"${published.name}" is published. You set no password, so it cannot be edited.`);

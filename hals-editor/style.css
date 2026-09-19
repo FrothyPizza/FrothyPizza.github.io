@@ -290,7 +290,7 @@ img {
 }
 
 
-#loaded-map-menu {
+#loaded-map-menu, #project-menu {
     position: absolute;
     top: 0;
     left: 50%;
@@ -310,7 +310,7 @@ img {
     display: none;
 }
 
-#loaded-map-menu h1 {
+#loaded-map-menu h1, #project-menu h1 {
     text-align: center;
 
     margin-top: 0.5em;
@@ -318,11 +318,11 @@ img {
 
 }
 
-#loaded-map-menu button {
+#loaded-map-menu button, #project-menu button {
     display: inline-block;
 }
 
-#loaded-maps-container {
+#loaded-maps-container, #project-list-container {
     display: flex;
     flex-direction: column;
     align-items: stretch;
@@ -464,9 +464,13 @@ img {
     font-size: 0.9em;
 }
 
-#map-list-status {
+#map-list-status, #project-list-status {
     margin-bottom: 0.5em;
     color: rgba(255, 255, 255, 0.7);
+}
+
+#project-list-status:empty {
+    display: none;
 }
 
 
@@ -514,6 +518,32 @@ img {
 .small-button {
     font-size: 0.9em;
     padding: 0.25em 0.6em;
+}
+
+/* Deleting a local draft can't be undone, so it gets a visually distinct
+   warning color instead of blending in with the other card actions. */
+.danger-button {
+    border-color: #ff5c5c;
+    background-color: rgba(120, 15, 15, 0.8);
+}
+
+.danger-button:hover {
+    background-color: rgba(120, 15, 15, 0.95);
+}
+
+.danger-button:active {
+    background-color: rgba(120, 15, 15, 0.7);
+}
+
+
+/* ---- local projects (unpublished drafts) ---------------------------- */
+
+#new-project-button {
+    display: block;
+    width: calc(100% - 1em);
+    margin: 0 auto 0.7em auto;
+
+    font-size: 1.2em;
 }
 
 
@@ -594,7 +624,7 @@ img {
 
 /* ---- map browser navigation ----------------------------------------- */
 
-#map-browser-header {
+#map-browser-header, #project-menu-header {
     display: flex;
     align-items: center;
     gap: 0.6em;
@@ -603,7 +633,7 @@ img {
     text-align: left;
 }
 
-#map-browser-header button {
+#map-browser-header button, #project-menu-header button {
     font-size: 1em;
     flex: 0 0 auto;
 }
