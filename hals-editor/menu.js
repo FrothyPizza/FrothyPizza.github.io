@@ -203,6 +203,11 @@ publishButton.onclick = () => {
 
 
 goToMenuButton.onclick = () => {
+    // Otherwise a publish started before leaving keeps polling in the
+    // background, and re-entering the editor and flying to the win block
+    // with editor tools fires it -- publishing without actually beating it.
+    stopPublishWatcher(true);
+
     paused = true;
     pauseDisplay.style.display = "none";
     endRun();

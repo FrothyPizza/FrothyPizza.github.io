@@ -119,11 +119,18 @@ function isEditingPublishedMap() {
     return editingMap !== null;
 }
 
-function cancelPublish(silent) {
+// Stops the watcher without also navigating to the menu, for callers that are
+// already on their way there (goToMenuButton itself).
+function stopPublishWatcher(silent) {
     if (publishWatcher === null) return;
     clearInterval(publishWatcher);
     publishWatcher = null;
     if (!silent) showToast("Publish cancelled.");
+}
+
+function cancelPublish(silent) {
+    if (publishWatcher === null) return;
+    stopPublishWatcher(silent);
     goToMenuButton.click();
 }
 
