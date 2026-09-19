@@ -283,6 +283,13 @@ function endRun() {
     runSubmitted = false;
 }
 
+// Called from Player.restart() on every death. Deaths still accumulate on
+// player.deaths; only the clock restarts. No-op outside a scored run
+// (runStartedAt is null in the editor and when nothing is loaded).
+function resetRunTimer() {
+    if (runStartedAt !== null) runStartedAt = Date.now();
+}
+
 // Polled from the game loop's win check. Submits once per run.
 function submitRunIfWon() {
     if (runSubmitted || currentMapId === null || runStartedAt === null) return;

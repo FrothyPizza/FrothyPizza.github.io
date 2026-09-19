@@ -464,6 +464,8 @@ class Player {
     }
 
     restart() {
+        resetRunTimer();
+
         this.deathAnimationTimer = gameNow();
         this.deathX = this.x;
         this.deathY = this.y;
