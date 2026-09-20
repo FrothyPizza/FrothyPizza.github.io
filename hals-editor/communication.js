@@ -369,12 +369,16 @@ addKeyPressListener("Escape", () => {
 let currentMapId = null;
 let runStartedAt = null;
 let runSubmitted = false;
+// Elapsed time (ms) at the last checkpoint reached this run. A death
+// restores the clock to this value instead of zeroing it.
+let checkpointElapsedMs = 0;
 
 // Starts the clock for a published map. Called from loadMap in menu.js.
 function beginRun(mapRecord) {
     currentMapId = mapRecord.id === undefined ? null : mapRecord.id;
     runStartedAt = Date.now();
     runSubmitted = false;
+    checkpointElapsedMs = 0;
 
     if (currentMapId !== null) {
         post(SERVER_URL + `/maps/${currentMapId}/play`, { client: getVoterToken() }).catch(() => {});
@@ -385,13 +389,22 @@ function endRun() {
     currentMapId = null;
     runStartedAt = null;
     runSubmitted = false;
+    checkpointElapsedMs = 0;
 }
 
 // Called from Player.restart() on every death. Deaths still accumulate on
-// player.deaths; only the clock restarts. No-op outside a scored run
-// (runStartedAt is null in the editor and when nothing is loaded).
+// player.deaths; the clock rewinds to the last checkpoint's time instead of
+// zeroing out. No-op outside a scored run (runStartedAt is null in the
+// editor and when nothing is loaded).
 function resetRunTimer() {
-    if (runStartedAt !== null) runStartedAt = Date.now();
+    if (runStartedAt !== null) runStartedAt = Date.now() - checkpointElapsedMs;
+}
+
+// Called when the player reaches a new checkpoint, so a later death rewinds
+// the clock to this moment instead of all the way back to zero.
+function recordCheckpointTime() {
+    const elapsed = getRunElapsedMs();
+    if (elapsed !== null) checkpointElapsedMs = elapsed;
 }
 
 // Polled from the game loop's win check. Submits once per run.

@@ -453,6 +453,7 @@ class Player {
         // Checkpoints used to carry over from the previous map, so the "Level"
         // counter started partway up whenever you opened a second map.
         this.acquiredCheckpoints = [];
+        checkpointElapsedMs = 0;
         // this.gravity = this.defaultGravity;
 
         this.deathAnimationTimer = 0;
@@ -700,6 +701,7 @@ function collidePlayerWithBlock(player, blockType, blockX, blockY) {
             // if the checkpoint array doesn't have this checkpoint, add it
             if(!player.acquiredCheckpoints.includes(blockX + ',' + blockY)) {
                 player.acquiredCheckpoints.push(blockX + ',' + blockY);
+                recordCheckpointTime();
                 //localStorage.setItem('checkpoints3', JSON.stringify(player.acquiredCheckpoints));
             }
         }
