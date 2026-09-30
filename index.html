@@ -1,196 +1,305 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <title>Hal Seamans — Portfolio</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Hal Seamans — CS & Engineering at the University of Iowa. Projects, games, research, and contact." />
+    <title>Hal Seamans</title>
+    <meta name="description" content="Hal Seamans: Computer Science and Engineering at the University of Iowa. iOS, web, and game development. Projects, work, and games you can play." />
     <link rel="icon" href="images/frothypizza.png" />
-    <link rel="stylesheet" href="style.css" />
-    <!-- Open Graph -->
-    <meta property="og:title" content="Hal Seamans — Portfolio" />
-    <meta property="og:description" content="Projects, games, research, and contact." />
+    <meta property="og:title" content="Hal Seamans" />
+    <meta property="og:description" content="Software engineering student at the University of Iowa. Projects, work, and games you can play." />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://frothypizza.github.io/" />
+    <meta property="og:image" content="https://frothypizza.github.io/images/face.jpeg" />
+    <script>
+      // Pick the theme before first paint: a saved choice wins, otherwise follow the system.
+      (function () {
+        var theme;
+        try { theme = localStorage.getItem('theme'); } catch (e) {}
+        if (theme !== 'light' && theme !== 'dark') {
+          theme = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Silkscreen&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="home.css" />
   </head>
   <body>
-    <!-- Navbar inserted by nav.js -->
-    <!-- <script id="replace_with_navbar" src="nav.js"></script> -->
+    <a class="skip" href="#main">Skip to content</a>
 
-    <header class="hero">
-      <div class="container hero__content">
-        <div>
-          <h1>Hal Seamans</h1>
-          <p class="lead">hfseamans@gmail.com</p>
-          <p class="lead">
-            Computer Science & Engineering @ University of Iowa • Research Assistant (Holo Reality Lab) •
-            Teaching Assistant • President, Iowa Cycling Club
-          </p>
-          <div class="actions">
-            <a class="btn" href="#projects" aria-label="See projects">View Projects</a>
-            <a class="btn primary" href="games.html" aria-label="See games">Play My Games</a>
-            <a class="btn outline" href="#contact" aria-label="Contact me">Contact</a>
-          </div>
-        </div>
-        <div class="hero__badge">
-          <img src="images/face.jpeg" alt="Portrait of Hal Seamans" />
-        </div>
+    <header class="topbar">
+      <div class="wrap topbar__inner">
+        <a class="brand" href="#top">
+          <img src="images/frothypizza.png" alt="" width="24" height="24" />
+          <span>frothypizza</span>
+        </a>
+        <nav class="topnav" aria-label="Main">
+          <a href="#work">Work</a>
+          <a href="#projects">Projects</a>
+          <a href="games.html">Games</a>
+        </nav>
       </div>
     </header>
 
-    <main>
-<!-- About -->
-<section id="about" class="section">
-  <div class="container">
-    <h2>About</h2>
-    <p>
-      I’m a third-year Computer Science and Engineering student at the University of Iowa. Passionate about software development, AI, and game design, I enjoy building projects that push my problem-solving skills—from developing AI-driven Tetris agents to creating custom game engines from scratch.
-    </p>
-    <p>
-      I also conduct research in the Holo Reality Lab, where I’m building a real-time VR teacher-training simulation in Unreal Engine 5. My work spans C++/Blueprints, OpenAI Realtime–powered conversational agents, NVIDIA ACE lip-sync, and a JSON state-machine pipeline backed by a Node.js/MongoDB logging service. The goal is natural, performant interactions in PCVR while keeping a clean engineering surface for rapid iteration.
-    </p>
-    <p>
-      Beyond coursework, I’ve worked as a teaching assistant for a software design course, helping students navigate object-oriented programming and software architecture. I’m always looking to collaborate on innovative projects, whether in AI, game development, or software engineering.
-    </p>
-  </div>
-</section>
+    <main id="main">
+      <section class="hero wrap" id="top">
+        <div class="hero__text">
+          <h1>Hal Seamans</h1>
+          <p class="hero__lede">
+            I'm a senior in Computer Science and Engineering at the University of Iowa, staying on for an M.S. in
+            Electrical and Computer Engineering through May 2028. This summer I was a mobile software engineering
+            intern at Citizens, building iOS screens for the College Raptor app.
+          </p>
+          <p>
+            I've also been putting games on this site since 2021. <a href="games.html">Go play some.</a>
+          </p>
+          <p class="status"><span class="status__dot" aria-hidden="true"></span>Looking for a software engineering internship for summer 2027.</p>
+          <ul class="linkrow">
+            <li><a class="btn btn--primary" href="mailto:hfseamans@gmail.com">hfseamans@gmail.com</a></li>
+            <li><a class="btn" href="https://github.com/frothypizza" target="_blank" rel="noopener">GitHub</a></li>
+            <li><a class="btn" href="https://www.linkedin.com/in/hal-seamans/" target="_blank" rel="noopener">LinkedIn</a></li>
+          </ul>
+        </div>
+        <img class="hero__photo" src="images/face.jpeg" alt="Hal Seamans" width="800" height="800" />
+      </section>
 
-
-      <!-- Projects -->
-      <section id="projects" class="section">
-        <div class="container">
-          <h2>Selected Projects</h2>
-          <div class="grid">
-            <article class="card">
-              <h3>VR Teacher-Training Simulator</h3>
+      <section class="section wrap" id="work" aria-labelledby="work-title">
+        <h2 id="work-title">Work</h2>
+        <ol class="timeline">
+          <li>
+            <p class="when">Aug 2026 – now</p>
+            <div>
+              <h3>Undergraduate Research Assistant <span class="org">Prof. Hans Johnson, Electrical and Computer Engineering</span></h3>
+              <p>Building DataLad and git-annex tooling to ingest large biomedical datasets, and moving old ZIP archives into DataLad.</p>
+            </div>
+          </li>
+          <li>
+            <p class="when">May – Aug 2026</p>
+            <div>
+              <h3>Software Engineering Intern, Mobile <span class="org">Citizens / College Raptor</span></h3>
               <p>
-                UE5.5/5.6 simulation with conversational agents, hand-tracking, and logging pipeline. Integrates
-                OpenAI Realtime and NVIDIA ACE for natural interactions.
+                Built the Task Center and Task Calendar screens in the College Raptor iOS app with SwiftUI. Task Center
+                lists a user's pending and completed tasks, like application deadlines and recommendation letters, and
+                loads them over GraphQL with Apollo iOS. I also built Android screens in Jetpack Compose, fixed bugs and
+                crashes, and merged 58 pull requests.
               </p>
-              <div class="tags">
-                <span>UE5</span><span>C++/Blueprints</span><span>Realtime API</span><span>MongoDB</span>
-              </div>
-              <div class="card__actions">
-                <a class="btn small" href="#" aria-label="Read more about VR project">Case Study (soon)</a>
-              </div>
-            </article>
-
-            <article class="card">
-              <h3>Boss-Rush Platformer Game</h3>
+            </div>
+          </li>
+          <li>
+            <p class="when">Jan 2025 – May 2026</p>
+            <div>
+              <h3>Undergraduate Research Assistant <span class="org">Holo Reality Lab, Prof. Tyler Bell</span></h3>
               <p>
-                Built on my own lightweight JavaScript engine with an object-oriented architecture that makes
-    new boss design fast and modular. Focused on tight feel, deterministic gameplay loops, and
-    rapid iteration.
+                Built a VR teacher-training simulation in Unreal Engine 5.5 where a MetaHuman character holds a spoken
+                conversation with the user through the OpenAI Realtime API, lip-synced with NVIDIA Audio2Face. I designed
+                the JSON-configurable state machine that drives the conversation and debugged the real-time audio
+                pipeline: sample-rate conversion, push-to-talk vs. voice activity detection, and lip-sync crashes.
               </p>
-              <div class="tags"><span>JS/TS</span><span>LLM</span><span>Game Design</span></div>
-              <div class="card__actions">
-                <a class="btn small" href="games.html" aria-label="Open Games page">Play</a>
-                <a class="btn small outline" href="https://github.com/FrothyPizza/EXP-Jam-2025" target="_blank" rel="noopener">GitHub</a>
-              </div>
-            </article>
+            </div>
+          </li>
+          <li>
+            <p class="when">Aug 2024 – May 2026</p>
+            <div>
+              <h3>Teaching Assistant <span class="org">ECE:3330 Introduction to Software Design</span></h3>
+              <p>
+                Helped 100+ students with Java, object-oriented design, and JUnit in office hours; graded, gave oral
+                exams, and wrote new homework problems. Also wrote a Python tool that sets up GitLab repos with starter
+                projects for about 16 student teams.
+              </p>
+            </div>
+          </li>
+          <li>
+            <p class="when">Aug 2024 – now</p>
+            <div>
+              <h3>President <span class="org">Iowa Cycling Club</span></h3>
+              <p>Run club operations, communications, rides, races, and campus events.</p>
+            </div>
+          </li>
+        </ol>
 
-            <article class="card">
-                <h3>Tetris AI</h3>
-                <p>
-                    Programmed a full Tetris clone in C++ with SFML. The AI uses a beam-search planner guided
-                    by a heuristic to score future placements, and a genetic algorithm to evolve the heuristic
-                    weights across a population of agents.
-                </p>
-                <ul class="checklist" style="margin-top:8px">
-                    <li>C++ + SFML rendering and game loop</li>
-                    <li>Beam search with heuristic evaluation for look-ahead placement</li>
-                    <li>Genetic algorithm to discover the best heuristic weights</li>
-                </ul>
-                <div class="tags" style="margin-top:10px">
-                    <span>C++</span><span>SFML</span><span>Search Algorithms</span><span>Genetic Algorithm</span><span>Heuristics</span>
-                </div>
-                <div class="card__actions">
-                    <a class="btn small" href="/Tetris/index.html" aria-label="Open Games page">Play JS Port</a>
-                    <a class="btn small outline" href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
-                    <!-- <a class="btn small" href="#" target="_blank" rel="noopener">Demo video</a> -->
-                </div>
-            </article>
-          </div>
+        <div class="school">
+          <h3>The University of Iowa</h3>
+          <p>
+            B.S.E. in Computer Science and Engineering, May 2027 <span class="sep">·</span>
+            M.S. in Electrical and Computer Engineering, May 2028 (combined program) <span class="sep">·</span>
+            GPA 4.16
+          </p>
         </div>
       </section>
 
-      <!-- Skills -->
-      <section id="skills" class="section">
-        <div class="container">
-          <h2>Skills</h2>
-          <div class="chips">
-            <span>Unreal Engine 5.x</span><span>C++</span><span>Blueprints</span><span>OpenAI Realtime</span>
-            <span>WebRTC / WebSocket</span><span>Node/Express</span><span>Java / JavaFX</span>
-            <span>Python</span><span>MongoDB</span><span>GitLab/GitHub</span>
-          </div>
+      <section class="section wrap" id="projects" aria-labelledby="projects-title">
+        <h2 id="projects-title">Projects</h2>
+        <div class="featured">
+          <article class="project">
+            <a class="project__shot" href="hals-editor/index.html">
+              <img src="images/projects/tower-editor.png" alt="The Hal's Tower Editor: a level built from gray blocks above a palette of block types" width="1000" height="640" loading="lazy" />
+            </a>
+            <div class="project__body">
+              <h3>Hal's Tower Editor</h3>
+              <p class="meta">2022, rebuilt 2026 · JavaScript, Canvas, Node.js, PostgreSQL</p>
+              <p>
+                A platformer level editor that runs in the browser. Build a map, beat it to prove it can be done, publish
+                it, and race other players on its leaderboard. I wrote the original in 2022. When Replit dropped
+                always-on hosting and the old server went down, I rebuilt the backend with Claude Code as a Node.js API
+                on Heroku and Postgres that old clients still work with.
+              </p>
+              <p class="project__links">
+                <a href="hals-editor/index.html">Play it</a>
+                <a href="https://github.com/FrothyPizza/FrothyPizza.github.io/tree/main/hals-editor" target="_blank" rel="noopener">Editor code</a>
+              </p>
+            </div>
+          </article>
+
+          <article class="project">
+            <a class="project__shot project__shot--pixel" href="https://github.com/FrothyPizza/EXP-Jam-2025" target="_blank" rel="noopener">
+              <img src="images/projects/theos-journey.png" alt="Theo's Journey: pixel-art cave level with a waterfall and two characters" width="684" height="428" loading="lazy" />
+            </a>
+            <div class="project__body">
+              <h3>Theo's Journey <span class="award">1st place</span></h3>
+              <p class="meta">Apr 2025 · EPX Studio Game Jam · JavaScript, Canvas</p>
+              <p>
+                A 2D platformer with boss fights that our team of three made in 48 hours. I led the team and wrote most
+                of the engine and gameplay in plain JavaScript: the entity class hierarchy, hitbox collision, the
+                bosses, and a JSON-scripted cutscene system.
+              </p>
+              <p class="project__links">
+                <a href="https://github.com/FrothyPizza/EXP-Jam-2025" target="_blank" rel="noopener">Code on GitHub</a>
+              </p>
+            </div>
+          </article>
         </div>
+
+        <ul class="minor">
+          <li>
+            <h3>NES controller Snake</h3>
+            <p class="meta">Spring 2026 · Embedded Systems team project · C, AVR</p>
+            <p>
+              We treated an NES controller as a black box, worked out its protocol with an oscilloscope, and read it
+              from bare-metal C on an ATmega. A second ATmega runs Snake on an LCD, fed by a 3-byte serial packet with
+              an XOR checksum.
+            </p>
+          </li>
+          <li>
+            <h3>Grounding check for vision-language models</h3>
+            <p class="meta">Spring 2026 · AI course team project · Python, PyTorch, Hugging Face</p>
+            <p>
+              Tested whether vision-language models' explanations on A-OKVQA are grounded in what's actually in the
+              image. My part: moved the prompts for six model adapters into one configurable JSON file and wrote a LLaVA
+              smoke test.
+            </p>
+          </li>
+        </ul>
       </section>
 
-      <!-- Experience -->
-      <section id="experience" class="section">
-        <div class="container">
-          <h2>Experience</h2>
-          <div class="timeline">
-            <div class="timeline__item">
-              <h3>Research Assistant — Holo Reality Lab</h3>
-              <p class="muted">2024–Present</p>
-              <p>VR simulation for teacher training; built agent pipeline, state machines, and analytics.</p>
-            </div>
-            <div class="timeline__item">
-              <h3>Teaching Assistant — ECE:3330 Intro to Software Design</h3>
-              <p class="muted">2024–Present</p>
-              <p>Oral-exam modules, Java/JavaFX setups, grading automation, GitLab workflows.</p>
-            </div>
-            <div class="timeline__item">
-              <h3>President — Iowa Cycling Club</h3>
-              <p class="muted">2024–Present</p>
-              <p>Operations, budgeting, equipment management, and race logistics.</p>
-            </div>
-          </div>
+      <section class="section wrap" id="games" aria-labelledby="games-title">
+        <div class="section__head">
+          <h2 id="games-title">Games</h2>
+          <a class="more" href="games.html">All games →</a>
         </div>
+        <p class="section__note">Made for fun since 2021. They all run in the browser.</p>
+        <ul class="gamestrip">
+          <li><a href="hals-editor/index.html"><img src="images/game-icons/editor.PNG" alt="" loading="lazy" /><span>Hal's Tower Editor</span></a></li>
+          <li><a href="ThisTownAintBigEnough/index.html"><img src="images/game-icons/townCover.png" alt="" loading="lazy" /><span>This Town Ain't Big Enough</span></a></li>
+          <li><a href="Samurai%20Slasher/index.html"><img src="images/game-icons/slasher_icon.png" alt="" loading="lazy" /><span>Samurai Slasher</span></a></li>
+          <li><a href="Echoes/index.html"><img src="images/game-icons/echoes-screenshot.png" alt="" loading="lazy" /><span>Echoes of the Riddle Lords</span></a></li>
+          <li><a href="Tetris/index.html"><img src="images/game-icons/tetrainer_icon.png" alt="" loading="lazy" /><span>Tetrainer</span></a></li>
+          <li><a href="Hal's%20Tower%203/index.html"><img src="images/game-icons/hals_tower_3_icon.png" alt="" loading="lazy" /><span>Hal's Tower 3</span></a></li>
+        </ul>
       </section>
 
-      <!-- Contact -->
-      <section id="contact" class="section">
-        <div class="container">
-          <h2>Contact</h2>
-          <p>Feel free to reach out for collaborations, internships, or to chat about bikes and VR.</p>
-          <div class="actions">
-            <a class="btn primary" href="mailto:hfseamans@gmail.com">Email</a>
-            <a class="btn outline" href="https://github.com/frothypizza" target="_blank" rel="noopener">GitHub</a>
-            <a class="btn outline" href="https://www.linkedin.com/in/hal-seamans-514119265/" target="_blank" rel="noopener">LinkedIn</a>
-            <!-- Optional resume link -->
-            <!-- <a class="btn" href="files/Hal_Seamans_Resume.pdf" target="_blank" rel="noopener">Resume</a> -->
-          </div>
-        </div>
+      <section class="section wrap" id="skills" aria-labelledby="skills-title">
+        <h2 id="skills-title">Skills</h2>
+        <dl class="skills">
+          <div><dt>Languages</dt><dd>Swift, Kotlin, JavaScript, C++, Java, Python, C</dd></div>
+          <div><dt>Mobile</dt><dd>SwiftUI, Jetpack Compose, Apollo iOS (GraphQL)</dd></div>
+          <div><dt>Web and backend</dt><dd>Node.js, REST, GraphQL, PostgreSQL, MongoDB, WebSockets</dd></div>
+          <div><dt>Games and graphics</dt><dd>Unreal Engine 5 (C++, Blueprints), HTML5 Canvas</dd></div>
+          <div><dt>Tools</dt><dd>Git, GitHub, GitLab, JUnit, Claude Code</dd></div>
+        </dl>
+      </section>
+
+      <section class="section wrap" id="contact" aria-labelledby="contact-title">
+        <h2 id="contact-title">Contact</h2>
+        <p>
+          Email is the best way to reach me: <a href="mailto:hfseamans@gmail.com">hfseamans@gmail.com</a>. Reach out
+          about internships, projects, or to chat about bikes and VR.
+        </p>
       </section>
     </main>
 
     <footer class="footer">
-      <div class="container footer__content">
-        <span>© <span id="year"></span> Hal Seamans</span>
+      <div class="wrap footer__inner">
+        <span>© <span id="year">2026</span> Hal Seamans</span>
         <div class="footer__right">
-          <button id="themeToggle" class="btn small outline" aria-label="Toggle dark mode">Toggle theme</button>
-          <!-- tiny easter egg -->
-          <img class="dvd-mini" src="images/dvd-video.png" alt="" />
+          <button id="themeToggle" class="btn btn--small" type="button">Dark mode</button>
+          <button class="dvd" type="button" aria-label="Start the DVD screensaver">
+            <img src="images/dvd-video.png" alt="" width="48" height="27" />
+          </button>
         </div>
       </div>
     </footer>
 
     <script>
-      // year
       document.getElementById('year').textContent = new Date().getFullYear();
 
-      // theme toggle with persistence
-      const toggle = document.getElementById('themeToggle');
-      const root = document.documentElement;
-      const stored = localStorage.getItem('theme');
-      if (stored) root.dataset.theme = stored;
-
-      toggle.addEventListener('click', () => {
-        const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
-        root.dataset.theme = next;
-        localStorage.setItem('theme', next);
+      // Theme toggle. The initial theme is set in <head>.
+      var root = document.documentElement;
+      var toggle = document.getElementById('themeToggle');
+      function labelToggle() {
+        toggle.textContent = root.dataset.theme === 'dark' ? 'Light mode' : 'Dark mode';
+      }
+      labelToggle();
+      toggle.addEventListener('click', function () {
+        root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+        try { localStorage.setItem('theme', root.dataset.theme); } catch (e) {}
+        labelToggle();
       });
+
+      // The DVD logo in the footer bounces around the screen when clicked. Click it again (or press Esc) to stop.
+      (function () {
+        var button = document.querySelector('.dvd');
+        var logo = null, frame = 0, x = 0, y = 0, dx = 2, dy = 2, hue = 0;
+        var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        function bounce() {
+          hue = (hue + 60 + Math.floor(Math.random() * 180)) % 360;
+          logo.style.filter = 'hue-rotate(' + hue + 'deg)';
+        }
+        function step() {
+          var w = window.innerWidth - logo.offsetWidth, h = window.innerHeight - logo.offsetHeight;
+          x += dx; y += dy;
+          if (x <= 0 || x >= w) { dx = -dx; x = Math.max(0, Math.min(x, w)); bounce(); }
+          if (y <= 0 || y >= h) { dy = -dy; y = Math.max(0, Math.min(y, h)); bounce(); }
+          logo.style.transform = 'translate(' + x + 'px,' + y + 'px)';
+          frame = requestAnimationFrame(step);
+        }
+        function stop() {
+          cancelAnimationFrame(frame);
+          if (logo) logo.remove();
+          logo = null;
+          button.setAttribute('aria-label', 'Start the DVD screensaver');
+        }
+        function start() {
+          logo = document.createElement('img');
+          logo.src = 'images/dvd-video.png';
+          logo.alt = '';
+          logo.className = 'dvd-bouncer';
+          logo.title = 'Click to stop';
+          logo.addEventListener('click', stop);
+          document.body.appendChild(logo);
+          x = Math.random() * (window.innerWidth - 120);
+          y = Math.random() * (window.innerHeight - 70);
+          button.setAttribute('aria-label', 'Stop the DVD screensaver');
+          bounce();
+          if (still) logo.style.transform = 'translate(' + x + 'px,' + y + 'px)';
+          else frame = requestAnimationFrame(step);
+        }
+        button.addEventListener('click', function () { logo ? stop() : start(); });
+        document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && logo) stop(); });
+      })();
     </script>
   </body>
 </html>

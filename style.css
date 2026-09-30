@@ -258,3 +258,9 @@ nav {
 .footer__right { display: flex; align-items: center; gap: 12px; }
 .dvd-mini { width: 48px; opacity: .85; }
 
+
+/* ---------- Small screens: keep the Home / Games / GitHub bar inside the page ---------- */
+@media (max-width: 600px) {
+  nav { width: auto; margin: 1em 16px 0; padding: 0.4em; }
+  .nav-button { font-size: large; padding: 6px 10px; }
+}

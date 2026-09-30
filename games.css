@@ -94,3 +94,10 @@
         grid-template-rows: repeat(3, 1fr);
     }
 }
+/* Keep icons circular when a two-line title squeezes the column: size from the height, square aspect. */
+.game-icon-container img {
+    width: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    min-height: 0;
+}
