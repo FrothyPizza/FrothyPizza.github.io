@@ -5,10 +5,10 @@ fetch('nav.html')
     let newelem = document.createElement("div");
     newelem.innerHTML = text;
     oldelem.parentNode.replaceChild(newelem, oldelem);
-    // get tab title
-    let title = document.querySelector("title").innerHTML;
-    document.getElementById("nav-bar").childNodes.forEach(element => {
-        if(element.innerHTML == title) {
+    // bold the link for the page we're on
+    let page = location.pathname.split("/").pop() || "index.html";
+    document.querySelectorAll("#nav-bar a").forEach(element => {
+        if(element.getAttribute("href") == page) {
             element.classList.add("active");
         }
     });
